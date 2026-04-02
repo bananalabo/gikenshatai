@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MVP Prototype - 新規依頼</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./mvp.js"></script>
+  </head>
+  <body>
+    <script>
+      // Compatibility redirect: role pages now live under ./user/.
+      (function () {
+        window.location.replace("./user/user-new-case.html" + window.location.search);
+      })();
+    </script>
+    <div class="app">
+      <div class="layout">
+        <aside class="sidebar">
+          <div class="sidebar-card">
+            <div class="sidebar-header">
+              <div class="sidebar-title">User</div>
+              <p class="sidebar-subtitle">組織：<span id="orgLabel">Honda（例）</span></p>
+            </div>
+            <nav class="nav">
+              <div class="nav-group">
+                <div class="nav-group-title">業務</div>
+                <a class="nav-item" id="navCaseListLink" href="#">案件一覧</a>
+                <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
+                <a class="nav-item role-user-only" id="navNewCaseLink" href="#">新規依頼</a>
+              </div>
+              <div class="nav-group">
+                <div class="nav-group-title">連絡</div>
+                <a class="nav-item" id="navInboxLink" href="#">インボックス <span class="badge">2</span></a>
+              </div>
+            </nav>
+          </div>
+        </aside>
+
+        <main class="main">
+          <div class="topnav">
+            <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
+              <div>新規依頼</div>
+              <div class="breadcrumb">案件一覧 / 新規依頼</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
+              <div class="muted small">ログアウト（表示用）</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">新規依頼（MVP：必須は最小限）</div>
+            <div class="panel-body">
+              <div class="grid-2">
+                <div class="proto-field">
+                  <span class="proto-bubble">顧客・依頼元の名称</span>
+                  <label>関連先名（顧客/依頼元）</label>
+                  <input type="text" placeholder="例：Honda" />
+                </div>
+                <div class="proto-field">
+                  <span class="proto-bubble">依頼日を選択</span>
+                  <label>依頼日</label>
+                  <input type="date" />
+                </div>
+              </div>
+
+              <div style="margin-top:14px;">
+                <div class="proto-field">
+                  <span class="proto-bubble">自由記述（見積条件など）</span>
+                  <label>備考（任意）</label>
+                  <textarea placeholder="例：見積に必要な情報など"></textarea>
+                </div>
+              </div>
+
+              <div class="btnbar">
+                <button class="btn success" type="button" onclick="fakeCreate()">作成する</button>
+                <button class="btn" type="button" onclick="alert('下書き保存：プロトタイプです。')">下書き保存（必要なら）</button>
+                <a class="btn" href="./user-cases.html?role=user&org=Honda（例）">戻る</a>
+              </div>
+
+              <p class="muted small" style="margin-top:12px;">
+                ※この画面はUI確認用です。クリックしても実データは保存されません。
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Sidebar links follow `org` query param (prototype convenience).
+      (function () {
+        const org = new URLSearchParams(window.location.search).get("org") || "Honda（例）";
+        const casesLink = document.getElementById("navCaseListLink");
+        const vendorsLink = document.getElementById("navVendorsLink");
+        const inboxLink = document.getElementById("navInboxLink");
+        const newCaseLink = document.getElementById("navNewCaseLink");
+        if (casesLink) casesLink.href = "./user-cases.html?role=user&org=" + encodeURIComponent(org);
+        if (vendorsLink) vendorsLink.href = "./vendors.html?role=user&org=" + encodeURIComponent(org);
+        if (inboxLink) inboxLink.href = "./inbox.html?role=user&org=" + encodeURIComponent(org);
+        if (newCaseLink) newCaseLink.href = "./user-new-case.html?role=user&org=" + encodeURIComponent(org);
+      })();
+
+      function fakeCreate() {
+        const org = new URLSearchParams(window.location.search).get("org") || "Honda（例）";
+        // プロトタイプとして固定の案件IDへ遷移
+        const nextCaseId = "000201";
+        window.location.href = "./case-detail.html?role=user&caseId=" + nextCaseId + "&org=" + encodeURIComponent(org);
+      }
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MVP Prototype - ログイン</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="topnav">
+        <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="pill">MVP Prototype</div>
+            <div>ログイン</div>
+          </div>
+          <div class="breadcrumb">入口 / ログイン</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
+          <div class="muted small">入口ページ</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">ログイン</div>
+        <div class="panel-body">
+          <div class="grid-2">
+            <div class="proto-field">
+              <span class="proto-bubble">ログインID（プロトタイプ・認証なし）</span>
+              <label>ID</label>
+              <input type="text" placeholder="例：dealer001 / admin01" />
+            </div>
+            <div class="proto-field">
+              <span class="proto-bubble">パスワード（プロトタイプ・未検証）</span>
+              <label>パスワード</label>
+              <input type="password" placeholder="••••••••" />
+            </div>
+          </div>
+
+          <div class="btnbar">
+            <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=元請け">管理者として進む</a>
+            <a class="btn primary" href="./user/user-cases.html?role=user&org=Honda（例）">利用者として進む</a>
+          </div>
+
+          <p class="muted small" style="margin-top:12px;">
+            ※このHTMLはプロトタイプです。認証は実装していません。
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

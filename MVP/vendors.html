@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MVP Prototype - 取引先</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./mvp.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <div class="layout">
+        <aside class="sidebar">
+          <div class="sidebar-card">
+            <div class="sidebar-header">
+              <div class="sidebar-title" id="rolePill">Role</div>
+              <p class="sidebar-subtitle">組織：<span id="orgLabel">Honda（例）</span></p>
+            </div>
+            <nav class="nav">
+              <div class="nav-group">
+                <div class="nav-group-title">業務</div>
+                <a class="nav-item" id="navCaseListLink" href="#">案件一覧</a>
+                <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
+                <a class="nav-item role-user-only" id="navNewCaseLink" href="#">新規依頼</a>
+              </div>
+              <div class="nav-group">
+                <div class="nav-group-title">連絡</div>
+                <a class="nav-item" id="navInboxLink" href="#">インボックス</a>
+              </div>
+            </nav>
+          </div>
+        </aside>
+
+        <main class="main">
+          <div class="topnav">
+            <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
+              <div>取引先</div>
+              <div class="breadcrumb">業務 / 取引先</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
+              <div class="muted small">案件のアクセシビリティ向上（プロトタイプ）</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">取引先ごとの案件（サンプル）</div>
+            <div class="panel-body">
+              <div class="role-admin-only">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width:240px;">取引先名</th>
+                      <th>案件数（目安）</th>
+                      <th style="width:180px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Honda</td>
+                      <td>2</td>
+                      <td>
+                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=Honda（例）">案件を見る</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>損保A</td>
+                      <td>1</td>
+                      <td>
+                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=損保A（例）">案件を見る</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="role-user-only">
+                <div class="muted small">あなたの取引先（組織）</div>
+                <div style="margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                  <span class="status-badge"><span class="dot"></span><span id="userOrgName">Honda（例）</span></span>
+                  <a class="btn primary" id="goUserCasesBtn" href="#">案件を見る</a>
+                </div>
+                <p class="muted small" style="margin-top:12px;">
+                  MVPでは、取引先ページは「どの案件を見ているか」を分かりやすくする入口として機能します。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">画面の意図（クライアント説明用）</div>
+            <div class="panel-body">
+              <p class="muted small" style="margin:0;">
+                取引先（ディーラー/法人）単位で案件を整理することで、探す時間を減らし、誤案内・漏れを防ぎます。
+                後で実データに置き換える前提で、UI導線を早めに固めます。
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // User-only button setup (prototype).
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const role = params.get("role") || "user";
+        const org = params.get("org") || "Honda（例）";
+        const orgName = document.getElementById("userOrgName");
+        if (orgName) orgName.textContent = org;
+
+        const goBtn = document.getElementById("goUserCasesBtn");
+        if (goBtn && role === "user") {
+          goBtn.href = "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+        }
+      })();
+    </script>
+  </body>
+</html>
+
