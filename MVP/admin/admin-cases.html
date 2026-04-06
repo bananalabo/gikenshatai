@@ -6,6 +6,7 @@
     <title>案件一覧（管理者）— 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
+    <script src="../mvp-demo-interactions.js"></script>
   </head>
   <body
     data-walkthrough-key="admin-cases"
@@ -21,7 +22,7 @@
       </button>
       <span class="mobile-header__title">案件一覧</span>
       <div class="mobile-header__action">
-        <span class="pill" style="font-size:10px;">Admin</span>
+        <span class="pill" style="font-size:10px;">管理者</span>
       </div>
     </header>
 
@@ -32,14 +33,14 @@
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
-              <div class="sidebar-title">Admin</div>
+              <div class="sidebar-title">管理者</div>
               <p class="sidebar-subtitle">組織：<span id="orgLabel">元請け</span></p>
             </div>
             <nav class="nav">
               <div class="nav-group">
                 <div class="nav-group-title">業務</div>
                 <a class="nav-item active" id="navCaseListLink" href="#">案件一覧</a>
-                <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
+                <a class="nav-item role-admin-only" id="navVendorsLink" href="#">取引先</a>
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
@@ -72,18 +73,18 @@
             <div class="panel-body">
               <div class="grid-2">
                 <div class="proto-field">
-                  <label>案件ID</label>
-                  <input type="text" placeholder="例：000012" />
+                  <label for="adminCaseIdFilter">案件ID</label>
+                  <input id="adminCaseIdFilter" type="text" placeholder="例：000012" />
                 </div>
                 <div class="proto-field">
-                  <label>関連先名</label>
-                  <input type="text" placeholder="例：Honda" />
+                  <label for="adminVendorFilter">関連先名</label>
+                  <input id="adminVendorFilter" type="text" placeholder="例：Honda" />
                 </div>
               </div>
               <div style="margin-top:12px;">
                 <div class="proto-field">
-                  <label>ステータス</label>
-                  <select>
+                  <label for="adminStatusFilter">ステータス</label>
+                  <select id="adminStatusFilter">
                     <option>すべて</option>
                     <option>受付</option>
                     <option>確認中</option>
@@ -95,8 +96,8 @@
                 </div>
               </div>
               <div class="btnbar">
-                <button class="btn primary" type="button" onclick="window.mvpNotify && window.mvpNotify('検索条件を適用しました', 'info')">検索</button>
-                <button class="btn" type="button" onclick="window.location.href = window.buildMvpHref ? window.buildMvpHref('./admin-cases.html', { role: 'admin', org: '元請け' }) : './admin-cases.html?role=admin&org=元請け'">リセット</button>
+                <button class="btn primary" type="button" id="adminCaseSearchBtn">検索</button>
+                <button class="btn" type="button" id="adminCaseResetBtn">リセット</button>
               </div>
             </div>
           </div>
@@ -118,62 +119,62 @@
                       <th style="min-width:110px;"></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr data-org="元請け">
+                  <tbody id="adminCasesRows">
+                    <tr data-org="元請け" data-case-id="000012" data-vendor="Honda" data-status="見積済">
                       <td>000012</td>
                       <td>Honda</td>
                       <td><span class="status-badge status-quoted"><span class="dot"></span>見積済</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000012&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000013" data-vendor="損保A" data-status="作業中">
                       <td>000013</td>
                       <td>損保A</td>
                       <td><span class="status-badge status-working"><span class="dot" style="background:var(--accent2);"></span>作業中</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000013&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000014" data-vendor="物流B" data-status="受付">
                       <td>000014</td>
                       <td>物流B</td>
                       <td><span class="status-badge status-received"><span class="dot"></span>受付</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000014&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000015" data-vendor="電装C" data-status="確認中">
                       <td>000015</td>
                       <td>電装C</td>
                       <td><span class="status-badge status-checking"><span class="dot"></span>確認中</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000015&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000016" data-vendor="工務店D" data-status="納品済">
                       <td>000016</td>
                       <td>工務店D</td>
                       <td><span class="status-badge status-delivered"><span class="dot"></span>納品済</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000016&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000017" data-vendor="保険E" data-status="作業中">
                       <td>000017</td>
                       <td>保険E</td>
                       <td><span class="status-badge status-working"><span class="dot" style="background:var(--accent2);"></span>作業中</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000017&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000018" data-vendor="ディーラーF" data-status="見積済">
                       <td>000018</td>
                       <td>ディーラーF</td>
                       <td><span class="status-badge status-quoted"><span class="dot"></span>見積済</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000018&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000019" data-vendor="メーカーG" data-status="受付">
                       <td>000019</td>
                       <td>メーカーG</td>
                       <td><span class="status-badge status-received"><span class="dot"></span>受付</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000019&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000020" data-vendor="商社H" data-status="作業中">
                       <td>000020</td>
                       <td>商社H</td>
                       <td><span class="status-badge status-working"><span class="dot" style="background:var(--accent2);"></span>作業中</span></td>
                       <td><a class="btn" href="../case-detail.html?role=admin&caseId=000020&org=元請け">詳細</a></td>
                     </tr>
-                    <tr data-org="元請け">
+                    <tr data-org="元請け" data-case-id="000021" data-vendor="整備I" data-status="完了">
                       <td>000021</td>
                       <td>整備I</td>
                       <td><span class="status-badge status-complete"><span class="dot" style="background:var(--muted);"></span>完了</span></td>
@@ -208,7 +209,7 @@
         </span>
         <span>受信箱</span>
       </a>
-      <a class="bottom-nav__item" id="bnVendors" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnVendors" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>取引先</span>
       </a>

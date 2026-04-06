@@ -6,12 +6,13 @@
     <title>受信箱 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
+    <script src="./mvp-demo-interactions.js"></script>
   </head>
   <body
     data-walkthrough-key="inbox"
-    data-walkthrough-target='a[href*="inbox-thread.html"]'
+    data-walkthrough-target='a.inbox-thread-card'
     data-walkthrough-title="メッセージを開く"
-    data-walkthrough-text="光っている「開く」をタップして、案件のやり取りを確認します。"
+    data-walkthrough-text="カードをタップして、案件のやり取りを確認します。"
   >
 
     <!-- MOBILE HEADER -->
@@ -30,15 +31,15 @@
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
-              <div class="sidebar-title" id="rolePill">Role</div>
+              <div class="sidebar-title" id="rolePill">利用者</div>
               <p class="sidebar-subtitle">組織：<span id="orgLabel">Honda（例）</span></p>
             </div>
             <nav class="nav">
               <div class="nav-group">
                 <div class="nav-group-title">業務</div>
                 <a class="nav-item" id="navCaseListLink" href="#">案件一覧</a>
-                <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
-                <a class="nav-item role-user-only" id="navNewCaseLink" href="#">新規依頼</a>
+                <a class="nav-item role-admin-only" id="navVendorsLink" href="#">取引先</a>
+                <a class="nav-item role-admin-only" id="navNewCaseLink" href="#">新規依頼</a>
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
@@ -67,62 +68,97 @@
             </div>
           </div>
 
-          <!-- Filter pills -->
-          <div class="panel">
-            <div class="panel-body">
-              <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:10px;">
-                <button class="btn btn--full" type="button" onclick="window.mvpNotify && window.mvpNotify('未読のみを表示しました', 'info')">未読のみ</button>
-                <button class="btn btn--full" type="button" onclick="window.mvpNotify && window.mvpNotify('すべて表示しました', 'info')">すべて</button>
-              </div>
+          <!-- Filter (same pattern as case list) -->
+          <div class="uc-filter inbox-flow-filter">
+            <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:10px;">
+              <button class="btn btn--full inbox-filter-btn" type="button" id="inboxFilterUnread">未読のみ</button>
+              <button class="btn btn--full inbox-filter-btn is-active" type="button" id="inboxFilterAll">すべて</button>
             </div>
           </div>
 
-          <!-- Message list -->
-          <div class="panel">
-            <div class="panel-header">メッセージ一覧（サンプル）</div>
-            <div class="panel-body" style="padding:0;">
-              <div class="table-wrap table-wrap--inbox">
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="width:100px;">ステータス</th>
-                      <th>件名</th>
-                      <th style="width:100px;">案件ID</th>
-                      <th style="width:120px;"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><span class="badge" style="background:rgba(26,86,219,0.1); border-color:rgba(26,86,219,0.25); color:var(--primary);">未読</span></td>
-                      <td style="font-weight:600;">見積PDFの差し替えについて</td>
-                      <td>000012</td>
-                      <td>
-                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda&caseId=000012">開く</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><span class="badge" style="background:rgba(26,86,219,0.1); border-color:rgba(26,86,219,0.25); color:var(--primary);">未読</span></td>
-                      <td style="font-weight:600;">途中写真の追加依頼</td>
-                      <td>000102</td>
-                      <td>
-                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t002&org=Honda&caseId=000102">開く</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><span class="muted small">既読</span></td>
-                      <td>完了報告の確認</td>
-                      <td>000013</td>
-                      <td>
-                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t003&org=Honda&caseId=000013">開く</a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+          <!-- Message cards -->
+          <div class="uc-stack inbox-flow">
+            <section class="uc-hero inbox-hero" aria-label="受信箱の概要">
+              <div class="uc-hero__label">
+                <span class="uc-hero__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </span>
+                <span class="uc-hero__eyebrow">連絡</span>
               </div>
-              <p class="demo-note" style="margin:12px 16px 14px;">
-                Demo mode: メッセージはサンプルです
-              </p>
+              <h2 class="uc-hero__title">メッセージ一覧</h2>
+              <p class="uc-hero__lead">案件ごとのやり取りをカードで確認します。カード内の「最新」は、あなたが送信した直近の内容、またはスレッドの最新文面です。</p>
+            </section>
+
+            <div class="uc-case-grid" id="inboxThreadList">
+              <a
+                class="uc-case-card inbox-thread-card"
+                data-thread-id="t001"
+                data-unread="1"
+                href="./inbox-thread.html?role=user&threadId=t001&org=Honda&caseId=000012"
+              >
+                <div class="uc-case-card__body">
+                  <div class="inbox-thread-card__top">
+                    <span class="inbox-thread-card__status">
+                      <span class="inbox-thread-card__status-dot inbox-thread-card__status-dot--unread" aria-hidden="true"></span>
+                      <span class="inbox-thread-card__status-text">未読</span>
+                    </span>
+                    <span class="inbox-thread-card__case">案件 #000012</span>
+                  </div>
+                  <div class="uc-case-card__title inbox-thread-card__subject">見積PDFの差し替えについて</div>
+                  <div class="inbox-thread-card__last">
+                    <span class="inbox-thread-card__last-label">最新のメッセージ</span>
+                    <p class="inbox-thread-card__last-text">見積PDFを差し替えました。ご確認お願いします。</p>
+                  </div>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a
+                class="uc-case-card inbox-thread-card"
+                data-thread-id="t002"
+                data-unread="1"
+                href="./inbox-thread.html?role=user&threadId=t002&org=Honda&caseId=000102"
+              >
+                <div class="uc-case-card__body">
+                  <div class="inbox-thread-card__top">
+                    <span class="inbox-thread-card__status">
+                      <span class="inbox-thread-card__status-dot inbox-thread-card__status-dot--unread" aria-hidden="true"></span>
+                      <span class="inbox-thread-card__status-text">未読</span>
+                    </span>
+                    <span class="inbox-thread-card__case">案件 #000102</span>
+                  </div>
+                  <div class="uc-case-card__title inbox-thread-card__subject">途中写真の追加依頼</div>
+                  <div class="inbox-thread-card__last">
+                    <span class="inbox-thread-card__last-label">最新のメッセージ</span>
+                    <p class="inbox-thread-card__last-text">工程の途中写真を共有いただけますか。</p>
+                  </div>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a
+                class="uc-case-card inbox-thread-card"
+                data-thread-id="t003"
+                data-unread="0"
+                href="./inbox-thread.html?role=user&threadId=t003&org=Honda&caseId=000013"
+              >
+                <div class="uc-case-card__body">
+                  <div class="inbox-thread-card__top">
+                    <span class="inbox-thread-card__status">
+                      <span class="inbox-thread-card__status-dot inbox-thread-card__status-dot--read" aria-hidden="true"></span>
+                      <span class="inbox-thread-card__status-text">既読</span>
+                    </span>
+                    <span class="inbox-thread-card__case">案件 #000013</span>
+                  </div>
+                  <div class="uc-case-card__title inbox-thread-card__subject">完了報告の確認</div>
+                  <div class="inbox-thread-card__last">
+                    <span class="inbox-thread-card__last-label">最新のメッセージ</span>
+                    <p class="inbox-thread-card__last-text">完了報告の内容をご確認ください。</p>
+                  </div>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
             </div>
+
+            <p class="demo-note inbox-flow__demo">Demo: 未読・送信内容はこのタブ内で保持されます（sessionStorage）</p>
           </div>
 
         </main>
@@ -135,7 +171,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
         <span>案件一覧</span>
       </a>
-      <a class="bottom-nav__item role-user-only" id="bnNewCase" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnNewCase" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
         <span>新規依頼</span>
       </a>
@@ -146,25 +182,11 @@
         </span>
         <span>受信箱</span>
       </a>
-      <a class="bottom-nav__item" id="bnVendors" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnVendors" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>取引先</span>
       </a>
     </nav>
 
-    <script>
-      (function () {
-        const params = new URLSearchParams(window.location.search);
-        const role = params.get("role") || "user";
-        const org  = params.get("org")  || "Honda";
-
-        document.querySelectorAll("a[href*='inbox-thread.html']").forEach(a => {
-          const url = new URL(a.href, window.location.href);
-          url.searchParams.set("role", role);
-          url.searchParams.set("org",  org);
-          a.href = url.toString();
-        });
-      })();
-    </script>
   </body>
 </html>

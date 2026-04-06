@@ -6,6 +6,7 @@
     <title>案件一覧 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
+    <script src="../mvp-demo-interactions.js"></script>
   </head>
   <body
     data-walkthrough-key="user-cases"
@@ -36,15 +37,15 @@
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
-              <div class="sidebar-title">User</div>
+              <div class="sidebar-title">利用者</div>
               <p class="sidebar-subtitle">組織：<span id="orgLabel">Honda（例）</span></p>
             </div>
             <nav class="nav">
               <div class="nav-group">
                 <div class="nav-group-title">業務</div>
                 <a class="nav-item active" id="navCaseListLink" href="#">案件一覧</a>
-                <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
-                <a class="nav-item" id="navNewCaseLink" href="#">新規依頼</a>
+                <a class="nav-item role-admin-only" id="navVendorsLink" href="#">取引先</a>
+                <a class="nav-item role-admin-only" id="navNewCaseLink" href="#">新規依頼</a>
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
@@ -74,18 +75,29 @@
             </div>
           </div>
 
-          <!-- Search panel -->
-          <div class="panel">
-            <div class="panel-header">検索</div>
-            <div class="panel-body">
-              <div class="grid-2">
-                <div class="proto-field">
-                  <label>案件ID</label>
-                  <input type="text" placeholder="例：000101" />
+          <!-- Simplified card UI (dark, onboarding-style) -->
+          <div class="uc-stack">
+            <section class="uc-hero" aria-label="案件一覧の概要">
+              <div class="uc-hero__label">
+                <span class="uc-hero__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+                <span class="uc-hero__eyebrow">利用者</span>
+              </div>
+              <h2 class="uc-hero__title">案件一覧</h2>
+              <p class="uc-hero__lead">自社に紐づく案件をカードで確認。タップで詳細・書類・進捗へ進みます。</p>
+              <p class="uc-hero__meta" id="orgFilterLabel">フィルタ：なし</p>
+            </section>
+
+            <section class="uc-filter" aria-label="検索">
+              <div class="uc-filter__fields">
+                <div class="uc-field">
+                  <label class="uc-field__label" for="ucCaseIdFilter">案件ID</label>
+                  <input id="ucCaseIdFilter" class="uc-field__input" type="text" placeholder="例：000101" />
                 </div>
-                <div class="proto-field">
-                  <label>ステータス</label>
-                  <select>
+                <div class="uc-field">
+                  <label class="uc-field__label" for="ucStatusFilter">ステータス</label>
+                  <select id="ucStatusFilter" class="uc-field__input">
                     <option>すべて</option>
                     <option>受付</option>
                     <option>確認中</option>
@@ -96,104 +108,133 @@
                   </select>
                 </div>
               </div>
-              <div class="btnbar">
-                <button class="btn primary" type="button" onclick="window.mvpNotify && window.mvpNotify('検索条件を適用しました', 'info')">検索</button>
-                <button class="btn" type="button" onclick="window.location.href = window.buildMvpHref ? window.buildMvpHref('./user-cases.html', { role: 'user', org: 'Honda' }) : './user-cases.html?role=user&org=Honda'">リセット</button>
+              <div class="uc-filter__actions">
+                <button class="btn primary uc-btn-primary" type="button" id="ucSearchBtn">検索</button>
+                <button class="btn uc-btn-ghost" type="button" id="ucFilterReset">リセット</button>
               </div>
-            </div>
-          </div>
+            </section>
 
-          <!-- Cases table -->
-          <div class="panel">
-            <div class="panel-header">案件一覧（自社のみ・サンプル）</div>
-            <div class="panel-body" style="padding:0;">
-              <p class="muted small" id="orgFilterLabel" style="padding:12px 16px 0; margin:0;">
-                フィルタ：なし
-              </p>
-              <div class="table-wrap" style="margin-top:8px;">
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="min-width:130px;">案件ID</th>
-                      <th>関連先/顧客</th>
-                      <th style="min-width:130px;">ステータス</th>
-                      <th style="min-width:110px;"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr data-org="Honda">
-                      <td>000101</td>
-                      <td>顧客A</td>
-                      <td><span class="status-badge status-received"><span class="dot"></span>受付</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000101&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000102</td>
-                      <td>顧客B</td>
-                      <td><span class="status-badge status-working"><span class="dot" style="background:var(--accent2);"></span>作業中</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000102&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000103</td>
-                      <td>顧客C</td>
-                      <td><span class="status-badge status-checking"><span class="dot"></span>確認中</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000103&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000104</td>
-                      <td>顧客D</td>
-                      <td><span class="status-badge status-quoted"><span class="dot"></span>見積済</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000104&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000105</td>
-                      <td>顧客E</td>
-                      <td><span class="status-badge status-delivered"><span class="dot"></span>納品済</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000105&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000106</td>
-                      <td>顧客F</td>
-                      <td><span class="status-badge status-working"><span class="dot" style="background:var(--accent2);"></span>作業中</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000106&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000107</td>
-                      <td>顧客G</td>
-                      <td><span class="status-badge status-received"><span class="dot"></span>受付</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000107&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000108</td>
-                      <td>顧客H</td>
-                      <td><span class="status-badge status-quoted"><span class="dot"></span>見積済</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000108&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000109</td>
-                      <td>顧客I</td>
-                      <td><span class="status-badge status-checking"><span class="dot"></span>確認中</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000109&org=Honda">詳細</a></td>
-                    </tr>
-                    <tr data-org="Honda">
-                      <td>000110</td>
-                      <td>顧客J</td>
-                      <td><span class="status-badge status-complete"><span class="dot" style="background:var(--muted);"></span>完了</span></td>
-                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000110&org=Honda">詳細</a></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div id="emptyCasesState" class="empty-state muted small" style="display:none; margin: 10px 16px 0;">
-                条件に合う案件はありません。新規依頼を作成するか、フィルタをリセットしてください。
-              </div>
-              <p class="demo-note" style="margin:12px 16px 14px;">
-                Demo mode: サンプルデータを表示中
-              </p>
-              <div style="padding:0 16px 14px;">
-                <button class="btn" type="button" id="startNewCaseWalkthroughBtn">新規依頼のガイドを見る</button>
-              </div>
+            <div class="uc-case-grid" id="userCasesCardList">
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000101&org=Honda" data-org="Honda" data-case-id="000101" data-status="受付">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--received"></span>
+                    <span>受付</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客A</div>
+                  <p class="uc-case-card__desc">案件 #000101 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000102&org=Honda" data-org="Honda" data-case-id="000102" data-status="作業中">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--working"></span>
+                    <span>作業中</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客B</div>
+                  <p class="uc-case-card__desc">案件 #000102 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000103&org=Honda" data-org="Honda" data-case-id="000103" data-status="確認中">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--checking"></span>
+                    <span>確認中</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客C</div>
+                  <p class="uc-case-card__desc">案件 #000103 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000104&org=Honda" data-org="Honda" data-case-id="000104" data-status="見積済">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--quoted"></span>
+                    <span>見積済</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客D</div>
+                  <p class="uc-case-card__desc">案件 #000104 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000105&org=Honda" data-org="Honda" data-case-id="000105" data-status="納品済">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--delivered"></span>
+                    <span>納品済</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客E</div>
+                  <p class="uc-case-card__desc">案件 #000105 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000106&org=Honda" data-org="Honda" data-case-id="000106" data-status="作業中">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--working"></span>
+                    <span>作業中</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客F</div>
+                  <p class="uc-case-card__desc">案件 #000106 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000107&org=Honda" data-org="Honda" data-case-id="000107" data-status="受付">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--received"></span>
+                    <span>受付</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客G</div>
+                  <p class="uc-case-card__desc">案件 #000107 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000108&org=Honda" data-org="Honda" data-case-id="000108" data-status="見積済">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--quoted"></span>
+                    <span>見積済</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客H</div>
+                  <p class="uc-case-card__desc">案件 #000108 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000109&org=Honda" data-org="Honda" data-case-id="000109" data-status="確認中">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--checking"></span>
+                    <span>確認中</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客I</div>
+                  <p class="uc-case-card__desc">案件 #000109 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+              <a class="uc-case-card" href="../case-detail.html?role=user&caseId=000110&org=Honda" data-org="Honda" data-case-id="000110" data-status="完了">
+                <div class="uc-case-card__body">
+                  <div class="uc-case-card__label">
+                    <span class="uc-case-card__dot uc-case-card__dot--complete"></span>
+                    <span>完了</span>
+                  </div>
+                  <div class="uc-case-card__title">顧客J</div>
+                  <p class="uc-case-card__desc">案件 #000110 · 見積・納品書・写真は詳細で確認できます。</p>
+                </div>
+                <svg class="uc-case-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
             </div>
+
+            <div id="emptyCasesState" class="uc-empty" style="display:none;" role="status">
+              条件に合う案件はありません。新規依頼を作成するか、フィルタをリセットしてください。
+            </div>
+
+            <footer class="uc-footer">
+              <p class="uc-footer__note demo-note">Demo mode: サンプルデータを表示中</p>
+              <button class="btn uc-btn-ghost uc-footer__btn" type="button" id="startNewCaseWalkthroughBtn">新規依頼のガイドを見る</button>
+            </footer>
           </div>
 
         </main>
@@ -206,7 +247,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
         <span>案件一覧</span>
       </a>
-      <a class="bottom-nav__item" id="bnNewCase" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnNewCase" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
         <span>新規依頼</span>
       </a>
@@ -217,7 +258,7 @@
         </span>
         <span>受信箱</span>
       </a>
-      <a class="bottom-nav__item" id="bnVendors" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnVendors" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>取引先</span>
       </a>
@@ -228,16 +269,16 @@
         const orgRaw = new URLSearchParams(window.location.search).get("org") || "Honda";
         const org = window.normalizeOrgName ? window.normalizeOrgName(orgRaw) : orgRaw;
         const label = document.getElementById("orgFilterLabel");
-        const rows  = document.querySelectorAll("tr[data-org]");
+        const cards = document.querySelectorAll(".uc-case-card[data-org]");
         const empty = document.getElementById("emptyCasesState");
         if (label) label.textContent = org ? "フィルタ：" + org : "フィルタ：なし";
         if (org) {
           let visible = 0;
-          rows.forEach(tr => {
-            const rowOrgRaw = tr.getAttribute("data-org") || "";
+          cards.forEach(card => {
+            const rowOrgRaw = card.getAttribute("data-org") || "";
             const rowOrg = window.normalizeOrgName ? window.normalizeOrgName(rowOrgRaw) : rowOrgRaw;
             const show = rowOrg === org;
-            tr.style.display = show ? "" : "none";
+            card.style.display = show ? "" : "none";
             if (show) visible += 1;
           });
           if (empty) empty.style.display = visible ? "none" : "";

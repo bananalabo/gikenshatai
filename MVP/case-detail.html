@@ -33,15 +33,15 @@
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
-              <div class="sidebar-title" id="rolePill">Role</div>
+              <div class="sidebar-title" id="rolePill">利用者</div>
               <p class="sidebar-subtitle">組織：<span id="orgLabel">Honda（例）</span></p>
             </div>
             <nav class="nav">
               <div class="nav-group">
                 <div class="nav-group-title">業務</div>
                 <a class="nav-item" id="navCaseListLink" href="#">案件一覧</a>
-                <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
-                <a class="nav-item role-user-only" id="navNewCaseLink" href="#">新規依頼</a>
+                <a class="nav-item role-admin-only" id="navVendorsLink" href="#">取引先</a>
+                <a class="nav-item role-admin-only" id="navNewCaseLink" href="#">新規依頼</a>
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
@@ -93,6 +93,15 @@
                 <span class="status-badge status-checking" title="デモ用の見せ方です。実データの進捗とは連動しません。">例示（デモ）2 / 4</span>
               </div>
               <p class="muted small" style="margin-top:8px;">実装時はアップロード状況に応じて自動計算します。</p>
+              <div class="divider"></div>
+              <div class="section-title" style="margin-bottom:8px;">担当者への連絡</div>
+              <p class="muted small" style="margin:0;">
+                この案件について質問や連絡を送るときは、メッセージ画面で新規スレッドを開始します（本番では担当窓口へ通知されます）。
+              </p>
+              <div class="btnbar" style="margin-top:12px;">
+                <a class="btn primary" id="caseDetailOpenMessageBtn" href="./inbox-thread.html">この案件でメッセージを送る</a>
+              </div>
+              <p class="demo-note" style="margin-top:12px;">Demo: デモではメッセージ画面のサンプル／新規開始の見た目のみです</p>
             </div>
           </div>
 
@@ -281,7 +290,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
         <span>案件一覧</span>
       </a>
-      <a class="bottom-nav__item role-user-only" id="bnNewCase" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnNewCase" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
         <span>新規依頼</span>
       </a>
@@ -292,7 +301,7 @@
         </span>
         <span>受信箱</span>
       </a>
-      <a class="bottom-nav__item" id="bnVendors" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnVendors" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>取引先</span>
       </a>
@@ -341,6 +350,20 @@
         }
         if (navNewCaseLink) {
           navNewCaseLink.href = window.buildMvpHref ? window.buildMvpHref("./user/user-new-case.html", { role: "user", org: org }) : "./user/user-new-case.html?role=user&org=" + encodeURIComponent(org);
+        }
+
+        const openMessageBtn = document.getElementById("caseDetailOpenMessageBtn");
+        if (openMessageBtn) {
+          const threadParams = { role: role, org: org, caseId: caseId, compose: "1" };
+          openMessageBtn.href = window.buildMvpHref
+            ? window.buildMvpHref("./inbox-thread.html", threadParams)
+            : "./inbox-thread.html?role=" +
+              encodeURIComponent(role) +
+              "&org=" +
+              encodeURIComponent(org) +
+              "&caseId=" +
+              encodeURIComponent(caseId) +
+              "&compose=1";
         }
 
         // PDF attachment labels

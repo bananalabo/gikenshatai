@@ -58,7 +58,7 @@
         <div class="panel-body">
           <div class="grid-2">
             <div class="panel" style="margin-top:0; box-shadow:none;">
-              <div class="panel-header">Admin（元請け）</div>
+              <div class="panel-header">管理者（元請け）</div>
               <div class="panel-body">
                 <p class="small muted" style="margin:0;">
                   案件の閲覧・ステータス更新・必要な証憑（PDF/写真）の確認
@@ -66,7 +66,7 @@
               </div>
             </div>
             <div class="panel" style="margin-top:0; box-shadow:none;">
-              <div class="panel-header">User（ディーラー/法人）</div>
+              <div class="panel-header">利用者（ディーラー/法人）</div>
               <div class="panel-body">
                 <p class="small muted" style="margin:0;">
                   自社案件の作成・見積/納品書のPDFアップロード・途中写真の追加
@@ -82,17 +82,17 @@
         <div class="panel-body">
           <div class="grid-2">
             <div>
-              <div class="section-title">Admin</div>
+              <div class="section-title">管理者</div>
               <p class="muted small" style="margin:0;">案件一覧 / 取引先 / 受信箱</p>
               <p class="muted small" style="margin:10px 0 0 0;">
-                案件詳細は1ページで共通。Adminだけ「ステータス更新」を表示。
+                案件詳細は1ページで共通。管理者だけ「ステータス更新」を表示。
               </p>
             </div>
             <div>
-              <div class="section-title">User</div>
+              <div class="section-title">利用者</div>
               <p class="muted small" style="margin:0;">案件一覧 / 新規依頼 / 受信箱 / 取引先</p>
               <p class="muted small" style="margin:10px 0 0 0;">
-                案件詳細は1ページで共通。Userだけ「PDFアップロード/写真追加」を表示。
+                案件詳細は1ページで共通。利用者だけ「PDFアップロード/写真追加」を表示。
               </p>
             </div>
           </div>
@@ -114,7 +114,7 @@
               <tbody>
                 <tr>
                   <td>入口（トップ）</td>
-                  <td class="small muted">Admin/Userのどちらで進むかを選ぶページ</td>
+                  <td class="small muted">管理者/利用者のどちらで進むかを選ぶページ</td>
                   <td><a class="btn" href="./index.html">開く</a></td>
                 </tr>
                 <tr>
@@ -129,36 +129,36 @@
                 </tr>
                 <tr>
                   <td>管理者ログイン</td>
-                  <td class="small muted">Admin専用ログインページ</td>
+                  <td class="small muted">管理者専用ログインページ</td>
                   <td><a class="btn" href="./login.html">開く</a></td>
                 </tr>
                 <tr>
                   <td>案件一覧</td>
                   <td class="small muted">案件ID・関連先・ステータスで一覧。クリックで案件詳細へ</td>
                   <td style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <a class="btn" href="./admin/admin-cases.html?role=admin&org=元請け">Admin</a>
-                    <a class="btn" href="./user/user-cases.html?role=user&org=Honda">User</a>
+                    <a class="btn" href="./admin/admin-cases.html?role=admin&org=元請け">管理者</a>
+                    <a class="btn" href="./user/user-cases.html?role=user&org=Honda">利用者</a>
                   </td>
                 </tr>
                 <tr>
                   <td>取引先</td>
                   <td class="small muted">取引先（ディーラー/法人）単位で案件を分けて探しやすくする</td>
                   <td style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <a class="btn" href="./vendors.html?role=admin&org=元請け">Admin</a>
-                    <a class="btn" href="./vendors.html?role=user&org=Honda">User</a>
+                    <a class="btn" href="./vendors.html?role=admin&org=元請け">管理者</a>
+                    <a class="btn" href="./vendors.html?role=user&org=Honda">利用者</a>
                   </td>
                 </tr>
                 <tr>
                   <td>新規依頼</td>
-                  <td class="small muted">Userが案件を作成（MVPでは必須項目のみ）</td>
+                  <td class="small muted">利用者が案件を作成（MVPでは必須項目のみ）</td>
                   <td><a class="btn" href="./user/user-new-case.html?role=user&org=Honda">開く</a></td>
                 </tr>
                 <tr>
                   <td>案件詳細（共通）</td>
                   <td class="small muted">同じ画面でroleに応じて「操作できる領域」が変わる</td>
                   <td style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <a class="btn" href="./case-detail.html?role=admin&caseId=000012&org=元請け">Admin</a>
-                    <a class="btn" href="./case-detail.html?role=user&caseId=000101&org=Honda">User</a>
+                    <a class="btn" href="./case-detail.html?role=admin&caseId=000012&org=元請け">管理者</a>
+                    <a class="btn" href="./case-detail.html?role=user&caseId=000101&org=Honda">利用者</a>
                   </td>
                 </tr>
                 <tr>
@@ -201,9 +201,9 @@
         <div class="panel-body">
           <ol style="margin:0; padding-left:18px;">
             <li class="muted small" style="margin-bottom:8px;">入口で「役割ごとに同じ案件を追跡できる」ことを説明</li>
-            <li class="muted small" style="margin-bottom:8px;">Userで新規依頼を作成し、案件詳細で写真/書類を追加</li>
-            <li class="muted small" style="margin-bottom:8px;">Adminで同案件を確認し、ステータスを更新</li>
-            <li class="muted small">Inboxで依頼・確認の往復を見せて、情報の一元化価値で締める</li>
+            <li class="muted small" style="margin-bottom:8px;">利用者で新規依頼を作成し、案件詳細で写真/書類を追加</li>
+            <li class="muted small" style="margin-bottom:8px;">管理者で同案件を確認し、ステータスを更新</li>
+            <li class="muted small">受信箱で依頼・確認の往復を見せて、情報の一元化価値で締める</li>
           </ol>
           <p class="demo-note" style="margin-top:12px;">Demo mode: サンプルデータで一連の業務フローを体験できます</p>
         </div>

@@ -6,13 +6,14 @@
     <title>メッセージ — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
+    <script src="./mvp-demo-interactions.js"></script>
   </head>
   <body
     class="page-inbox-thread"
     data-walkthrough-key="inbox-thread"
     data-walkthrough-target="#threadSendBtn"
     data-walkthrough-title="返信を送信する"
-    data-walkthrough-text="メッセージを入力し、画面下部に固定の入力エリアから「送信」をタップして返信します（PCでは右側のパネルに表示されます）。"
+    data-walkthrough-text="メッセージを入力し、画面下のバー右端の送信ボタン（紙飛行機アイコン）で返信します。PCでは右パネルの「送信」ボタンになります。"
   >
 
     <!-- MOBILE HEADER -->
@@ -21,7 +22,15 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
       <span class="mobile-header__title" id="mobileThreadTitle">メッセージ</span>
-      <div class="mobile-header__action"></div>
+      <div class="mobile-header__action">
+        <a
+          class="btn back"
+          id="threadBackToCaseMobile"
+          href="./case-detail.html"
+          hidden
+          style="font-size: 13px; padding: 6px 12px; white-space: nowrap"
+          >案件へ</a>
+      </div>
     </header>
 
     <div class="app">
@@ -31,15 +40,15 @@
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
-              <div class="sidebar-title" id="rolePill">Role</div>
+              <div class="sidebar-title" id="rolePill">利用者</div>
               <p class="sidebar-subtitle">組織：<span id="orgLabel">Honda（例）</span></p>
             </div>
             <nav class="nav">
               <div class="nav-group">
                 <div class="nav-group-title">業務</div>
                 <a class="nav-item" id="navCaseListLink" href="#">案件一覧</a>
-                <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
-                <a class="nav-item role-user-only" id="navNewCaseLink" href="#">新規依頼</a>
+                <a class="nav-item role-admin-only" id="navVendorsLink" href="#">取引先</a>
+                <a class="nav-item role-admin-only" id="navNewCaseLink" href="#">新規依頼</a>
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
@@ -55,25 +64,27 @@
           <div class="topnav">
             <div class="brand">
               <div class="brand-col">
-                <span>メッセージ</span>
-                <span class="breadcrumb">受信箱 / メッセージ</span>
+                <span id="threadTopnavTitle">メッセージ</span>
+                <span class="breadcrumb" id="threadTopnavCrumb">受信箱 / メッセージ</span>
               </div>
             </div>
             <div class="topnav-actions">
               <button class="btn back" type="button" onclick="history.back()">戻る</button>
+              <a class="btn back" id="backToCaseBtn" href="./case-detail.html" hidden>案件に戻る</a>
               <a class="btn" id="backToInboxBtn" href="./inbox.html">一覧へ戻る</a>
             </div>
           </div>
 
           <!-- Thread info -->
           <div class="panel thread-panel">
-            <div class="panel-header">スレッド（サンプル）</div>
+            <div class="panel-header" id="threadPanelHeader">スレッド（サンプル）</div>
             <div class="panel-body thread-panel__body">
               <div class="thread-layout">
                 <div class="thread-layout__messages">
                   <p class="muted small thread-layout__case-id">
                     案件ID：<strong id="caseIdLabel">000000</strong>
                   </p>
+                  <div id="threadMessageListWrap">
                   <div class="msg-list">
                     <div class="msg-bubble msg-bubble--in">
                       <div class="msg-meta">
@@ -96,28 +107,127 @@
                       </div>
                       <div class="msg-text">次のステータスは作業中に更新予定です（明日AM）。</div>
                     </div>
+                    <div class="msg-bubble msg-bubble--out">
+                      <div class="msg-meta">
+                        <span class="msg-sender">あなた</span>
+                        <time class="msg-time" datetime="2026-04-06T14:18">4/6 14:18</time>
+                      </div>
+                      <div class="msg-text">承知しました。差し替えPDFの版は表紙右下の日付で判断して問題ないでしょうか。</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-06T14:22">4/6 14:22</time>
+                      </div>
+                      <div class="msg-text">はい、2026/04/06版が最新です。旧版は破棄でお願いします。</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--out">
+                      <div class="msg-meta">
+                        <span class="msg-sender">あなた</span>
+                        <time class="msg-time" datetime="2026-04-06T15:01">4/6 15:01</time>
+                      </div>
+                      <div class="msg-text">部品の手配状況だけ教えてください。フロント周りは在庫ありますか？</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-06T15:47">4/6 15:47</time>
+                      </div>
+                      <div class="msg-text">
+                        フロントバンパー・グリルは当社在庫で確保済みです。フォグランプユニットのみメーカー取り寄せで、リードタイムは目安5〜7営業日です。全体としては来週水曜までに現物確認できる見込みです。遅延が出た場合はこちらから改めて連絡します。
+                      </div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--out">
+                      <div class="msg-meta">
+                        <span class="msg-sender">あなた</span>
+                        <time class="msg-time" datetime="2026-04-06T16:05">4/6 16:05</time>
+                      </div>
+                      <div class="msg-text">了解です。塗装の色味サンプルは前回お送りした番号で合わせて問題ないですか？</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-06T16:33">4/6 16:33</time>
+                      </div>
+                      <div class="msg-text">問題ありません。工場に共有済みです。</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-07T08:40">4/7 8:40</time>
+                      </div>
+                      <div class="msg-text">おはようございます。本日AM中に塗装ブースに入れる予定です。進み次第またご連絡します。</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--out">
+                      <div class="msg-meta">
+                        <span class="msg-sender">あなた</span>
+                        <time class="msg-time" datetime="2026-04-07T09:12">4/7 9:12</time>
+                      </div>
+                      <div class="msg-text">ありがとうございます。完了見込みが分かり次第、納期だけ共有いただけると助かります。</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-07T10:28">4/7 10:28</time>
+                      </div>
+                      <div class="msg-text">
+                        現状、4/10（木）出荷・4/11（金）午前中お届け想定です。最終検査で手直しが入った場合は1日ずれる可能性がありますが、その際はすぐにご連絡します。
+                      </div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--out">
+                      <div class="msg-meta">
+                        <span class="msg-sender">あなた</span>
+                        <time class="msg-time" datetime="2026-04-07T10:35">4/7 10:35</time>
+                      </div>
+                      <div class="msg-text">かしこまりました。請求タイミングは納品後で合っていますか？</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-07T10:41">4/7 10:41</time>
+                      </div>
+                      <div class="msg-text">はい、納品書・請求書は納品後にまとめて送付します。ほかに気になる点があればいつでもどうぞ。</div>
+                    </div>
+                  </div>
+                  </div>
+                  <div id="threadEmptyCompose" class="thread-empty-compose" hidden>
+                    <div class="empty-state" style="margin:0; text-align:left;">
+                      <p class="muted small" style="margin:0; line-height:1.5;">
+                        <strong>案件詳細から新規連絡</strong>の見本です。担当者への<strong>最初のメッセージ</strong>を下の入力欄から送信する想定です。
+                      </p>
+                      <p class="muted small" style="margin:10px 0 0;">
+                        本番ではここでスレッドが作成され、受信箱に表示されます。
+                      </p>
+                      <p class="demo-note" style="margin-top:12px;">Demo: 送信しても履歴には追加されません</p>
+                    </div>
                   </div>
                 </div>
 
                 <div class="thread-layout__composer" id="threadComposer">
-                  <div class="proto-field thread-composer__field">
-                    <label for="threadReplyInput">返信</label>
-                    <textarea id="threadReplyInput" placeholder="メッセージを入力" rows="3"></textarea>
-                  </div>
-                  <div class="thread-composer__actions">
+                  <label for="threadReplyInput" class="thread-composer__label">返信</label>
+                  <div class="thread-composer__messenger">
+                    <div class="thread-composer__bubble">
+                      <textarea
+                        id="threadReplyInput"
+                        placeholder="メッセージを入力…"
+                        rows="1"
+                        autocomplete="off"
+                      ></textarea>
+                    </div>
                     <button
-                      class="btn primary thread-composer__send"
-                      id="threadSendBtn"
                       type="button"
-                      onclick="window.mvpNotify && window.mvpNotify('返信を送信しました', 'success')"
+                      class="thread-composer__send"
+                      id="threadSendBtn"
+                      aria-label="送信"
                     >
-                      送信
+                      <span class="thread-composer__send-text">送信</span>
+                      <svg class="thread-composer__send-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
                     </button>
                   </div>
                   <p class="muted small thread-composer__hint">
-                    スマホではこの入力エリアが画面下に固定されます。PCでは右カラムに表示されます。
+                    PCでは右カラムに表示されます。スマホは下のバーから返信します。
                   </p>
-                  <p class="demo-note thread-composer__demo">Demo mode: 送信内容は保存されません</p>
+                  <p class="demo-note thread-composer__demo">Demo: このタブ内で送信内容を保持し、一覧に反映します。</p>
                 </div>
               </div>
             </div>
@@ -133,7 +243,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
         <span>案件一覧</span>
       </a>
-      <a class="bottom-nav__item role-user-only" id="bnNewCase" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnNewCase" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
         <span>新規依頼</span>
       </a>
@@ -143,7 +253,7 @@
         </span>
         <span>受信箱</span>
       </a>
-      <a class="bottom-nav__item" id="bnVendors" href="#">
+      <a class="bottom-nav__item role-admin-only" id="bnVendors" href="#">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>取引先</span>
       </a>
@@ -155,16 +265,72 @@
         const role     = params.get("role")     || "user";
         const org      = params.get("org")      || "Honda";
         const caseId   = params.get("caseId")   || "000000";
+        const compose  = params.get("compose") === "1";
 
         const caseLabel = document.getElementById("caseIdLabel");
         if (caseLabel) caseLabel.textContent = caseId;
 
         const mobileTitle = document.getElementById("mobileThreadTitle");
-        if (mobileTitle) mobileTitle.textContent = "案件 #" + caseId;
+        if (mobileTitle) mobileTitle.textContent = compose ? "新規 · 案件 #" + caseId : "案件 #" + caseId;
 
         const backToInboxBtn = document.getElementById("backToInboxBtn");
         if (backToInboxBtn) {
-          backToInboxBtn.href = "./inbox.html?role=" + encodeURIComponent(role) + "&org=" + encodeURIComponent(org);
+          backToInboxBtn.href = window.buildMvpHref
+            ? window.buildMvpHref("./inbox.html", { role: role, org: org })
+            : "./inbox.html?role=" + encodeURIComponent(role) + "&org=" + encodeURIComponent(org);
+        }
+
+        if (compose) {
+          const caseDetailHref = window.buildMvpHref
+            ? window.buildMvpHref("./case-detail.html", { role: role, org: org, caseId: caseId })
+            : "./case-detail.html?role=" +
+              encodeURIComponent(role) +
+              "&org=" +
+              encodeURIComponent(org) +
+              "&caseId=" +
+              encodeURIComponent(caseId);
+
+          const backCase = document.getElementById("backToCaseBtn");
+          if (backCase) {
+            backCase.href = caseDetailHref;
+            backCase.removeAttribute("hidden");
+            backCase.setAttribute("data-nav-dir", "back");
+          }
+          const backCaseMob = document.getElementById("threadBackToCaseMobile");
+          if (backCaseMob) {
+            backCaseMob.href = caseDetailHref;
+            backCaseMob.removeAttribute("hidden");
+            backCaseMob.setAttribute("data-nav-dir", "back");
+          }
+
+          const listWrap = document.getElementById("threadMessageListWrap");
+          const emptyBox = document.getElementById("threadEmptyCompose");
+          if (listWrap) listWrap.style.display = "none";
+          if (emptyBox) emptyBox.removeAttribute("hidden");
+
+          const ph = document.getElementById("threadPanelHeader");
+          if (ph) ph.textContent = "新規メッセージ（案件 #" + caseId + "）";
+
+          const tt = document.getElementById("threadTopnavTitle");
+          if (tt) tt.textContent = "新規メッセージ";
+          const tc = document.getElementById("threadTopnavCrumb");
+          if (tc) tc.textContent = "案件詳細 / メッセージ";
+
+          const lbl = document.querySelector(".thread-composer__label");
+          if (lbl) lbl.textContent = "メッセージ";
+
+          const replyTaPh = document.getElementById("threadReplyInput");
+          if (replyTaPh) replyTaPh.placeholder = "担当者への最初のメッセージを入力…";
+        }
+
+        const replyTa = document.getElementById("threadReplyInput");
+        if (replyTa && window.matchMedia && window.matchMedia("(max-width: 899px)").matches) {
+          function sizeReplyTa() {
+            replyTa.style.height = "auto";
+            replyTa.style.height = Math.min(replyTa.scrollHeight, 120) + "px";
+          }
+          replyTa.addEventListener("input", sizeReplyTa);
+          sizeReplyTa();
         }
       })();
     </script>
