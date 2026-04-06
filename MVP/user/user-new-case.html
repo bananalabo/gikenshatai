@@ -168,21 +168,6 @@
             try {
               localStorage.setItem(KEY, JSON.stringify(payload));
             } catch (e) {}
-            // #region agent log
-            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
-              body: JSON.stringify({
-                sessionId: "595356",
-                location: "user-new-case.html:draft_save",
-                message: "new_case_draft_saved",
-                data: { hasCustomer: !!(customer && customer.value), hasDate: !!(dateEl && dateEl.value) },
-                timestamp: Date.now(),
-                hypothesisId: "H3",
-                runId: "post-fix",
-              }),
-            }).catch(function () {});
-            // #endregion
             if (window.mvpNotify) window.mvpNotify("下書きを保存しました（このブラウザのみ）", "info");
           });
         }

@@ -308,28 +308,6 @@
         const role   = params.get("role")   || "user";
         const org    = params.get("org")    || "Honda";
 
-        // #region agent log
-        fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
-          body: JSON.stringify({
-            sessionId: "595356",
-            location: "case-detail.html:DOMContentLoaded",
-            message: "case_detail_loaded",
-            data: {
-              caseId: caseId,
-              role: role,
-              org: org,
-              fileInputCount: document.querySelectorAll("input[type=file]").length,
-              hasReflectBtn: !!document.getElementById("caseDetailReflectBtn"),
-            },
-            timestamp: Date.now(),
-            hypothesisId: "H1",
-            runId: "post-fix",
-          }),
-        }).catch(function () {});
-        // #endregion
-
         // Update mobile header title
         const mobileTitle = document.getElementById("mobileDetailTitle");
         if (mobileTitle) mobileTitle.textContent = "案件 #" + caseId;
@@ -534,21 +512,6 @@
         const statusReflectBtn = document.getElementById("caseDetailStatusReflectBtn");
         if (statusReflectBtn) {
           statusReflectBtn.addEventListener("click", function () {
-            // #region agent log
-            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
-              body: JSON.stringify({
-                sessionId: "595356",
-                location: "case-detail.html:status_reflect",
-                message: "status_reflect_demo",
-                data: { caseId: caseId },
-                timestamp: Date.now(),
-                hypothesisId: "H2",
-                runId: "post-fix",
-              }),
-            }).catch(function () {});
-            // #endregion
             if (window.mvpNotify) window.mvpNotify("ステータスを反映しました（デモ）", "success");
           });
         }
@@ -562,21 +525,6 @@
                 JSON.stringify({ caseId: caseId, org: org, role: role, reflectedAt: Date.now() })
               );
             } catch (e) {}
-            // #region agent log
-            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
-              body: JSON.stringify({
-                sessionId: "595356",
-                location: "case-detail.html:reflect_demo",
-                message: "case_detail_reflect_demo",
-                data: { caseId: caseId, role: role, org: org },
-                timestamp: Date.now(),
-                hypothesisId: "H1",
-                runId: "post-fix",
-              }),
-            }).catch(function () {});
-            // #endregion
             if (window.mvpNotify) window.mvpNotify("変更を反映しました（デモ）", "success");
           });
         }

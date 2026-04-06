@@ -99,40 +99,9 @@
             : "./admin-cases.html?role=admin&org=" + encodeURIComponent(org);
         }
 
-        // #region agent log
-        fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
-          body: JSON.stringify({
-            sessionId: "595356",
-            location: "status-update.html:init",
-            message: "status_update_screen_loaded",
-            data: { caseId: caseId, org: org },
-            timestamp: Date.now(),
-            hypothesisId: "H4",
-            runId: "post-fix",
-          }),
-        }).catch(function () {});
-        // #endregion
-
         var sur = document.getElementById("statusUpdateReflectBtn");
         if (sur) {
           sur.addEventListener("click", function () {
-            // #region agent log
-            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
-              body: JSON.stringify({
-                sessionId: "595356",
-                location: "status-update.html:reflect_click",
-                message: "status_update_reflect_demo",
-                data: { caseId: caseId },
-                timestamp: Date.now(),
-                hypothesisId: "H4",
-                runId: "post-fix",
-              }),
-            }).catch(function () {});
-            // #endregion
             if (window.mvpNotify) window.mvpNotify("ステータスを反映しました（デモ）", "success");
           });
         }
