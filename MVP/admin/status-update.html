@@ -3,23 +3,39 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - ステータス更新</title>
+    <title>ステータス更新 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
   </head>
   <body>
-    <div class="app">
+
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+      <button class="mobile-header__back" type="button" onclick="history.back()" aria-label="戻る">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="mobile-header__title">ステータス更新</span>
+      <div class="mobile-header__action">
+        <span class="muted small" style="font-size:12px;">案件 #<span id="caseIdLabel">000000</span></span>
+      </div>
+    </header>
+
+    <div class="app app--simple">
+
+      <!-- TOPNAV (desktop) -->
       <div class="topnav">
-        <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="pill">Admin</div>
-            <div>ステータス更新</div>
+        <div class="brand">
+          <div class="brand-col">
+            <div class="brand-row">
+              <span class="pill">Admin</span>
+              <span>ステータス更新</span>
+            </div>
+            <span class="breadcrumb">案件一覧 / ステータス更新</span>
           </div>
-          <div class="breadcrumb">案件一覧 / ステータス更新</div>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-          <div class="muted small">案件ID：<span id="caseIdLabel">000000</span></div>
+        <div class="topnav-actions">
+          <button class="btn back" type="button" onclick="history.back()">戻る</button>
+          <span class="muted small">案件ID：<span id="caseIdLabelDesktop">000000</span></span>
         </div>
       </div>
 
@@ -46,16 +62,38 @@
             </div>
           </div>
 
-          <div class="btnbar">
-            <button class="btn success" type="button" onclick="alert('プロトタイプ：保存しません。')">更新する</button>
-            <a class="btn" href="./admin-cases.html?role=admin&org=元請け">案件一覧へ</a>
+          <div class="page-actions">
+            <button class="btn success btn--full" type="button" onclick="alert('プロトタイプ：保存しません。')">
+              更新する
+            </button>
+            <a class="btn btn--full" id="backToCasesBtn" href="./admin-cases.html?role=admin&org=元請け">
+              案件一覧へ戻る
+            </a>
           </div>
-          <p class="muted small" style="margin-top:12px;">
-            ※MVPの実装時に管理者のみ更新可能にする前提。
+
+          <p class="muted small" style="margin-top:14px;">
+            ※ MVPの実装時に管理者のみ更新可能にする前提。
           </p>
         </div>
       </div>
+
     </div>
+
+    <script>
+      (function () {
+        const p      = new URLSearchParams(window.location.search);
+        const caseId = p.get("caseId") || "000000";
+        const org    = p.get("org")    || "元請け";
+
+        document.querySelectorAll("#caseIdLabel, #caseIdLabelDesktop").forEach(el => {
+          el.textContent = caseId;
+        });
+
+        const backBtn = document.getElementById("backToCasesBtn");
+        if (backBtn) {
+          backBtn.href = "./admin-cases.html?role=admin&org=" + encodeURIComponent(org);
+        }
+      })();
+    </script>
   </body>
 </html>
-

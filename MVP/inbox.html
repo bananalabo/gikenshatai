@@ -3,13 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - インボックス</title>
+    <title>受信箱 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
   </head>
   <body>
+
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+      <button class="mobile-header__back" type="button" onclick="history.back()" aria-label="戻る">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="mobile-header__title">受信箱</span>
+      <div class="mobile-header__action"></div>
+    </header>
+
     <div class="app">
       <div class="layout">
+
+        <!-- SIDEBAR (desktop) -->
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
@@ -25,63 +37,75 @@
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
-                <a class="nav-item active" id="navInboxLink" href="./inbox.html?role=user&org=Honda（例）">インボックス <span class="badge">2</span></a>
+                <a class="nav-item active" id="navInboxLink" href="#">
+                  受信箱 <span class="badge">2</span>
+                </a>
               </div>
             </nav>
           </div>
         </aside>
 
         <main class="main">
+
+          <!-- TOPNAV (desktop) -->
           <div class="topnav">
-            <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-              <div>インボックス</div>
-              <div class="breadcrumb">連絡 / インボックス</div>
+            <div class="brand">
+              <div class="brand-col">
+                <div class="brand-row">
+                  <span>受信箱</span>
+                </div>
+                <span class="breadcrumb">連絡 / 受信箱</span>
+              </div>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-              <div class="muted small">ログアウト（表示用）</div>
+            <div class="topnav-actions">
+              <button class="btn back" type="button" onclick="history.back()">戻る</button>
+              <span class="muted small">ログアウト（表示用）</span>
             </div>
           </div>
 
+          <!-- Filter pills -->
+          <div class="panel">
+            <div class="panel-body">
+              <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:10px;">
+                <button class="btn btn--full" type="button" onclick="alert('未読フィルタ（プロトタイプ）')">未読のみ</button>
+                <button class="btn btn--full" type="button" onclick="alert('全件（プロトタイプ）')">すべて</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Message list -->
           <div class="panel">
             <div class="panel-header">メッセージ一覧（サンプル）</div>
-            <div class="panel-body">
-              <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 12px;">
-                <button class="btn" type="button" onclick="alert('未読フィルタ（プロトタイプ）')">未読</button>
-                <button class="btn" type="button" onclick="alert('全件（プロトタイプ）')">全て</button>
-              </div>
-
-              <div class="divider"></div>
-
-              <div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-wrap table-wrap--inbox">
                 <table>
                   <thead>
                     <tr>
-                      <th style="width:120px;">ステータス</th>
+                      <th style="width:100px;">ステータス</th>
                       <th>件名</th>
-                      <th style="width:110px;">案件ID</th>
-                      <th style="width:140px;"></th>
+                      <th style="width:100px;">案件ID</th>
+                      <th style="width:120px;"></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>未読</td>
-                      <td>見積PDFの差し替えについて</td>
+                      <td><span class="badge" style="background:rgba(26,86,219,0.1); border-color:rgba(26,86,219,0.25); color:var(--primary);">未読</span></td>
+                      <td style="font-weight:600;">見積PDFの差し替えについて</td>
                       <td>000012</td>
                       <td>
                         <a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda（例）&caseId=000012">開く</a>
                       </td>
                     </tr>
                     <tr>
-                      <td>未読</td>
-                      <td>途中写真の追加依頼</td>
+                      <td><span class="badge" style="background:rgba(26,86,219,0.1); border-color:rgba(26,86,219,0.25); color:var(--primary);">未読</span></td>
+                      <td style="font-weight:600;">途中写真の追加依頼</td>
                       <td>000102</td>
                       <td>
                         <a class="btn" href="./inbox-thread.html?role=user&threadId=t002&org=Honda（例）&caseId=000102">開く</a>
                       </td>
                     </tr>
                     <tr>
-                      <td>既読</td>
+                      <td><span class="muted small">既読</span></td>
                       <td>完了報告の確認</td>
                       <td>000013</td>
                       <td>
@@ -90,49 +114,53 @@
                     </tr>
                   </tbody>
                 </table>
-
-                <p class="muted small" style="margin-top:12px;">
-                  ※この画面はプロトタイプです。実データはありません。
-                </p>
               </div>
+              <p class="muted small" style="padding:12px 16px 14px; margin:0;">
+                ※ この画面はプロトタイプです。実データはありません。
+              </p>
             </div>
           </div>
+
         </main>
       </div>
     </div>
 
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" id="bottomNav">
+      <a class="bottom-nav__item" id="bnCaseList" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        <span>案件一覧</span>
+      </a>
+      <a class="bottom-nav__item role-user-only" id="bnNewCase" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <span>新規依頼</span>
+      </a>
+      <a class="bottom-nav__item active" id="bnInbox" href="#">
+        <span class="bn-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="bn-badge">2</span>
+        </span>
+        <span>受信箱</span>
+      </a>
+      <a class="bottom-nav__item" id="bnVendors" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>取引先</span>
+      </a>
+    </nav>
+
     <script>
-      // Fix hrefs based on role/org query params (prototype only).
       (function () {
         const params = new URLSearchParams(window.location.search);
         const role = params.get("role") || "user";
-        const org = params.get("org") || "Honda（例）";
+        const org  = params.get("org")  || "Honda（例）";
 
-        const navCaseListLink = document.getElementById("navCaseListLink");
-        if (navCaseListLink) {
-          navCaseListLink.href =
-            role === "admin"
-              ? "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org)
-              : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
-        }
-
-        // Update thread links so role/org stay consistent.
-        document.querySelectorAll("a[href*='inbox-thread.html']").forEach((a) => {
-          const url = new URL(a.href);
-          url.searchParams.set("role", role);
-          url.searchParams.set("org", org);
-          a.href = url.toString();
-        });
-
-        // Update active inbox link
-        document.querySelectorAll("a.nav-item.active").forEach((a) => {
+        document.querySelectorAll("a[href*='inbox-thread.html']").forEach(a => {
           const url = new URL(a.href, window.location.href);
           url.searchParams.set("role", role);
-          url.searchParams.set("org", org);
+          url.searchParams.set("org",  org);
           a.href = url.toString();
         });
       })();
     </script>
   </body>
 </html>
-

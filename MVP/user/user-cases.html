@@ -3,13 +3,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - 利用者案件一覧</title>
+    <title>案件一覧 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
   </head>
   <body>
+
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+      <button class="mobile-header__back" type="button" onclick="history.back()" aria-label="戻る">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="mobile-header__title">案件一覧</span>
+      <div class="mobile-header__action">
+        <a class="btn primary" id="mobileNewCaseBtn" href="./user-new-case.html?role=user&org=Honda（例）"
+           style="font-size:12px; padding:6px 12px;">
+          + 新規
+        </a>
+      </div>
+    </header>
+
     <div class="app">
       <div class="layout">
+
+        <!-- SIDEBAR (desktop) -->
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
@@ -19,32 +36,42 @@
             <nav class="nav">
               <div class="nav-group">
                 <div class="nav-group-title">業務</div>
-                <a class="nav-item" id="navCaseListLink" href="#">案件一覧</a>
+                <a class="nav-item active" id="navCaseListLink" href="#">案件一覧</a>
                 <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
-                <a class="nav-item role-user-only" id="navNewCaseLink" href="./user-new-case.html?role=user&org=Honda（例）">新規依頼</a>
+                <a class="nav-item" id="navNewCaseLink" href="#">新規依頼</a>
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
-                <a class="nav-item" id="navInboxLink" href="#">インボックス <span class="badge">2</span></a>
+                <a class="nav-item" id="navInboxLink" href="#">
+                  受信箱 <span class="badge">2</span>
+                </a>
               </div>
             </nav>
           </div>
         </aside>
 
         <main class="main">
+
+          <!-- TOPNAV (desktop) -->
           <div class="topnav">
-            <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-              <div>案件一覧</div>
-              <div class="breadcrumb">業務 / 案件一覧</div>
+            <div class="brand">
+              <div class="brand-col">
+                <span>案件一覧</span>
+                <span class="breadcrumb">業務 / 案件一覧</span>
+              </div>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-              <div class="muted small">ログアウト（表示用）</div>
+            <div class="topnav-actions">
+              <button class="btn back" type="button" onclick="history.back()">戻る</button>
+              <a class="btn primary" id="navNewCaseLinkTop" href="./user-new-case.html?role=user&org=Honda（例）">
+                + 新規依頼
+              </a>
+              <span class="muted small">ログアウト（表示用）</span>
             </div>
           </div>
 
+          <!-- Search panel -->
           <div class="panel">
-            <div class="panel-header">検索（MVP最低限）</div>
+            <div class="panel-header">検索</div>
             <div class="panel-body">
               <div class="grid-2">
                 <div class="proto-field">
@@ -68,132 +95,144 @@
               </div>
               <div class="btnbar">
                 <button class="btn primary" type="button">検索</button>
-                <a class="btn" href="./user-new-case.html?org=Honda（例）&role=user">新規依頼</a>
+                <button class="btn" type="button">リセット</button>
               </div>
             </div>
           </div>
 
+          <!-- Cases table -->
           <div class="panel">
-            <div class="panel-header">案件テーブル（自社のみ：サンプル）</div>
-            <div class="panel-body">
-              <p class="muted small" id="orgFilterLabel" style="margin: 0 0 12px 0;">
+            <div class="panel-header">案件一覧（自社のみ・サンプル）</div>
+            <div class="panel-body" style="padding:0;">
+              <p class="muted small" id="orgFilterLabel" style="padding:12px 16px 0; margin:0;">
                 フィルタ：なし
               </p>
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:160px;">案件ID</th>
-                    <th>関連先/顧客</th>
-                    <th style="width:160px;">ステータス</th>
-                    <th style="width:140px;"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr data-org="Honda（例）">
-                    <td>000101</td>
-                    <td>顧客A</td>
-                    <td><span class="status-badge"><span class="dot"></span>受付</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000101&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000102</td>
-                    <td>顧客B</td>
-                    <td><span class="status-badge"><span class="dot" style="background:var(--accent2)"></span>作業中</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000102&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000103</td>
-                    <td>顧客C</td>
-                    <td><span class="status-badge"><span class="dot"></span>確認中</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000103&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000104</td>
-                    <td>顧客D</td>
-                    <td><span class="status-badge"><span class="dot"></span>見積済</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000104&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000105</td>
-                    <td>顧客E</td>
-                    <td><span class="status-badge"><span class="dot"></span>納品済</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000105&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000106</td>
-                    <td>顧客F</td>
-                    <td><span class="status-badge"><span class="dot" style="background:var(--accent2)"></span>作業中</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000106&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000107</td>
-                    <td>顧客G</td>
-                    <td><span class="status-badge"><span class="dot"></span>受付</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000107&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000108</td>
-                    <td>顧客H</td>
-                    <td><span class="status-badge"><span class="dot"></span>見積済</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000108&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000109</td>
-                    <td>顧客I</td>
-                    <td><span class="status-badge"><span class="dot"></span>確認中</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000109&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                  <tr data-org="Honda（例）">
-                    <td>000110</td>
-                    <td>顧客J</td>
-                    <td><span class="status-badge"><span class="dot"></span>完了</span></td>
-                    <td>
-                      <a class="btn" href="../case-detail.html?role=user&caseId=000110&org=Honda（例）">詳細</a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <p class="muted small" style="margin-top:12px;">
-                ※この画面はUIのたたき台です。データはダミーです。
+              <div class="table-wrap" style="margin-top:8px;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="min-width:130px;">案件ID</th>
+                      <th>関連先/顧客</th>
+                      <th style="min-width:130px;">ステータス</th>
+                      <th style="min-width:110px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-org="Honda（例）">
+                      <td>000101</td>
+                      <td>顧客A</td>
+                      <td><span class="status-badge"><span class="dot"></span>受付</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000101&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000102</td>
+                      <td>顧客B</td>
+                      <td><span class="status-badge"><span class="dot" style="background:var(--accent2);"></span>作業中</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000102&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000103</td>
+                      <td>顧客C</td>
+                      <td><span class="status-badge"><span class="dot"></span>確認中</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000103&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000104</td>
+                      <td>顧客D</td>
+                      <td><span class="status-badge"><span class="dot"></span>見積済</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000104&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000105</td>
+                      <td>顧客E</td>
+                      <td><span class="status-badge"><span class="dot"></span>納品済</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000105&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000106</td>
+                      <td>顧客F</td>
+                      <td><span class="status-badge"><span class="dot" style="background:var(--accent2);"></span>作業中</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000106&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000107</td>
+                      <td>顧客G</td>
+                      <td><span class="status-badge"><span class="dot"></span>受付</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000107&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000108</td>
+                      <td>顧客H</td>
+                      <td><span class="status-badge"><span class="dot"></span>見積済</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000108&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000109</td>
+                      <td>顧客I</td>
+                      <td><span class="status-badge"><span class="dot"></span>確認中</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000109&org=Honda（例）">詳細</a></td>
+                    </tr>
+                    <tr data-org="Honda（例）">
+                      <td>000110</td>
+                      <td>顧客J</td>
+                      <td><span class="status-badge"><span class="dot" style="background:var(--muted);"></span>完了</span></td>
+                      <td><a class="btn" href="../case-detail.html?role=user&caseId=000110&org=Honda（例）">詳細</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="muted small" style="padding:12px 16px 14px; margin:0;">
+                ※ この画面はUIのたたき台です。データはダミーです。
               </p>
             </div>
           </div>
+
         </main>
       </div>
     </div>
 
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" id="bottomNav">
+      <a class="bottom-nav__item active" id="bnCaseList" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        <span>案件一覧</span>
+      </a>
+      <a class="bottom-nav__item" id="bnNewCase" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <span>新規依頼</span>
+      </a>
+      <a class="bottom-nav__item" id="bnInbox" href="#">
+        <span class="bn-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="bn-badge">2</span>
+        </span>
+        <span>受信箱</span>
+      </a>
+      <a class="bottom-nav__item" id="bnVendors" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>取引先</span>
+      </a>
+    </nav>
+
     <script>
       (function () {
-        const org = new URLSearchParams(window.location.search).get("org");
+        const org   = new URLSearchParams(window.location.search).get("org") || "Honda（例）";
         const label = document.getElementById("orgFilterLabel");
-        const rows = document.querySelectorAll('tr[data-org]');
-        if (!org) return;
-        if (label) label.textContent = "フィルタ：" + org;
-        rows.forEach((tr) => {
-          const rowOrg = tr.getAttribute("data-org");
-          tr.style.display = rowOrg === org ? "" : "none";
-        });
+        const rows  = document.querySelectorAll("tr[data-org]");
+        if (label) label.textContent = org ? "フィルタ：" + org : "フィルタ：なし";
+        if (org) {
+          rows.forEach(tr => {
+            tr.style.display = tr.getAttribute("data-org") === org ? "" : "none";
+          });
+        }
+
+        // Update new case button org param
+        const mobileBtn = document.getElementById("mobileNewCaseBtn");
+        const topBtn    = document.getElementById("navNewCaseLinkTop");
+        const orgEnc    = encodeURIComponent(org);
+        if (mobileBtn) mobileBtn.href = "./user-new-case.html?role=user&org=" + orgEnc;
+        if (topBtn)    topBtn.href    = "./user-new-case.html?role=user&org=" + orgEnc;
       })();
     </script>
   </body>
 </html>
-

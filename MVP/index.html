@@ -3,47 +3,73 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - トップ</title>
+    <title>案件管理プラットフォーム — MVP Prototype</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
-    <div class="app">
-      <div class="topnav">
-        <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="pill">MVP Prototype</div>
-            <div>案件管理プラットフォーム</div>
-          </div>
-          <div class="breadcrumb">トップ</div>
-        </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <a class="btn primary" href="./login.html">ログイン</a>
-        </div>
+  <body class="auth-page">
+    <div class="auth-container" style="max-width:480px; justify-content:center;">
+
+      <!-- Brand -->
+      <div class="auth-brand" style="justify-content:center; margin-bottom:40px;">
+        <div class="auth-brand__logo">G</div>
+        <div class="auth-brand__name">案件管理プラットフォーム</div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header">ようこそ</div>
-        <div class="panel-body">
-          <div class="grid-2">
-            <div>
-              <h2 style="margin:0 0 10px 0;">案件の進行をシンプルに管理</h2>
-              <p class="muted small" style="margin:0 0 12px 0;">
-                これはバックエンドなしのUIプロトタイプです。トップ → ログイン → 管理者/利用者のダッシュボード（案件一覧）へ進めます。
-              </p>
-              <div class="btnbar">
-                <a class="btn primary" href="./login.html">ログインして進む</a>
-              </div>
-            </div>
-            <div>
-              <div class="section-title" style="margin-bottom:8px;">デモで確認できること</div>
-              <div class="muted small" style="margin-bottom:8px;">案件一覧（管理者 / 利用者）</div>
-              <div class="muted small" style="margin-bottom:8px;">案件詳細（UIサンプル）</div>
-              <div class="muted small">写真/添付（プレビュー画面）</div>
+      <!-- Welcome -->
+      <h1 class="auth-heading" style="text-align:center;">案件の進行を<br>シンプルに管理</h1>
+      <p class="auth-subheading" style="text-align:center;">
+        これはバックエンドなしのUIプロトタイプです。<br>
+        ご利用の立場を選んでお進みください。
+      </p>
+
+      <!-- Entry cards -->
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+
+        <!-- User entry -->
+        <div class="panel" style="margin-top:0;">
+          <div class="panel-body" style="padding:20px;">
+            <div class="section-title" style="margin-bottom:6px;">利用者（ディーラー / 法人）</div>
+            <p class="muted small" style="margin:0 0 16px;">
+              自社案件の確認・写真や書類のアップロードはこちら
+            </p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <a class="btn primary btn--full" href="./user-login.html">
+                利用者ログイン
+              </a>
+              <a class="btn btn--full" href="./user-signup.html">
+                新規アカウント登録
+              </a>
             </div>
           </div>
         </div>
+
+        <!-- Admin entry -->
+        <div class="panel" style="margin-top:0;">
+          <div class="panel-body" style="padding:20px;">
+            <div class="section-title" style="margin-bottom:6px;">管理者（元請け）</div>
+            <p class="muted small" style="margin:0 0 16px;">
+              全案件の管理・ステータス更新・書類確認はこちら
+            </p>
+            <a class="btn btn--full" href="./login.html">
+              管理者ログイン
+            </a>
+          </div>
+        </div>
+
       </div>
+
+      <!-- Sitemap link -->
+      <div style="text-align:center; margin-top:28px;">
+        <a href="./sitemap.html" class="muted small">
+          画面一覧（クライアント向けサイトマップ）→
+        </a>
+      </div>
+
+      <!-- Prototype badge -->
+      <div style="text-align:center; margin-top:20px;">
+        <span class="pill">MVP Prototype</span>
+      </div>
+
     </div>
   </body>
 </html>
-

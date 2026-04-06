@@ -3,52 +3,91 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - ログイン</title>
+    <title>管理者ログイン — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
-    <div class="app">
-      <div class="topnav">
-        <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="pill">MVP Prototype</div>
-            <div>ログイン</div>
-          </div>
-          <div class="breadcrumb">入口 / ログイン</div>
+  <body class="auth-page">
+    <div class="auth-container">
+
+      <!-- Back + Brand -->
+      <div class="d-flex align-center justify-between" style="margin-bottom:32px;">
+        <div class="auth-brand" style="margin-bottom:0;">
+          <div class="auth-brand__logo">G</div>
+          <div class="auth-brand__name">案件管理プラットフォーム</div>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-          <div class="muted small">入口ページ</div>
+        <a href="./index.html" style="font-size:14px; color:var(--muted);">← トップへ</a>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="auth-heading">管理者ログイン</h1>
+      <p class="auth-subheading">元請け管理者アカウントでログインしてください。</p>
+
+      <!-- Login form -->
+      <div class="field-group">
+        <div class="field-group__item">
+          <label class="field-group__label" for="adminId">管理者ID</label>
+          <input
+            id="adminId"
+            type="text"
+            placeholder="例：admin01"
+            autocomplete="username"
+          />
+        </div>
+        <div class="field-group__item">
+          <label class="field-group__label" for="adminPassword">パスワード</label>
+          <div class="d-flex align-center gap-sm">
+            <input
+              id="adminPassword"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              style="flex:1; border:none; box-shadow:none; padding:0; border-radius:0; font-size:16px; background:transparent;"
+            />
+            <button
+              type="button"
+              onclick="togglePassword('adminPassword', this)"
+              style="border:none; background:none; color:var(--muted); font-size:13px; cursor:pointer; white-space:nowrap; padding:0;"
+            >表示</button>
+          </div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header">ログイン</div>
-        <div class="panel-body">
-          <div class="grid-2">
-            <div class="proto-field">
-              <span class="proto-bubble">ログインID（プロトタイプ・認証なし）</span>
-              <label>ID</label>
-              <input type="text" placeholder="例：dealer001 / admin01" />
-            </div>
-            <div class="proto-field">
-              <span class="proto-bubble">パスワード（プロトタイプ・未検証）</span>
-              <label>パスワード</label>
-              <input type="password" placeholder="••••••••" />
-            </div>
-          </div>
+      <!-- CTA -->
+      <a
+        class="btn black btn--full"
+        href="./admin/admin-cases.html?role=admin&org=元請け"
+        style="font-size:16px; padding:15px 20px; margin-top:8px;"
+      >
+        管理者としてログイン
+      </a>
 
-          <div class="btnbar">
-            <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=元請け">管理者として進む</a>
-            <a class="btn primary" href="./user/user-cases.html?role=user&org=Honda（例）">利用者として進む</a>
-          </div>
+      <!-- Prototype note -->
+      <p class="muted small" style="text-align:center; margin-top:16px;">
+        ※ プロトタイプのため認証は実装されていません。
+      </p>
 
-          <p class="muted small" style="margin-top:12px;">
-            ※このHTMLはプロトタイプです。認証は実装していません。
-          </p>
-        </div>
+      <!-- User link -->
+      <div class="auth-divider" style="margin-top:28px;">利用者の方</div>
+      <div style="text-align:center;">
+        <a href="./user-login.html" style="font-size:14px; color:var(--primary); font-weight:500;">
+          利用者ログインページへ →
+        </a>
       </div>
+
     </div>
+
+    <script>
+      function togglePassword(id, btn) {
+        const input = document.getElementById(id);
+        if (!input) return;
+        if (input.type === "password") {
+          input.type = "text";
+          btn.textContent = "隠す";
+        } else {
+          input.type = "password";
+          btn.textContent = "表示";
+        }
+      }
+    </script>
   </body>
 </html>
-

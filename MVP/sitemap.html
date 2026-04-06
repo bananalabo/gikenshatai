@@ -7,26 +7,41 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="app" style="max-width: 980px;">
+    <!-- Mobile header (simple — no bottom nav on this docs page) -->
+    <header class="mobile-header">
+      <button class="mobile-header__back" type="button" onclick="history.back()" aria-label="戻る">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="mobile-header__title">画面一覧</span>
+      <div class="mobile-header__action">
+        <span class="pill" style="font-size:10px;">MVP Preview</span>
+      </div>
+    </header>
+
+    <div class="app app--simple" style="max-width:980px;">
+
+      <!-- Desktop topnav -->
       <div class="topnav">
-        <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="pill">MVP Preview</div>
-            <div>画面一覧 / サイトマップ（クライアント向け）</div>
+        <div class="brand">
+          <div class="brand-col">
+            <div class="brand-row">
+              <span class="pill">MVP Preview</span>
+              <span>画面一覧 / サイトマップ（クライアント向け）</span>
+            </div>
+            <span class="breadcrumb">説明 / サイトマップ</span>
           </div>
-          <div class="breadcrumb">説明 / サイトマップ</div>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-          <div class="muted small">静的HTMLプロトタイプ</div>
+        <div class="topnav-actions">
+          <button class="btn back" type="button" onclick="history.back()">戻る</button>
+          <span class="muted small">静的HTMLプロトタイプ</span>
         </div>
       </div>
 
-      <div class="panel" style="margin-top: 14px;">
+      <div class="panel">
         <div class="panel-header">1. このMVPで解決したいこと（要点）</div>
         <div class="panel-body">
           <p class="muted small" style="margin:0;">
-            法人取引のやり取り（依頼・写真・見積/納品書・進捗）を `LINE/メール/電話` から
+            法人取引のやり取り（依頼・写真・見積/納品書・進捗）を <code>LINE/メール/電話</code> から
             「案件ID（管理番号）」単位で一元化し、情報の転送・確認・漏れを減らします。
           </p>
         </div>
@@ -57,23 +72,19 @@
       </div>
 
       <div class="panel">
-        <div class="panel-header">3. サイドメニュー（典型的なSaaS導線）</div>
+        <div class="panel-header">3. ナビゲーション構造</div>
         <div class="panel-body">
           <div class="grid-2">
             <div>
               <div class="section-title">Admin</div>
-              <p class="muted small" style="margin:0;">
-                案件一覧 / インボックス
-              </p>
+              <p class="muted small" style="margin:0;">案件一覧 / 取引先 / 受信箱</p>
               <p class="muted small" style="margin:10px 0 0 0;">
                 案件詳細は1ページで共通。Adminだけ「ステータス更新」を表示。
               </p>
             </div>
             <div>
               <div class="section-title">User</div>
-              <p class="muted small" style="margin:0;">
-                案件一覧 / 新規依頼 / インボックス
-              </p>
+              <p class="muted small" style="margin:0;">案件一覧 / 新規依頼 / 受信箱 / 取引先</p>
               <p class="muted small" style="margin:10px 0 0 0;">
                 案件詳細は1ページで共通。Userだけ「PDFアップロード/写真追加」を表示。
               </p>
@@ -85,69 +96,85 @@
       <div class="panel">
         <div class="panel-header">4. 作成する画面（MVPスコープ）</div>
         <div class="panel-body">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:180px;">画面</th>
-                <th>説明</th>
-                <th style="width:220px;">プロトタイプ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>入口</td>
-                <td class="small muted">Admin/Userのどちらで見せるかを選ぶページ</td>
-                <td><a class="btn" href="./index.html?from=sitemap">開く</a></td>
-              </tr>
-              <tr>
-                <td>案件一覧</td>
-                <td class="small muted">案件ID・関連先・ステータスで一覧。クリックで案件詳細へ</td>
-                <td>
-                  <a class="btn" href="./admin/admin-cases.html?role=admin&org=元請け">Admin</a>
-                  <a class="btn" href="./user/user-cases.html?role=user&org=Honda（例）" style="margin-left:8px;">User</a>
-                </td>
-              </tr>
-              <tr>
-                <td>取引先</td>
-                <td class="small muted">取引先（ディーラー/法人）単位で案件を分けて探しやすくする</td>
-                <td>
-                  <a class="btn" href="./vendors.html?role=admin&org=Honda（例）">Admin</a>
-                  <a class="btn" href="./vendors.html?role=user&org=Honda（例）" style="margin-left:8px;">User</a>
-                </td>
-              </tr>
-              <tr>
-                <td>新規依頼</td>
-                <td class="small muted">Userが案件を作成（MVPでは必須項目のみ）</td>
-                <td><a class="btn" href="./user/user-new-case.html?role=user&org=Honda（例）">開く</a></td>
-              </tr>
-              <tr>
-                <td>案件詳細（共通1ページ）</td>
-                <td class="small muted">同じ画面レイアウトで、roleに応じて「操作できる領域」が変わる</td>
-                <td>
-                  <a class="btn" href="./case-detail.html?role=admin&caseId=000012&org=Honda（例）">Admin</a>
-                  <a class="btn" href="./case-detail.html?role=user&caseId=000101&org=Honda（例）" style="margin-left:8px;">User</a>
-                </td>
-              </tr>
-              <tr>
-                <td>添付プレビュー</td>
-                <td class="small muted">途中写真の拡大プレビュー / PDF表示（プロトタイプ）</td>
-                <td><a class="btn" href="./attachment-preview.html?caseId=000012&type=progress&idx=1">開く</a></td>
-              </tr>
-              <tr>
-                <td>インボックス（一覧）</td>
-                <td class="small muted">案件に紐づくメッセージを一覧（未読/既読）</td>
-                <td><a class="btn" href="./inbox.html?role=user&org=Honda（例）">開く</a></td>
-              </tr>
-              <tr>
-                <td>メッセージ（スレッド）</td>
-                <td class="small muted">会話の流れを確認し、返信できるUI</td>
-                <td><a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda（例）&caseId=000012">開く</a></td>
-              </tr>
-            </tbody>
-          </table>
-
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="min-width:160px;">画面</th>
+                  <th>説明</th>
+                  <th style="min-width:200px;">プロトタイプ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>入口（トップ）</td>
+                  <td class="small muted">Admin/Userのどちらで進むかを選ぶページ</td>
+                  <td><a class="btn" href="./index.html">開く</a></td>
+                </tr>
+                <tr>
+                  <td>利用者ログイン</td>
+                  <td class="small muted">利用者向けログインページ（メール + パスワード）</td>
+                  <td><a class="btn" href="./user-login.html">開く</a></td>
+                </tr>
+                <tr>
+                  <td>利用者新規登録</td>
+                  <td class="small muted">会社情報・担当者情報・利用規約同意</td>
+                  <td><a class="btn" href="./user-signup.html">開く</a></td>
+                </tr>
+                <tr>
+                  <td>管理者ログイン</td>
+                  <td class="small muted">Admin専用ログインページ</td>
+                  <td><a class="btn" href="./login.html">開く</a></td>
+                </tr>
+                <tr>
+                  <td>案件一覧</td>
+                  <td class="small muted">案件ID・関連先・ステータスで一覧。クリックで案件詳細へ</td>
+                  <td style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <a class="btn" href="./admin/admin-cases.html?role=admin&org=元請け">Admin</a>
+                    <a class="btn" href="./user/user-cases.html?role=user&org=Honda（例）">User</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>取引先</td>
+                  <td class="small muted">取引先（ディーラー/法人）単位で案件を分けて探しやすくする</td>
+                  <td style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <a class="btn" href="./vendors.html?role=admin&org=Honda（例）">Admin</a>
+                    <a class="btn" href="./vendors.html?role=user&org=Honda（例）">User</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>新規依頼</td>
+                  <td class="small muted">Userが案件を作成（MVPでは必須項目のみ）</td>
+                  <td><a class="btn" href="./user/user-new-case.html?role=user&org=Honda（例）">開く</a></td>
+                </tr>
+                <tr>
+                  <td>案件詳細（共通）</td>
+                  <td class="small muted">同じ画面でroleに応じて「操作できる領域」が変わる</td>
+                  <td style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <a class="btn" href="./case-detail.html?role=admin&caseId=000012&org=Honda（例）">Admin</a>
+                    <a class="btn" href="./case-detail.html?role=user&caseId=000101&org=Honda（例）">User</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>受信箱</td>
+                  <td class="small muted">案件に紐づくメッセージを一覧（未読/既読）</td>
+                  <td><a class="btn" href="./inbox.html?role=user&org=Honda（例）">開く</a></td>
+                </tr>
+                <tr>
+                  <td>メッセージスレッド</td>
+                  <td class="small muted">会話の流れを確認し、返信できるUI</td>
+                  <td><a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda（例）&caseId=000012">開く</a></td>
+                </tr>
+                <tr>
+                  <td>添付プレビュー</td>
+                  <td class="small muted">途中写真の拡大プレビュー / PDF表示</td>
+                  <td><a class="btn" href="./attachment-preview.html?caseId=000012&type=progress&idx=1">開く</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <p class="muted small" style="margin-top:14px;">
-            注：本ページ・画面群はバックエンドなしのUI/導線プロトタイプです。開発時は実データ連携を追加します。
+            注：本ページ・画面群はバックエンドなしのUI/導線プロトタイプです。
           </p>
         </div>
       </div>
@@ -155,14 +182,14 @@
       <div class="panel">
         <div class="panel-header">5. 次に確定したいこと（開発前）</div>
         <div class="panel-body">
-          <ul style="margin:0; padding-left: 18px;">
+          <ul style="margin:0; padding-left:18px;">
             <li class="muted small" style="margin-bottom:8px;">写真/添付の保存方式（自前サーバー vs Google Drive）</li>
             <li class="muted small" style="margin-bottom:8px;">roleごとの入力/閲覧ルール（誤添付・漏れ防止）</li>
             <li class="muted small" style="margin-bottom:8px;">MVPデモシナリオ（案件1件の登録→添付→閲覧→進捗更新）</li>
           </ul>
         </div>
       </div>
+
     </div>
   </body>
 </html>
-

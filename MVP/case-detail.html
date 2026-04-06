@@ -3,13 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - 案件詳細</title>
+    <title>案件詳細 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
   </head>
   <body>
+
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+      <button class="mobile-header__back" type="button" onclick="history.back()" aria-label="戻る">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="mobile-header__title" id="mobileDetailTitle">案件詳細</span>
+      <div class="mobile-header__action">
+        <a class="btn back" id="backToListBtn" href="#" style="font-size:13px; padding:6px 12px;">一覧</a>
+      </div>
+    </header>
+
     <div class="app">
       <div class="layout">
+
+        <!-- SIDEBAR (desktop) -->
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
@@ -25,37 +39,44 @@
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
-                <a class="nav-item" id="navInboxLink" href="#">インボックス <span class="badge">3</span></a>
+                <a class="nav-item" id="navInboxLink" href="#">
+                  受信箱 <span class="badge">3</span>
+                </a>
               </div>
             </nav>
           </div>
         </aside>
 
         <main class="main">
+
+          <!-- TOPNAV (desktop) -->
           <div class="topnav">
-            <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-              <div>案件詳細</div>
-              <div class="breadcrumb">案件一覧 / 案件詳細</div>
+            <div class="brand">
+              <div class="brand-col">
+                <span>案件詳細</span>
+                <span class="breadcrumb">案件一覧 / 案件詳細</span>
+              </div>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-              <a class="btn" id="backToListBtn" href="#">案件一覧へ戻る</a>
+            <div class="topnav-actions">
+              <button class="btn back" type="button" onclick="history.back()">戻る</button>
+              <a class="btn" id="backToListBtnDesktop" href="#">案件一覧へ</a>
             </div>
           </div>
 
+          <!-- Case header -->
           <div class="panel">
             <div class="panel-header">案件ヘッダ</div>
             <div class="panel-body">
               <div class="grid-2">
                 <div>
                   <div class="section-title">案件ID</div>
-                  <div style="font-size:22px; font-weight:800;" id="caseIdLabel">000000</div>
-                  <div class="muted small">（管理番号 / 案件ID）</div>
+                  <div style="font-size:26px; font-weight:800; letter-spacing:-0.04em;" id="caseIdLabel">000000</div>
+                  <div class="muted small">管理番号</div>
                 </div>
                 <div>
-                  <div class="section-title">ステータス（サンプル）</div>
-                  <div class="status-badge"><span class="dot"></span>見積済 / 受付</div>
-                  <div class="muted small" style="margin-top:10px;">
+                  <div class="section-title">ステータス</div>
+                  <span class="status-badge"><span class="dot"></span>見積済 / 受付</span>
+                  <div class="muted small" style="margin-top:8px;">
                     実装時はステータスに応じて表示を切替
                   </div>
                 </div>
@@ -63,8 +84,9 @@
             </div>
           </div>
 
+          <!-- PDF documents -->
           <div class="panel">
-            <div class="panel-header">所定欄（見積/納品/車検証など）</div>
+            <div class="panel-header">所定欄（見積 / 納品書）</div>
             <div class="panel-body">
               <div class="two-col">
                 <div>
@@ -76,15 +98,12 @@
                   <div class="role-admin-only" style="margin-top:12px;">
                     <div class="proto-field">
                       <span class="proto-bubble">見積PDFをここに添付（管理者）</span>
-                      <div class="field-label">見積PDFをアップロード（管理者）</div>
+                      <div class="field-label">見積PDFをアップロード</div>
                       <label class="file-btn file-btn--primary">
                         <span class="file-btn__text">PDFを選択</span>
                         <input id="estimatePdfInput" type="file" accept="application/pdf" />
                       </label>
                     </div>
-                    <p class="muted small" style="margin-top:8px;">
-                      アップロードした内容をその場でプレビュー（プロトタイプ）
-                    </p>
                   </div>
                 </div>
 
@@ -97,21 +116,19 @@
                   <div class="role-admin-only" style="margin-top:12px;">
                     <div class="proto-field">
                       <span class="proto-bubble">納品書PDFをここに添付（管理者）</span>
-                      <div class="field-label">納品書PDFをアップロード（管理者）</div>
+                      <div class="field-label">納品書PDFをアップロード</div>
                       <label class="file-btn file-btn--primary">
                         <span class="file-btn__text">PDFを選択</span>
                         <input id="deliveryPdfInput" type="file" accept="application/pdf" />
                       </label>
                     </div>
-                    <p class="muted small" style="margin-top:8px;">
-                      アップロードした内容をその場でプレビュー（プロトタイプ）
-                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- Status update (admin only) -->
           <div class="panel role-admin-only">
             <div class="panel-header">ステータス更新（管理者）</div>
             <div class="panel-body">
@@ -130,23 +147,26 @@
               <div class="btnbar">
                 <button class="btn success" type="button" onclick="alert('プロトタイプ：保存しません。')">更新する</button>
               </div>
-              <p class="muted small" style="margin-top:12px;">
-                ※この画面はUIプロトタイプです。
-              </p>
+              <p class="muted small" style="margin-top:12px;">※ この画面はUIプロトタイプです。</p>
             </div>
           </div>
 
+          <!-- Progress photos -->
           <div class="panel">
             <div class="panel-header">途中写真（複数）</div>
             <div class="panel-body">
               <div class="case-photo" id="progressPhotosGallery">
-                <div class="thumb photo-thumb" tabindex="0" role="button" data-media-type="image" data-caption="撮影 2026/04/xx" data-media-src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%231d1d1f'/><text x='12' y='66' fill='%236b6b73' font-size='14'>写真1</text></svg>">
+                <div class="thumb photo-thumb" tabindex="0" role="button"
+                     data-media-type="image" data-caption="撮影 2026/04/xx"
+                     data-media-src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%231d1d1f'/><text x='12' y='66' fill='%236b6b73' font-size='14'>写真1</text></svg>">
                   <img alt="途中写真サンプル" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%231d1d1f'/><text x='12' y='66' fill='%236b6b73' font-size='14'>写真1</text></svg>" />
-                  <div class="muted small" style="margin-top:8px;">撮影 2026/04/xx</div>
+                  <div class="muted small" style="margin-top:6px;">撮影 2026/04/xx</div>
                 </div>
-                <div class="thumb photo-thumb" tabindex="0" role="button" data-media-type="image" data-caption="撮影 2026/04/xx" data-media-src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%231d1d1f'/><text x='12' y='66' fill='%236b6b73' font-size='14'>写真2</text></svg>">
+                <div class="thumb photo-thumb" tabindex="0" role="button"
+                     data-media-type="image" data-caption="撮影 2026/04/xx"
+                     data-media-src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%231d1d1f'/><text x='12' y='66' fill='%236b6b73' font-size='14'>写真2</text></svg>">
                   <img alt="途中写真サンプル" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%231d1d1f'/><text x='12' y='66' fill='%236b6b73' font-size='14'>写真2</text></svg>" />
-                  <div class="muted small" style="margin-top:8px;">撮影 2026/04/xx</div>
+                  <div class="muted small" style="margin-top:6px;">撮影 2026/04/xx</div>
                 </div>
               </div>
 
@@ -156,7 +176,7 @@
                 <div class="section-title">写真追加（利用者）</div>
                 <div class="proto-field">
                   <span class="proto-bubble">途中写真を追加（画像・複数可）</span>
-                  <div class="field-label">（スマホで撮影→アップロード想定）</div>
+                  <div class="field-label">スマホで撮影 → アップロード</div>
                   <label class="file-btn">
                     <span class="file-btn__text">写真を追加</span>
                     <input id="progressPhotosInputUser" type="file" multiple accept="image/*" />
@@ -168,29 +188,29 @@
               <div class="role-admin-only" style="margin-top:14px;">
                 <div class="section-title">写真追加（管理者）</div>
                 <div class="proto-field">
-                  <span class="proto-bubble">途中写真を追加（管理者・複数可）</span>
-                  <div class="field-label">（追加写真をアップロード）</div>
+                  <span class="proto-bubble">途中写真を追加（複数可）</span>
+                  <div class="field-label">追加写真をアップロード</div>
                   <label class="file-btn">
                     <span class="file-btn__text">写真を追加</span>
                     <input id="progressPhotosInputAdmin" type="file" multiple accept="image/*" />
                   </label>
                 </div>
-                <p class="muted small" style="margin-top:8px;">選択した画像を一覧に追加（プロトタイプ）</p>
               </div>
             </div>
           </div>
 
+          <!-- Vehicle docs + damage photos -->
           <div class="panel">
-            <div class="panel-header">車検証・損傷部位（アップロード/閲覧）</div>
+            <div class="panel-header">車検証・損傷部位（アップロード / 閲覧）</div>
             <div class="panel-body">
               <div class="two-col">
                 <div>
                   <div class="section-title">車検証</div>
                   <div class="muted small">PDFまたは画像（利用者アップロード）</div>
-                  <div id="vehicleDocPreviewArea" style="margin-top:10px;">
+                  <div id="vehicleDocPreviewArea" style="margin-top:8px;">
                     <div class="muted small">未登録（プロトタイプ）</div>
                   </div>
-                  <div class="btnbar" style="margin-top:10px;">
+                  <div class="btnbar" style="margin-top:8px;">
                     <button class="btn" type="button" id="vehicleDocViewBtn" style="display:none;">プレビュー</button>
                   </div>
                   <div class="role-user-only" style="margin-top:12px;">
@@ -202,34 +222,57 @@
                         <input id="vehicleDocInput" type="file" accept="application/pdf,image/*" />
                       </label>
                     </div>
-                    <p class="muted small" style="margin-top:8px;">アップロードした内容をその場で表示（プロトタイプ）</p>
                   </div>
                 </div>
 
                 <div>
                   <div class="section-title">損傷部位写真</div>
                   <div class="muted small">必要に応じて利用者がアップロード</div>
-                  <div id="damagedPartsEmptyState" class="muted small" style="margin-top:10px;">未登録（プロトタイプ）</div>
-                  <div class="case-photo" id="damagedPartsGallery" style="display:none; margin-top:10px;"></div>
+                  <div id="damagedPartsEmptyState" class="muted small" style="margin-top:8px;">未登録（プロトタイプ）</div>
+                  <div class="case-photo" id="damagedPartsGallery" style="display:none; margin-top:8px;"></div>
                   <div class="role-user-only" style="margin-top:12px;">
                     <div class="proto-field">
                       <span class="proto-bubble">損傷部位の写真（複数可）</span>
-                      <div class="field-label">損傷部位写真をアップロード（複数可）</div>
+                      <div class="field-label">損傷部位写真をアップロード</div>
                       <label class="file-btn">
                         <span class="file-btn__text">写真を追加</span>
                         <input id="damagedPartsInput" type="file" multiple accept="image/*" />
                       </label>
                     </div>
-                    <p class="muted small" style="margin-top:8px;">選択した画像を一覧に追加（プロトタイプ）</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
         </main>
       </div>
     </div>
 
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" id="bottomNav">
+      <a class="bottom-nav__item active" id="bnCaseList" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        <span>案件一覧</span>
+      </a>
+      <a class="bottom-nav__item role-user-only" id="bnNewCase" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <span>新規依頼</span>
+      </a>
+      <a class="bottom-nav__item" id="bnInbox" href="#">
+        <span class="bn-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="bn-badge">3</span>
+        </span>
+        <span>受信箱</span>
+      </a>
+      <a class="bottom-nav__item" id="bnVendors" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>取引先</span>
+      </a>
+    </nav>
+
+    <!-- Lightbox overlay -->
     <div id="viewerOverlay" class="viewer-overlay" aria-hidden="true">
       <div class="viewer-modal">
         <button class="btn viewer-close" type="button" id="viewerCloseBtn">閉じる</button>
@@ -239,244 +282,207 @@
     </div>
 
     <script>
-      // ロール別の導線/添付表示（プロトタイプ用）
       document.addEventListener("DOMContentLoaded", () => {
         const params = new URLSearchParams(window.location.search);
         const caseId = params.get("caseId") || "000000";
-        const role = params.get("role") || "user";
-        const org = params.get("org") || "Honda（例）";
+        const role   = params.get("role")   || "user";
+        const org    = params.get("org")    || "Honda（例）";
 
-        // Sidebar links follow role/org (prototype).
+        // Update mobile header title
+        const mobileTitle = document.getElementById("mobileDetailTitle");
+        if (mobileTitle) mobileTitle.textContent = "案件 #" + caseId;
+
+        // Desktop back-to-list
+        const backDesktop = document.getElementById("backToListBtnDesktop");
+        if (backDesktop) {
+          backDesktop.href = role === "admin"
+            ? "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org)
+            : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+        }
+
+        // Sidebar nav
         const navCaseListLink = document.getElementById("navCaseListLink");
-        const navInboxLink = document.getElementById("navInboxLink");
-        const navNewCaseLink = document.getElementById("navNewCaseLink");
+        const navInboxLink    = document.getElementById("navInboxLink");
+        const navNewCaseLink  = document.getElementById("navNewCaseLink");
         if (navCaseListLink) {
-          navCaseListLink.href =
-            role === "admin"
-              ? "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org)
-              : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+          navCaseListLink.href = role === "admin"
+            ? "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org)
+            : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
         }
         if (navInboxLink) {
-          navInboxLink.href =
-            "./inbox.html?role=" + encodeURIComponent(role) + "&org=" + encodeURIComponent(org);
+          navInboxLink.href = "./inbox.html?role=" + encodeURIComponent(role) + "&org=" + encodeURIComponent(org);
         }
         if (navNewCaseLink) {
-          navNewCaseLink.href =
-            "./user/user-new-case.html?role=user&org=" + encodeURIComponent(org);
+          navNewCaseLink.href = "./user/user-new-case.html?role=user&org=" + encodeURIComponent(org);
         }
 
-        // Update attachment labels with real caseId (prototype text).
+        // PDF attachment labels
         const estimateLabel = document.getElementById("estimatePdfLabel");
         if (estimateLabel) estimateLabel.textContent = "サンプル：見積_" + caseId + ".pdf";
         const deliveryLabel = document.getElementById("deliveryPdfLabel");
         if (deliveryLabel) deliveryLabel.textContent = "サンプル：納品書_" + caseId + ".pdf";
 
-        // File "button" labels: show chosen filename(s).
-        document.querySelectorAll(".file-btn input[type='file']").forEach((input) => {
+        // File button label update
+        document.querySelectorAll(".file-btn input[type='file']").forEach(input => {
           input.addEventListener("change", () => {
             const span = input.closest(".file-btn") && input.closest(".file-btn").querySelector(".file-btn__text");
             if (!span) return;
             const files = input.files;
             if (!files || !files.length) return;
-            if (input.multiple && files.length > 1) {
-              span.textContent = files.length + "件を選択";
-            } else {
-              span.textContent = files[0].name;
-            }
+            span.textContent = input.multiple && files.length > 1
+              ? files.length + "件を選択"
+              : files[0].name;
           });
         });
 
-        // Viewer (lightbox) setup for images/PDF.
-        const viewerOverlay = document.getElementById("viewerOverlay");
-        const viewerMedia = document.getElementById("viewerMedia");
-        const viewerCaption = document.getElementById("viewerCaption");
+        // ── Viewer (lightbox) ──────────────────────────────
+        const viewerOverlay  = document.getElementById("viewerOverlay");
+        const viewerMedia    = document.getElementById("viewerMedia");
+        const viewerCaption  = document.getElementById("viewerCaption");
         const viewerCloseBtn = document.getElementById("viewerCloseBtn");
 
         function closeViewer() {
-          if (viewerOverlay) viewerOverlay.classList.remove("open");
-          if (viewerOverlay) viewerOverlay.setAttribute("aria-hidden", "true");
-          if (viewerMedia) viewerMedia.innerHTML = "";
-          if (viewerCaption) viewerCaption.textContent = "";
+          viewerOverlay && viewerOverlay.classList.remove("open");
+          viewerOverlay && viewerOverlay.setAttribute("aria-hidden", "true");
+          viewerMedia && (viewerMedia.innerHTML = "");
+          viewerCaption && (viewerCaption.textContent = "");
         }
 
-        function openViewer(payload) {
+        function openViewer({ src = "", type = "image", caption = "" }) {
           if (!viewerOverlay || !viewerMedia) return;
-          const src = payload && payload.src ? payload.src : "";
-          const type = payload && payload.type ? payload.type : "image";
-          const caption = payload && payload.caption ? payload.caption : "";
-          viewerMedia.innerHTML = "";
-          if (type === "pdf") {
-            viewerMedia.innerHTML = `<iframe src="${src}" title="PDF" loading="lazy"></iframe>`;
-          } else {
-            viewerMedia.innerHTML = `<img src="${src}" alt="${caption.replace(/"/g, "&quot;")}" />`;
-          }
-          if (viewerCaption) viewerCaption.textContent = caption;
+          viewerMedia.innerHTML = type === "pdf"
+            ? `<iframe src="${src}" title="PDF" loading="lazy"></iframe>`
+            : `<img src="${src}" alt="${caption.replace(/"/g, "&quot;")}" />`;
+          viewerCaption && (viewerCaption.textContent = caption);
           viewerOverlay.classList.add("open");
           viewerOverlay.setAttribute("aria-hidden", "false");
         }
 
         if (viewerCloseBtn) viewerCloseBtn.addEventListener("click", closeViewer);
         if (viewerOverlay) {
-          viewerOverlay.addEventListener("click", (e) => {
-            if (e.target === viewerOverlay) closeViewer();
-          });
+          viewerOverlay.addEventListener("click", e => { if (e.target === viewerOverlay) closeViewer(); });
         }
 
-        // 途中写真 gallery: click-to-lightbox (no separate preview button).
-        document.querySelectorAll(".photo-thumb").forEach((thumb) => {
-          const open = () => {
-            const src =
-              thumb.getAttribute("data-media-src") ||
-              (thumb.querySelector("img") ? thumb.querySelector("img").src : "");
-            const type = thumb.getAttribute("data-media-type") || "image";
-            const caption = thumb.getAttribute("data-caption") || "";
-            openViewer({ src, type, caption });
-          };
-
-          thumb.addEventListener("click", open);
-          thumb.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              open();
-            }
+        // ── Photo gallery click-to-lightbox ───────────────
+        function bindThumb(thumb) {
+          const open = () => openViewer({
+            src:     thumb.getAttribute("data-media-src") || (thumb.querySelector("img") ? thumb.querySelector("img").src : ""),
+            type:    thumb.getAttribute("data-media-type") || "image",
+            caption: thumb.getAttribute("data-caption") || "",
           });
-        });
+          thumb.addEventListener("click", open);
+          thumb.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+        }
+        document.querySelectorAll(".photo-thumb").forEach(bindThumb);
 
-        // Add progress photos from file input (prototype).
+        // ── Progress photos from file input ───────────────
         const progressGallery = document.getElementById("progressPhotosGallery");
-        function addProgressImageThumb(url, caption) {
+        function addProgressThumb(url, caption) {
           if (!progressGallery) return;
           const thumb = document.createElement("div");
           thumb.className = "thumb photo-thumb";
           thumb.setAttribute("tabindex", "0");
           thumb.setAttribute("role", "button");
           thumb.dataset.mediaType = "image";
-          thumb.dataset.caption = caption || "追加写真";
-          thumb.dataset.mediaSrc = url;
+          thumb.dataset.caption   = caption || "追加写真";
+          thumb.dataset.mediaSrc  = url;
           thumb.innerHTML = `
             <img alt="${(caption || "追加写真").replace(/"/g, "&quot;")}" src="${url}" />
-            <div class="muted small" style="margin-top:8px;">${caption || "追加写真"}</div>
+            <div class="muted small" style="margin-top:6px;">${caption || "追加写真"}</div>
           `;
           progressGallery.appendChild(thumb);
-          // Bind click handler immediately.
-          thumb.addEventListener("click", () => openViewer({ src: url, type: "image", caption: thumb.dataset.caption || "" }));
-          thumb.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              openViewer({ src: url, type: "image", caption: thumb.dataset.caption || "" });
-            }
-          });
+          bindThumb(thumb);
         }
 
-        function wireProgressInput(inputId) {
-          const input = document.getElementById(inputId);
+        function wireProgressInput(id) {
+          const input = document.getElementById(id);
           if (!input) return;
           input.addEventListener("change", () => {
-            const files = Array.from(input.files || []);
-            files.forEach((file) => {
+            Array.from(input.files || []).forEach(file => {
               if (!file.type.startsWith("image/")) return;
-              const url = URL.createObjectURL(file);
-              addProgressImageThumb(url, file.name);
+              addProgressThumb(URL.createObjectURL(file), file.name);
             });
             input.value = "";
           });
         }
-
         wireProgressInput("progressPhotosInputUser");
         wireProgressInput("progressPhotosInputAdmin");
 
-        // 見積PDF/納品書PDF attach (admin only upload, both parties can view via preview button).
+        // ── PDF attach (admin) ────────────────────────────
         function wirePdfInput(inputId, labelId, viewBtnId) {
-          const input = document.getElementById(inputId);
-          const label = document.getElementById(labelId);
+          const input   = document.getElementById(inputId);
+          const label   = document.getElementById(labelId);
           const viewBtn = document.getElementById(viewBtnId);
           let objectUrl = null;
-
           if (!input || !label || !viewBtn) return;
-
           input.addEventListener("change", () => {
             const file = input.files && input.files[0];
             if (!file) return;
             if (objectUrl) URL.revokeObjectURL(objectUrl);
             objectUrl = URL.createObjectURL(file);
-            label.textContent = "アップロード済： " + file.name;
+            label.textContent   = "アップロード済：" + file.name;
             viewBtn.style.display = "";
-            viewBtn.onclick = () =>
-              openViewer({ src: objectUrl, type: "pdf", caption: file.name });
+            viewBtn.onclick = () => openViewer({ src: objectUrl, type: "pdf", caption: file.name });
           });
         }
-
         wirePdfInput("estimatePdfInput", "estimatePdfLabel", "estimatePdfViewBtn");
         wirePdfInput("deliveryPdfInput", "deliveryPdfLabel", "deliveryPdfViewBtn");
 
-        // 車検証（PDF or image）
-        const vehicleInput = document.getElementById("vehicleDocInput");
+        // ── Vehicle doc ───────────────────────────────────
+        const vehicleInput       = document.getElementById("vehicleDocInput");
         const vehiclePreviewArea = document.getElementById("vehicleDocPreviewArea");
-        const vehicleViewBtn = document.getElementById("vehicleDocViewBtn");
+        const vehicleViewBtn     = document.getElementById("vehicleDocViewBtn");
         let vehicleObjectUrl = null;
-
         if (vehicleInput && vehiclePreviewArea) {
           vehicleInput.addEventListener("change", () => {
             const file = vehicleInput.files && vehicleInput.files[0];
             if (!file) return;
             if (vehicleObjectUrl) URL.revokeObjectURL(vehicleObjectUrl);
             vehicleObjectUrl = URL.createObjectURL(file);
-
             if (file.type.startsWith("image/")) {
               vehiclePreviewArea.innerHTML = `
-                <div class="thumb photo-thumb" tabindex="0" role="button" data-media-type="image"
-                  data-media-src="${vehicleObjectUrl}" data-caption="車検証：${file.name}">
+                <div class="thumb photo-thumb" tabindex="0" role="button"
+                     data-media-type="image" data-media-src="${vehicleObjectUrl}" data-caption="車検証：${file.name}">
                   <img alt="車検証" src="${vehicleObjectUrl}" />
-                  <div class="muted small" style="margin-top:8px;">${file.name}</div>
+                  <div class="muted small" style="margin-top:6px;">${file.name}</div>
                 </div>
               `;
-              // Make new thumb clickable.
               const newThumb = vehiclePreviewArea.querySelector(".photo-thumb");
-              if (newThumb) {
-                newThumb.addEventListener("click", () =>
-                  openViewer({ src: vehicleObjectUrl, type: "image", caption: "車検証： " + file.name })
-                );
-              }
+              if (newThumb) bindThumb(newThumb);
             } else {
-              vehiclePreviewArea.innerHTML = `
-                <div class="muted small">アップロード済：${file.name}</div>
-              `;
-              if (vehicleViewBtn) vehicleViewBtn.style.display = "";
+              vehiclePreviewArea.innerHTML = `<div class="muted small">アップロード済：${file.name}</div>`;
               if (vehicleViewBtn) {
-                vehicleViewBtn.onclick = () => openViewer({ src: vehicleObjectUrl, type: "pdf", caption: "車検証： " + file.name });
+                vehicleViewBtn.style.display = "";
+                vehicleViewBtn.onclick = () => openViewer({ src: vehicleObjectUrl, type: "pdf", caption: "車検証：" + file.name });
               }
             }
           });
         }
 
-        // 損傷部位写真（複数）
-        const damagedInput = document.getElementById("damagedPartsInput");
-        const damagedGallery = document.getElementById("damagedPartsGallery");
+        // ── Damaged parts photos ──────────────────────────
+        const damagedInput      = document.getElementById("damagedPartsInput");
+        const damagedGallery    = document.getElementById("damagedPartsGallery");
         const damagedEmptyState = document.getElementById("damagedPartsEmptyState");
-
         if (damagedInput && damagedGallery) {
           damagedInput.addEventListener("change", () => {
-            const files = Array.from(damagedInput.files || []);
-            files.forEach((file) => {
+            Array.from(damagedInput.files || []).forEach(file => {
               if (!file.type.startsWith("image/")) return;
-              const url = URL.createObjectURL(file);
+              const url   = URL.createObjectURL(file);
               const thumb = document.createElement("div");
               thumb.className = "thumb photo-thumb";
               thumb.setAttribute("tabindex", "0");
               thumb.setAttribute("role", "button");
               thumb.dataset.mediaType = "image";
-              thumb.dataset.mediaSrc = url;
-              thumb.dataset.caption = file.name;
+              thumb.dataset.mediaSrc  = url;
+              thumb.dataset.caption   = file.name;
               thumb.innerHTML = `
                 <img alt="損傷部位写真" src="${url}" />
-                <div class="muted small" style="margin-top:8px;">${file.name}</div>
+                <div class="muted small" style="margin-top:6px;">${file.name}</div>
               `;
-              thumb.addEventListener("click", () =>
-                openViewer({ src: url, type: "image", caption: file.name })
-              );
               damagedGallery.style.display = "";
               if (damagedEmptyState) damagedEmptyState.style.display = "none";
               damagedGallery.appendChild(thumb);
+              bindThumb(thumb);
             });
             damagedInput.value = "";
           });
@@ -485,4 +491,3 @@
     </script>
   </body>
 </html>
-

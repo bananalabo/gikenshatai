@@ -3,13 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - 新規依頼</title>
+    <title>新規依頼 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
   </head>
   <body>
+
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+      <button class="mobile-header__back" type="button" onclick="history.back()" aria-label="戻る">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="mobile-header__title">新規依頼</span>
+      <div class="mobile-header__action"></div>
+    </header>
+
     <div class="app">
       <div class="layout">
+
+        <!-- SIDEBAR (desktop) -->
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-header">
@@ -21,30 +33,37 @@
                 <div class="nav-group-title">業務</div>
                 <a class="nav-item" id="navCaseListLink" href="#">案件一覧</a>
                 <a class="nav-item" id="navVendorsLink" href="#">取引先</a>
-                <a class="nav-item role-user-only" id="navNewCaseLink" href="#">新規依頼</a>
+                <a class="nav-item active" id="navNewCaseLink" href="#">新規依頼</a>
               </div>
               <div class="nav-group">
                 <div class="nav-group-title">連絡</div>
-                <a class="nav-item" id="navInboxLink" href="#">インボックス <span class="badge">2</span></a>
+                <a class="nav-item" id="navInboxLink" href="#">
+                  受信箱 <span class="badge">2</span>
+                </a>
               </div>
             </nav>
           </div>
         </aside>
 
         <main class="main">
+
+          <!-- TOPNAV (desktop) -->
           <div class="topnav">
-            <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-              <div>新規依頼</div>
-              <div class="breadcrumb">案件一覧 / 新規依頼</div>
+            <div class="brand">
+              <div class="brand-col">
+                <span>新規依頼</span>
+                <span class="breadcrumb">案件一覧 / 新規依頼</span>
+              </div>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-              <div class="muted small">ログアウト（表示用）</div>
+            <div class="topnav-actions">
+              <button class="btn back" type="button" onclick="history.back()">戻る</button>
+              <span class="muted small">ログアウト（表示用）</span>
             </div>
           </div>
 
+          <!-- Form -->
           <div class="panel">
-            <div class="panel-header">新規依頼（MVP：必須は最小限）</div>
+            <div class="panel-header">新規依頼（必須項目のみ）</div>
             <div class="panel-body">
               <div class="grid-2">
                 <div class="proto-field">
@@ -63,46 +82,85 @@
                 <div class="proto-field">
                   <span class="proto-bubble">自由記述（見積条件など）</span>
                   <label>備考（任意）</label>
-                  <textarea placeholder="例：見積に必要な情報など"></textarea>
+                  <textarea placeholder="例：見積に必要な情報、特記事項など"></textarea>
                 </div>
               </div>
 
-              <div class="btnbar">
-                <button class="btn success" type="button" onclick="fakeCreate()">作成する</button>
-                <button class="btn" type="button" onclick="alert('下書き保存：プロトタイプです。')">下書き保存（必要なら）</button>
-                <a class="btn" href="./user-cases.html?role=user&org=Honda（例）">戻る</a>
-              </div>
-
               <p class="muted small" style="margin-top:12px;">
-                ※この画面はUI確認用です。クリックしても実データは保存されません。
+                ※ この画面はUI確認用です。クリックしても実データは保存されません。
               </p>
             </div>
           </div>
+
+          <!-- Desktop button bar -->
+          <div class="btnbar" style="display:none;" id="desktopBtnbar">
+            <button class="btn success" type="button" onclick="fakeCreate()">作成する</button>
+            <button class="btn" type="button" onclick="alert('下書き保存：プロトタイプです。')">下書き保存</button>
+            <a class="btn" id="backToCasesBtn" href="./user-cases.html?role=user&org=Honda（例）">戻る</a>
+          </div>
+
         </main>
       </div>
     </div>
 
+    <!-- Sticky bottom CTA (mobile) -->
+    <div class="page-actions" id="mobileBtnArea"
+         style="position:fixed; bottom:calc(var(--bottom-nav-h) + 8px); left:16px; right:16px; z-index:150;">
+      <button class="btn success btn--full" type="button" onclick="fakeCreate()">作成する</button>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" id="bottomNav">
+      <a class="bottom-nav__item" id="bnCaseList" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        <span>案件一覧</span>
+      </a>
+      <a class="bottom-nav__item active" id="bnNewCase" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <span>新規依頼</span>
+      </a>
+      <a class="bottom-nav__item" id="bnInbox" href="#">
+        <span class="bn-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="bn-badge">2</span>
+        </span>
+        <span>受信箱</span>
+      </a>
+      <a class="bottom-nav__item" id="bnVendors" href="#">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>取引先</span>
+      </a>
+    </nav>
+
     <script>
-      // Sidebar links follow `org` query param (prototype convenience).
       (function () {
         const org = new URLSearchParams(window.location.search).get("org") || "Honda（例）";
-        const casesLink = document.getElementById("navCaseListLink");
-        const vendorsLink = document.getElementById("navVendorsLink");
-        const inboxLink = document.getElementById("navInboxLink");
-        const newCaseLink = document.getElementById("navNewCaseLink");
-        if (casesLink) casesLink.href = "./user-cases.html?role=user&org=" + encodeURIComponent(org);
-        if (vendorsLink) vendorsLink.href = "../vendors.html?role=user&org=" + encodeURIComponent(org);
-        if (inboxLink) inboxLink.href = "../inbox.html?role=user&org=" + encodeURIComponent(org);
-        if (newCaseLink) newCaseLink.href = "./user-new-case.html?role=user&org=" + encodeURIComponent(org);
+        const backBtn = document.getElementById("backToCasesBtn");
+        if (backBtn) backBtn.href = "./user-cases.html?role=user&org=" + encodeURIComponent(org);
+      })();
+
+      // Show desktop btn bar on ≥900px
+      (function () {
+        function checkLayout() {
+          const desktopBar = document.getElementById("desktopBtnbar");
+          const mobileCta  = document.getElementById("mobileBtnArea");
+          if (!desktopBar || !mobileCta) return;
+          if (window.innerWidth >= 900) {
+            desktopBar.style.display = "flex";
+            mobileCta.style.display  = "none";
+          } else {
+            desktopBar.style.display = "none";
+            mobileCta.style.display  = "flex";
+          }
+        }
+        checkLayout();
+        window.addEventListener("resize", checkLayout);
       })();
 
       function fakeCreate() {
         const org = new URLSearchParams(window.location.search).get("org") || "Honda（例）";
-        // プロトタイプとして固定の案件IDへ遷移
-        const nextCaseId = "000201";
-        window.location.href = "../case-detail.html?role=user&caseId=" + nextCaseId + "&org=" + encodeURIComponent(org);
+        window.location.href = "../case-detail.html?role=user&caseId=000201&org=" + encodeURIComponent(org);
       }
     </script>
   </body>
 </html>
-

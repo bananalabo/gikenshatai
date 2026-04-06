@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ログイン — 案件管理プラットフォーム</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="auth-page">
+    <div class="auth-container">
+
+      <!-- Brand -->
+      <div class="auth-brand">
+        <div class="auth-brand__logo">G</div>
+        <div class="auth-brand__name">案件管理プラットフォーム</div>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="auth-heading">おかえりなさい</h1>
+      <p class="auth-subheading">アカウントにログインして、案件の進捗を確認しましょう。</p>
+
+      <!-- Login form -->
+      <div class="field-group">
+        <div class="field-group__item">
+          <label class="field-group__label" for="loginEmail">メールアドレス</label>
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="例：tanaka@honda.co.jp"
+            autocomplete="email"
+            inputmode="email"
+          />
+        </div>
+        <div class="field-group__item">
+          <label class="field-group__label" for="loginPassword">パスワード</label>
+          <div class="d-flex align-center gap-sm">
+            <input
+              id="loginPassword"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              style="flex:1; border:none; box-shadow:none; padding:0; border-radius:0; font-size:16px; background:transparent;"
+            />
+            <button
+              type="button"
+              onclick="togglePassword('loginPassword', this)"
+              style="border:none; background:none; color:var(--muted); font-size:13px; cursor:pointer; white-space:nowrap; padding:0;"
+              aria-label="パスワードを表示"
+            >表示</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forgot password -->
+      <div style="text-align:right; margin-top:-4px; margin-bottom:20px;">
+        <a href="#" onclick="alert('プロトタイプ：パスワードリセットは未実装です。'); return false;"
+           style="font-size:14px; color:var(--primary); font-weight:500;">
+          パスワードをお忘れですか？
+        </a>
+      </div>
+
+      <!-- CTA -->
+      <a
+        class="btn primary btn--full"
+        href="./user/user-cases.html?role=user&org=Honda（例）"
+        style="font-size:16px; padding:15px 20px;"
+      >
+        ログイン
+      </a>
+
+      <!-- Sign up link -->
+      <div class="auth-footer">
+        アカウントをお持ちでない方は
+        <a href="./user-signup.html">新規登録はこちら</a>
+      </div>
+
+      <!-- Admin separator -->
+      <div class="auth-divider" style="margin-top:32px;">管理者の方</div>
+      <div style="text-align:center;">
+        <a href="./login.html" style="font-size:14px; color:var(--muted);">
+          管理者ログインページへ →
+        </a>
+      </div>
+
+    </div>
+
+    <script>
+      function togglePassword(id, btn) {
+        const input = document.getElementById(id);
+        if (!input) return;
+        if (input.type === "password") {
+          input.type = "text";
+          btn.textContent = "隠す";
+        } else {
+          input.type = "password";
+          btn.textContent = "表示";
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -3,58 +3,84 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - 添付プレビュー</title>
+    <title>添付プレビュー — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
   </head>
   <body>
-    <div class="app">
+
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+      <button class="mobile-header__back" type="button" onclick="history.back()" aria-label="戻る">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="mobile-header__title">添付プレビュー</span>
+      <div class="mobile-header__action">
+        <span class="muted small">案件 #<span id="caseIdLabel">000000</span></span>
+      </div>
+    </header>
+
+    <div class="app app--simple">
+
+      <!-- TOPNAV (desktop) -->
       <div class="topnav">
-        <div class="brand" style="flex-direction:column; align-items:flex-start; gap:4px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="pill">Preview</div>
-            <div>添付プレビュー</div>
+        <div class="brand">
+          <div class="brand-col">
+            <div class="brand-row">
+              <span class="pill">Preview</span>
+              <span>添付プレビュー</span>
+            </div>
+            <span class="breadcrumb">案件詳細 / 添付プレビュー</span>
           </div>
-          <div class="breadcrumb">案件一覧 / 添付プレビュー</div>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button class="btn back" type="button" onclick="window.history.back()">戻る</button>
-          <div class="muted small">案件ID：<span id="caseIdLabel">000000</span></div>
+        <div class="topnav-actions">
+          <button class="btn back" type="button" onclick="history.back()">戻る</button>
+          <span class="muted small">案件ID：<span id="caseIdLabelDesktop">000000</span></span>
         </div>
       </div>
 
+      <!-- Image preview -->
       <div class="panel">
         <div class="panel-header">画像プレビュー（途中写真）</div>
         <div class="panel-body">
           <div class="section-title">表示（サンプル）</div>
-          <div class="thumb" style="min-height: 260px;">
+          <div class="thumb" style="min-height:220px; cursor:default;">
             <img
               alt="拡大プレビュー"
-              style="height: 190px;"
-              src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='360'><rect width='900' height='360' fill='%23111b2f'/><text x='40' y='190' fill='%239fb0d0' font-size='24'>途中写真（拡大）</text><text x='40' y='250' fill='%235aa2ff' font-size='14'>プロトタイプ表示</text></svg>"
+              style="height:160px; width:100%; object-fit:contain; border-radius:10px;"
+              src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='360'><rect width='900' height='360' fill='%231d1d1f'/><text x='40' y='190' fill='%236b6b73' font-size='24'>途中写真（拡大）</text><text x='40' y='230' fill='%235aa2ff' font-size='14'>プロトタイプ表示</text></svg>"
             />
           </div>
           <div class="btnbar">
-            <a class="btn" href="#" onclick="alert('プロトタイプ：前へ/次へはありません。'); return false;">前へ</a>
-            <a class="btn" href="#" onclick="alert('プロトタイプ：前へ/次へはありません。'); return false;">次へ</a>
-            <a class="btn" href="javascript:history.back()">戻る</a>
+            <button class="btn" type="button" onclick="alert('プロトタイプ：前後移動はありません。')">← 前へ</button>
+            <button class="btn" type="button" onclick="alert('プロトタイプ：前後移動はありません。')">次へ →</button>
+            <button class="btn" type="button" onclick="history.back()">戻る</button>
           </div>
         </div>
       </div>
 
+      <!-- PDF preview -->
       <div class="panel">
-        <div class="panel-header">PDFプレビュー（見積/納品）</div>
+        <div class="panel-header">PDFプレビュー（見積 / 納品書）</div>
         <div class="panel-body">
-          <div class="muted small">
-            実装時はPDFの埋め込み or 新規タブ表示を想定。
-          </div>
+          <p class="muted small" style="margin:0 0 14px;">
+            実装時はPDFの埋め込みまたは新規タブ表示を想定。
+          </p>
           <div class="btnbar">
-            <button class="btn primary" type="button" onclick="alert('プロトタイプ：PDFプレビューしません。')">PDFを表示</button>
+            <button class="btn primary" type="button" onclick="alert('プロトタイプ：PDFを表示しません。')">PDFを表示</button>
             <button class="btn" type="button" onclick="alert('プロトタイプ：ダウンロードしません。')">ダウンロード</button>
           </div>
         </div>
       </div>
+
     </div>
+
+    <script>
+      (function () {
+        const caseId = new URLSearchParams(window.location.search).get("caseId") || "000000";
+        const labels = document.querySelectorAll("#caseIdLabel, #caseIdLabelDesktop");
+        labels.forEach(el => { el.textContent = caseId; });
+      })();
+    </script>
   </body>
 </html>
-

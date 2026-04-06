@@ -3,110 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MVP Prototype - 利用者案件詳細（アップロード）</title>
+    <title>案件詳細 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="../styles.css" />
-    <script src="../mvp.js"></script>
   </head>
   <body>
     <script>
-      // Deprecated page: redirect to the shared one-page case detail.
       (function () {
-        var params = new URLSearchParams(window.location.search);
-        var caseId = params.get("caseId") || "000000";
-        var org = params.get("org") || "Honda（例）";
-        window.location.href =
+        var p      = new URLSearchParams(window.location.search);
+        var caseId = p.get("caseId") || "000000";
+        var org    = p.get("org")    || "Honda（例）";
+        window.location.replace(
           "../case-detail.html?role=user&caseId=" +
-          encodeURIComponent(caseId) +
-          "&org=" +
-          encodeURIComponent(org);
+          encodeURIComponent(caseId) + "&org=" + encodeURIComponent(org)
+        );
       })();
     </script>
-    <div class="app">
-      <div class="topnav">
-        <div class="brand">
-          <div class="pill">User</div>
-          <div>案件詳細（アップロード）</div>
-        </div>
-        <div class="muted small">組織：<span id="orgLabel">Honda（例）</span></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">案件ヘッダ</div>
-        <div class="panel-body">
-          <div class="grid-2">
-            <div>
-              <div class="section-title">案件ID</div>
-              <div style="font-size:22px; font-weight:800;" id="caseIdLabel">000101</div>
-            </div>
-            <div>
-              <div class="section-title">現在ステータス</div>
-              <span class="status-badge"><span class="dot"></span>受付</span>
-            </div>
-          </div>
-          <div class="divider"></div>
-          <div class="section-title">所定欄：見積PDF</div>
-          <div class="proto-field">
-            <span class="proto-bubble">見積PDFを選択</span>
-            <input type="file" />
-          </div>
-          <div class="btnbar">
-            <button class="btn primary" type="button" onclick="alert('プロトタイプ：アップロードしません。')">保存</button>
-          </div>
-          <p class="muted small">※この画面はプロトタイプのため保存しません。</p>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="panel">
-          <div class="panel-header">所定欄：納品書PDF</div>
-          <div class="panel-body">
-            <div class="proto-field">
-              <span class="proto-bubble">納品書PDFを選択</span>
-              <input type="file" />
-            </div>
-            <div class="btnbar">
-              <button class="btn primary" type="button" onclick="alert('プロトタイプ：保存しません。')">保存</button>
-            </div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-header">途中写真（複数）</div>
-          <div class="panel-body">
-            <div class="proto-field">
-              <span class="proto-bubble">途中写真を追加（複数可）</span>
-              <label>写真追加</label>
-              <input type="file" multiple />
-            </div>
-            <div class="btnbar">
-              <button class="btn primary" type="button" onclick="alert('プロトタイプ：保存しません。')">追加後に反映</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">添付一覧（プレビュー）</div>
-        <div class="panel-body">
-          <div class="case-photo">
-            <div class="thumb">
-              <img alt="途中写真サンプル" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%23111b2f'/><text x='12' y='66' fill='%239fb0d0' font-size='14'>途中1</text></svg>" />
-              <div class="btnbar" style="margin-top:8px;">
-                <a class="btn" href="../attachment-preview.html?caseId=000101&type=progress&idx=1">プレビュー</a>
-              </div>
-            </div>
-            <div class="thumb">
-              <img alt="途中写真サンプル" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><rect width='240' height='120' fill='%23111b2f'/><text x='12' y='66' fill='%239fb0d0' font-size='14'>途中2</text></svg>" />
-              <div class="btnbar" style="margin-top:8px;">
-                <a class="btn" href="../attachment-preview.html?caseId=000101&type=progress&idx=2">プレビュー</a>
-              </div>
-            </div>
-          </div>
-          <div class="btnbar" style="margin-top:14px;">
-            <a class="btn" href="./user-cases.html?org=Honda（例）">案件一覧へ戻る</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <noscript>
+      <meta http-equiv="refresh" content="0;url=../case-detail.html?role=user" />
+    </noscript>
   </body>
 </html>
-

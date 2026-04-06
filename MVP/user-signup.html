@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>新規登録 — 案件管理プラットフォーム</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="auth-page">
+    <div class="auth-container" style="max-width:480px; justify-content:flex-start; padding-top:40px;">
+
+      <!-- Brand + back -->
+      <div class="d-flex align-center justify-between" style="margin-bottom:28px;">
+        <div class="auth-brand" style="margin-bottom:0;">
+          <div class="auth-brand__logo">G</div>
+          <div class="auth-brand__name">案件管理プラットフォーム</div>
+        </div>
+        <a href="./user-login.html" style="font-size:14px; color:var(--muted);">← ログインへ</a>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="auth-heading">アカウント登録</h1>
+      <p class="auth-subheading">以下の情報を入力してアカウントを作成してください。</p>
+
+      <!-- Section 1: Company -->
+      <div class="auth-section-title">会社情報</div>
+      <div class="field-group">
+        <div class="field-group__item">
+          <label class="field-group__label" for="companyName">
+            会社名 / 組織名 <span style="color:var(--danger);">*</span>
+          </label>
+          <input
+            id="companyName"
+            type="text"
+            placeholder="例：株式会社ホンダ"
+            autocomplete="organization"
+            required
+          />
+        </div>
+        <div class="field-group__item">
+          <label class="field-group__label" for="industry">
+            業種
+          </label>
+          <select id="industry" style="color:var(--text);">
+            <option value="">選択してください</option>
+            <option>自動車・輸送機器</option>
+            <option>保険・金融</option>
+            <option>物流・運輸</option>
+            <option>建設・工事</option>
+            <option>製造・メーカー</option>
+            <option>ディーラー・販売店</option>
+            <option>その他</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Section 2: Contact person -->
+      <div class="auth-section-title">担当者情報</div>
+      <div class="field-group">
+        <div class="field-group__item">
+          <label class="field-group__label" for="fullName">
+            氏名 <span style="color:var(--danger);">*</span>
+          </label>
+          <input
+            id="fullName"
+            type="text"
+            placeholder="例：田中 太郎"
+            autocomplete="name"
+            required
+          />
+        </div>
+        <div class="field-group__item">
+          <label class="field-group__label" for="email">
+            メールアドレス <span style="color:var(--danger);">*</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="例：tanaka@honda.co.jp"
+            autocomplete="email"
+            inputmode="email"
+            required
+          />
+        </div>
+        <div class="field-group__item">
+          <label class="field-group__label" for="phone">
+            電話番号（任意）
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            placeholder="例：090-1234-5678"
+            autocomplete="tel"
+            inputmode="tel"
+          />
+        </div>
+        <div class="field-group__item">
+          <label class="field-group__label" for="password">
+            パスワード <span style="color:var(--danger);">*</span>
+          </label>
+          <div class="d-flex align-center gap-sm">
+            <input
+              id="password"
+              type="password"
+              placeholder="8文字以上"
+              autocomplete="new-password"
+              required
+              style="flex:1; border:none; box-shadow:none; padding:0; border-radius:0; font-size:16px; background:transparent;"
+            />
+            <button
+              type="button"
+              onclick="togglePassword('password', this)"
+              style="border:none; background:none; color:var(--muted); font-size:13px; cursor:pointer; white-space:nowrap; padding:0;"
+            >表示</button>
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-top:6px;">
+            半角英数字・記号を含む8文字以上
+          </div>
+        </div>
+        <div class="field-group__item">
+          <label class="field-group__label" for="passwordConfirm">
+            パスワード確認 <span style="color:var(--danger);">*</span>
+          </label>
+          <input
+            id="passwordConfirm"
+            type="password"
+            placeholder="••••••••"
+            autocomplete="new-password"
+            required
+            style="border:none; box-shadow:none; padding:0; border-radius:0; font-size:16px; background:transparent;"
+          />
+        </div>
+      </div>
+
+      <!-- Section 3: Agreement -->
+      <div class="auth-section-title">同意</div>
+      <div class="field-group" style="margin-bottom:24px;">
+        <div class="field-group__item">
+          <label class="check-row" style="border-top:none; padding-top:0;">
+            <input type="checkbox" id="agreeTerms" required />
+            <span>
+              <a href="#" onclick="alert('プロトタイプ：利用規約ページは未実装です。'); return false;"
+                 style="color:var(--primary); font-weight:600;">利用規約</a>および
+              <a href="#" onclick="alert('プロトタイプ：プライバシーポリシーは未実装です。'); return false;"
+                 style="color:var(--primary); font-weight:600;">プライバシーポリシー</a>
+              に同意します
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit CTA -->
+      <button
+        class="btn primary btn--full"
+        type="button"
+        onclick="handleSignup()"
+        style="font-size:16px; padding:15px 20px;"
+      >
+        アカウント登録
+      </button>
+
+      <div class="auth-footer">
+        すでにアカウントをお持ちの方は
+        <a href="./user-login.html">ログインはこちら</a>
+      </div>
+
+      <!-- Prototype note -->
+      <p class="muted small" style="text-align:center; margin-top:20px;">
+        ※ このフォームはUIプロトタイプです。入力内容は保存されません。
+      </p>
+
+    </div>
+
+    <script>
+      function togglePassword(id, btn) {
+        const input = document.getElementById(id);
+        if (!input) return;
+        if (input.type === "password") {
+          input.type = "text";
+          btn.textContent = "隠す";
+        } else {
+          input.type = "password";
+          btn.textContent = "表示";
+        }
+      }
+
+      function handleSignup() {
+        const company = document.getElementById("companyName").value.trim();
+        const name    = document.getElementById("fullName").value.trim();
+        const email   = document.getElementById("email").value.trim();
+        const pw      = document.getElementById("password").value;
+        const pwc     = document.getElementById("passwordConfirm").value;
+        const agreed  = document.getElementById("agreeTerms").checked;
+
+        if (!company || !name || !email || !pw) {
+          alert("必須項目をすべて入力してください。");
+          return;
+        }
+        if (pw !== pwc) {
+          alert("パスワードが一致しません。");
+          return;
+        }
+        if (pw.length < 8) {
+          alert("パスワードは8文字以上で入力してください。");
+          return;
+        }
+        if (!agreed) {
+          alert("利用規約への同意が必要です。");
+          return;
+        }
+        // Prototype: redirect to user cases with the entered company as org
+        const org = company || "Honda（例）";
+        window.location.href = "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+      }
+    </script>
+  </body>
+</html>
