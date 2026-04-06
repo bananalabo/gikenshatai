@@ -75,11 +75,16 @@
                 </div>
                 <div>
                   <div class="section-title">ステータス</div>
-                  <span class="status-badge"><span class="dot"></span>見積済 / 受付</span>
+                  <span class="status-badge status-quoted"><span class="dot"></span>見積済</span>
                   <div class="muted small" style="margin-top:8px;">
-                    実装時はステータスに応じて表示を切替
+                    次のアクション：必要書類の確認
                   </div>
                 </div>
+              </div>
+              <div class="divider"></div>
+              <div class="d-flex align-center justify-between flex-wrap gap-sm">
+                <span class="section-title" style="margin:0;">必須項目の進捗</span>
+                <span class="status-badge status-checking">2 / 4 完了</span>
               </div>
             </div>
           </div>
@@ -145,9 +150,9 @@
                 </select>
               </div>
               <div class="btnbar">
-                <button class="btn success" type="button" onclick="alert('プロトタイプ：保存しません。')">更新する</button>
+                <button class="btn success" type="button" onclick="window.mvpNotify && window.mvpNotify('ステータスを更新しました', 'success')">更新する</button>
               </div>
-              <p class="muted small" style="margin-top:12px;">※ この画面はUIプロトタイプです。</p>
+              <p class="demo-note" style="margin-top:12px;">Demo mode: 変更は保存されません</p>
             </div>
           </div>
 
@@ -286,7 +291,7 @@
         const params = new URLSearchParams(window.location.search);
         const caseId = params.get("caseId") || "000000";
         const role   = params.get("role")   || "user";
-        const org    = params.get("org")    || "Honda（例）";
+        const org    = params.get("org")    || "Honda";
 
         // Update mobile header title
         const mobileTitle = document.getElementById("mobileDetailTitle");
@@ -296,8 +301,9 @@
         const backDesktop = document.getElementById("backToListBtnDesktop");
         if (backDesktop) {
           backDesktop.href = role === "admin"
-            ? "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org)
-            : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+            ? (window.buildMvpHref ? window.buildMvpHref("./admin/admin-cases.html", { role: "admin", org: org }) : "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org))
+            : (window.buildMvpHref ? window.buildMvpHref("./user/user-cases.html", { role: "user", org: org }) : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org));
+          backDesktop.setAttribute("data-nav-dir", "back");
         }
 
         // Sidebar nav
@@ -306,14 +312,14 @@
         const navNewCaseLink  = document.getElementById("navNewCaseLink");
         if (navCaseListLink) {
           navCaseListLink.href = role === "admin"
-            ? "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org)
-            : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+            ? (window.buildMvpHref ? window.buildMvpHref("./admin/admin-cases.html", { role: "admin", org: org }) : "./admin/admin-cases.html?role=admin&org=" + encodeURIComponent(org))
+            : (window.buildMvpHref ? window.buildMvpHref("./user/user-cases.html", { role: "user", org: org }) : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org));
         }
         if (navInboxLink) {
-          navInboxLink.href = "./inbox.html?role=" + encodeURIComponent(role) + "&org=" + encodeURIComponent(org);
+          navInboxLink.href = window.buildMvpHref ? window.buildMvpHref("./inbox.html", { role: role, org: org }) : "./inbox.html?role=" + encodeURIComponent(role) + "&org=" + encodeURIComponent(org);
         }
         if (navNewCaseLink) {
-          navNewCaseLink.href = "./user/user-new-case.html?role=user&org=" + encodeURIComponent(org);
+          navNewCaseLink.href = window.buildMvpHref ? window.buildMvpHref("./user/user-new-case.html", { role: "user", org: org }) : "./user/user-new-case.html?role=user&org=" + encodeURIComponent(org);
         }
 
         // PDF attachment labels

@@ -11,7 +11,7 @@
       (function () {
         var p      = new URLSearchParams(window.location.search);
         var caseId = p.get("caseId") || "000000";
-        var org    = p.get("org")    || "Honda（例）";
+        var org    = p.get("org")    || "Honda";
         window.location.replace(
           "../case-detail.html?role=user&caseId=" +
           encodeURIComponent(caseId) + "&org=" + encodeURIComponent(org)

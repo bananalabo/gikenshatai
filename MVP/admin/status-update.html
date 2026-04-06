@@ -63,7 +63,7 @@
           </div>
 
           <div class="page-actions">
-            <button class="btn success btn--full" type="button" onclick="alert('プロトタイプ：保存しません。')">
+            <button class="btn success btn--full" type="button" onclick="window.mvpNotify && window.mvpNotify('ステータスを更新しました', 'success')">
               更新する
             </button>
             <a class="btn btn--full" id="backToCasesBtn" href="./admin-cases.html?role=admin&org=元請け">
@@ -71,8 +71,8 @@
             </a>
           </div>
 
-          <p class="muted small" style="margin-top:14px;">
-            ※ MVPの実装時に管理者のみ更新可能にする前提。
+          <p class="demo-note" style="margin-top:14px;">
+            Demo mode: 更新内容は保存されません
           </p>
         </div>
       </div>
@@ -91,7 +91,9 @@
 
         const backBtn = document.getElementById("backToCasesBtn");
         if (backBtn) {
-          backBtn.href = "./admin-cases.html?role=admin&org=" + encodeURIComponent(org);
+          backBtn.href = window.buildMvpHref
+            ? window.buildMvpHref("./admin-cases.html", { role: "admin", org: org })
+            : "./admin-cases.html?role=admin&org=" + encodeURIComponent(org);
         }
       })();
     </script>

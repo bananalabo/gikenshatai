@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MVP画面一覧（クライアント向け）</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./mvp.js"></script>
   </head>
   <body>
     <!-- Mobile header (simple — no bottom nav on this docs page) -->
@@ -131,39 +132,39 @@
                   <td class="small muted">案件ID・関連先・ステータスで一覧。クリックで案件詳細へ</td>
                   <td style="display:flex; gap:8px; flex-wrap:wrap;">
                     <a class="btn" href="./admin/admin-cases.html?role=admin&org=元請け">Admin</a>
-                    <a class="btn" href="./user/user-cases.html?role=user&org=Honda（例）">User</a>
+                    <a class="btn" href="./user/user-cases.html?role=user&org=Honda">User</a>
                   </td>
                 </tr>
                 <tr>
                   <td>取引先</td>
                   <td class="small muted">取引先（ディーラー/法人）単位で案件を分けて探しやすくする</td>
                   <td style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <a class="btn" href="./vendors.html?role=admin&org=Honda（例）">Admin</a>
-                    <a class="btn" href="./vendors.html?role=user&org=Honda（例）">User</a>
+                    <a class="btn" href="./vendors.html?role=admin&org=元請け">Admin</a>
+                    <a class="btn" href="./vendors.html?role=user&org=Honda">User</a>
                   </td>
                 </tr>
                 <tr>
                   <td>新規依頼</td>
                   <td class="small muted">Userが案件を作成（MVPでは必須項目のみ）</td>
-                  <td><a class="btn" href="./user/user-new-case.html?role=user&org=Honda（例）">開く</a></td>
+                  <td><a class="btn" href="./user/user-new-case.html?role=user&org=Honda">開く</a></td>
                 </tr>
                 <tr>
                   <td>案件詳細（共通）</td>
                   <td class="small muted">同じ画面でroleに応じて「操作できる領域」が変わる</td>
                   <td style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <a class="btn" href="./case-detail.html?role=admin&caseId=000012&org=Honda（例）">Admin</a>
-                    <a class="btn" href="./case-detail.html?role=user&caseId=000101&org=Honda（例）">User</a>
+                    <a class="btn" href="./case-detail.html?role=admin&caseId=000012&org=元請け">Admin</a>
+                    <a class="btn" href="./case-detail.html?role=user&caseId=000101&org=Honda">User</a>
                   </td>
                 </tr>
                 <tr>
                   <td>受信箱</td>
                   <td class="small muted">案件に紐づくメッセージを一覧（未読/既読）</td>
-                  <td><a class="btn" href="./inbox.html?role=user&org=Honda（例）">開く</a></td>
+                  <td><a class="btn" href="./inbox.html?role=user&org=Honda">開く</a></td>
                 </tr>
                 <tr>
                   <td>メッセージスレッド</td>
                   <td class="small muted">会話の流れを確認し、返信できるUI</td>
-                  <td><a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda（例）&caseId=000012">開く</a></td>
+                  <td><a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda&caseId=000012">開く</a></td>
                 </tr>
                 <tr>
                   <td>添付プレビュー</td>
@@ -187,6 +188,19 @@
             <li class="muted small" style="margin-bottom:8px;">roleごとの入力/閲覧ルール（誤添付・漏れ防止）</li>
             <li class="muted small" style="margin-bottom:8px;">MVPデモシナリオ（案件1件の登録→添付→閲覧→進捗更新）</li>
           </ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">6. 3分デモの推奨シナリオ</div>
+        <div class="panel-body">
+          <ol style="margin:0; padding-left:18px;">
+            <li class="muted small" style="margin-bottom:8px;">入口で「役割ごとに同じ案件を追跡できる」ことを説明</li>
+            <li class="muted small" style="margin-bottom:8px;">Userで新規依頼を作成し、案件詳細で写真/書類を追加</li>
+            <li class="muted small" style="margin-bottom:8px;">Adminで同案件を確認し、ステータスを更新</li>
+            <li class="muted small">Inboxで依頼・確認の往復を見せて、情報の一元化価値で締める</li>
+          </ol>
+          <p class="demo-note" style="margin-top:12px;">Demo mode: サンプルデータで一連の業務フローを体験できます</p>
         </div>
       </div>
 

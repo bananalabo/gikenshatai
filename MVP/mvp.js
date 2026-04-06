@@ -1,6 +1,5 @@
 // MVP prototype helper — no backend.
-// Reads query params so the same pages feel consistent when navigating.
-// Also wires the bottom tab bar and mobile header.
+// Unifies params/navigation, adds app-like transitions, and shared feedback UI.
 
 (function syncMvpRole() {
   const p = new URLSearchParams(window.location.search);
@@ -14,15 +13,132 @@ function getQueryParam(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
 
+function normalizeOrgName(orgRaw) {
+  const raw = (orgRaw || "").trim();
+  if (!raw) return "";
+
+  const normalized = raw
+    .replace(/（例）/g, "")
+    .replace(/\(例\)/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const map = {
+    Honda: "Honda",
+    ホンダ: "Honda",
+    元請け: "元請け",
+    損保A: "損保A",
+    物流B: "物流B",
+  };
+
+  return map[normalized] || normalized;
+}
+
+function buildMvpHref(path, params) {
+  const q = new URLSearchParams();
+  Object.keys(params || {}).forEach(key => {
+    const val = params[key];
+    if (val !== undefined && val !== null && val !== "") q.set(key, String(val));
+  });
+  const qs = q.toString();
+  return qs ? path + "?" + qs : path;
+}
+
+function initPageEnterAnimation() {
+  const body = document.body;
+  if (!body) return;
+
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    body.classList.add("page-ready");
+    return;
+  }
+
+  const navDir = sessionStorage.getItem("mvp-nav-dir") || "forward";
+  body.classList.add(navDir === "back" ? "page-enter-back" : "page-enter-forward");
+  requestAnimationFrame(() => {
+    body.classList.add("page-enter-active");
+    window.setTimeout(() => {
+      body.classList.add("page-ready");
+      body.classList.remove("page-enter-forward", "page-enter-back", "page-enter-active");
+    }, 260);
+  });
+}
+
+function shouldAnimateNavLink(anchor) {
+  if (!anchor) return false;
+  const href = anchor.getAttribute("href") || "";
+  if (!href || href.startsWith("#")) return false;
+  if (anchor.hasAttribute("data-no-transition")) return false;
+  if (anchor.target && anchor.target !== "_self") return false;
+  if (/^https?:\/\//i.test(href)) return false;
+  return true;
+}
+
+function initNavigationTransitions() {
+  document.addEventListener("click", e => {
+    const anchor = e.target && e.target.closest ? e.target.closest("a") : null;
+    if (!shouldAnimateNavLink(anchor)) return;
+
+    const href = anchor.getAttribute("href");
+    const navDirAttr = anchor.getAttribute("data-nav-dir");
+    const navDir = navDirAttr || (anchor.classList.contains("back") ? "back" : "forward");
+    sessionStorage.setItem("mvp-nav-dir", navDir);
+
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    e.preventDefault();
+    document.body.classList.add("page-leave", navDir === "back" ? "page-leave-back" : "page-leave-forward");
+    window.setTimeout(() => {
+      window.location.href = href;
+    }, 130);
+  });
+}
+
+function ensureMvpToast() {
+  if (document.getElementById("mvpToast")) return;
+  const toast = document.createElement("div");
+  toast.id = "mvpToast";
+  toast.className = "mvp-toast";
+  toast.setAttribute("aria-live", "polite");
+  toast.setAttribute("aria-atomic", "true");
+  toast.hidden = true;
+  document.body.appendChild(toast);
+}
+
+function mvpNotify(message, tone) {
+  ensureMvpToast();
+  const toast = document.getElementById("mvpToast");
+  if (!toast) return;
+  toast.className = "mvp-toast" + (tone ? " is-" + tone : "");
+  toast.textContent = message;
+  toast.hidden = false;
+  toast.classList.remove("is-visible");
+  requestAnimationFrame(() => toast.classList.add("is-visible"));
+  window.clearTimeout(mvpNotify._timer);
+  mvpNotify._timer = window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+    window.setTimeout(() => {
+      toast.hidden = true;
+    }, 180);
+  }, 1800);
+}
+
+window.mvpNotify = mvpNotify;
+window.buildMvpHref = buildMvpHref;
+window.normalizeOrgName = normalizeOrgName;
+
 document.addEventListener("DOMContentLoaded", () => {
+  initPageEnterAnimation();
+  initNavigationTransitions();
+
   const role        = getQueryParam("role") || "user";
-  const orgFallback = "Honda（例）";
-  const orgQuery    = getQueryParam("org") || orgFallback;
+  const orgFallback = role === "admin" ? "元請け" : "Honda";
+  const orgQuery    = normalizeOrgName(getQueryParam("org") || orgFallback);
   const path        = window.location.pathname || "";
   const isInSubfolder = /\/(admin|user)\//.test(path);
   // Pages in admin/ or user/ folders need "../" to reach root assets.
   const rootPrefix = isInSubfolder ? "../" : "./";
-  const hrefOrg    = encodeURIComponent(orgQuery);
+  const hrefOrg    = orgQuery;
 
   // ── Case ID label ────────────────────────────────────────
   const caseIdLabel = document.getElementById("caseIdLabel");
@@ -37,15 +153,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── Role pill ────────────────────────────────────────────
   const rolePill = document.getElementById("rolePill");
   if (rolePill) {
-    rolePill.textContent = role === "admin" ? "Admin" : "User";
+    rolePill.textContent = role === "admin" ? "管理者" : "利用者";
   }
 
   // ── Back-to-list button ──────────────────────────────────
   const backBtn = document.getElementById("backToListBtn");
   if (backBtn) {
     backBtn.href = role === "admin"
-      ? rootPrefix + "admin/admin-cases.html?role=admin&org=" + hrefOrg
-      : rootPrefix + "user/user-cases.html?role=user&org=" + hrefOrg;
+      ? buildMvpHref(rootPrefix + "admin/admin-cases.html", { role: "admin", org: hrefOrg })
+      : buildMvpHref(rootPrefix + "user/user-cases.html", { role: "user", org: hrefOrg });
+    backBtn.setAttribute("data-nav-dir", "back");
   }
 
   // ── Determine current page for active-state detection ────
@@ -63,17 +180,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (navCaseListLink) {
     navCaseListLink.href = role === "admin"
-      ? rootPrefix + "admin/admin-cases.html?role=admin&org=" + hrefOrg
-      : rootPrefix + "user/user-cases.html?role=user&org=" + hrefOrg;
+      ? buildMvpHref(rootPrefix + "admin/admin-cases.html", { role: "admin", org: hrefOrg })
+      : buildMvpHref(rootPrefix + "user/user-cases.html", { role: "user", org: hrefOrg });
   }
   if (navVendorsLink) {
-    navVendorsLink.href = rootPrefix + "vendors.html?role=" + encodeURIComponent(role) + "&org=" + hrefOrg;
+    navVendorsLink.href = buildMvpHref(rootPrefix + "vendors.html", { role: role, org: hrefOrg });
   }
   if (navInboxLink) {
-    navInboxLink.href = rootPrefix + "inbox.html?role=" + encodeURIComponent(role) + "&org=" + hrefOrg;
+    navInboxLink.href = buildMvpHref(rootPrefix + "inbox.html", { role: role, org: hrefOrg });
   }
   if (navNewCaseLink) {
-    navNewCaseLink.href = rootPrefix + "user/user-new-case.html?role=user&org=" + hrefOrg;
+    navNewCaseLink.href = buildMvpHref(rootPrefix + "user/user-new-case.html", { role: "user", org: hrefOrg });
   }
 
   // Sidebar active state
@@ -91,17 +208,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (bnCaseList) {
     bnCaseList.href = role === "admin"
-      ? rootPrefix + "admin/admin-cases.html?role=admin&org=" + hrefOrg
-      : rootPrefix + "user/user-cases.html?role=user&org=" + hrefOrg;
+      ? buildMvpHref(rootPrefix + "admin/admin-cases.html", { role: "admin", org: hrefOrg })
+      : buildMvpHref(rootPrefix + "user/user-cases.html", { role: "user", org: hrefOrg });
   }
   if (bnNewCase) {
-    bnNewCase.href = rootPrefix + "user/user-new-case.html?role=user&org=" + hrefOrg;
+    bnNewCase.href = buildMvpHref(rootPrefix + "user/user-new-case.html", { role: "user", org: hrefOrg });
   }
   if (bnInbox) {
-    bnInbox.href = rootPrefix + "inbox.html?role=" + encodeURIComponent(role) + "&org=" + hrefOrg;
+    bnInbox.href = buildMvpHref(rootPrefix + "inbox.html", { role: role, org: hrefOrg });
   }
   if (bnVendors) {
-    bnVendors.href = rootPrefix + "vendors.html?role=" + encodeURIComponent(role) + "&org=" + hrefOrg;
+    bnVendors.href = buildMvpHref(rootPrefix + "vendors.html", { role: role, org: hrefOrg });
   }
 
   // Bottom nav active state

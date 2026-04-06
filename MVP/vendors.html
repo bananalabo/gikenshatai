@@ -76,21 +76,21 @@
                       <td>Honda</td>
                       <td>2</td>
                       <td>
-                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=Honda（例）">案件を見る</a>
+                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=元請け">案件を見る</a>
                       </td>
                     </tr>
                     <tr>
                       <td>損保A</td>
                       <td>1</td>
                       <td>
-                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=損保A（例）">案件を見る</a>
+                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=元請け">案件を見る</a>
                       </td>
                     </tr>
                     <tr>
                       <td>物流B</td>
                       <td>3</td>
                       <td>
-                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=物流B（例）">案件を見る</a>
+                        <a class="btn primary" href="./admin/admin-cases.html?role=admin&org=元請け">案件を見る</a>
                       </td>
                     </tr>
                   </tbody>
@@ -128,6 +128,7 @@
                 取引先（ディーラー/法人）単位で案件を整理することで、探す時間を減らし、
                 誤案内・漏れを防ぎます。後で実データに置き換える前提でUI導線を固めます。
               </p>
+              <p class="demo-note">Demo mode: 取引先データを表示中</p>
             </div>
           </div>
 
@@ -161,14 +162,17 @@
       (function () {
         const params = new URLSearchParams(window.location.search);
         const role   = params.get("role") || "user";
-        const org    = params.get("org")  || "Honda（例）";
+        const orgRaw = params.get("org")  || "Honda";
+        const org    = window.normalizeOrgName ? window.normalizeOrgName(orgRaw) : orgRaw;
 
         const orgName = document.getElementById("userOrgName");
         if (orgName) orgName.textContent = org;
 
         const goBtn = document.getElementById("goUserCasesBtn");
         if (goBtn) {
-          goBtn.href = "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+          goBtn.href = window.buildMvpHref
+            ? window.buildMvpHref("./user/user-cases.html", { role: "user", org: org })
+            : "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
         }
       })();
     </script>

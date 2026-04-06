@@ -92,11 +92,11 @@
                 <textarea placeholder="メッセージを入力"></textarea>
               </div>
               <div class="btnbar" style="margin-top:10px;">
-                <button class="btn primary" type="button" onclick="alert('プロトタイプ：送信しません。')">送信</button>
+                <button class="btn primary" type="button" onclick="window.mvpNotify && window.mvpNotify('返信を送信しました', 'success')">送信</button>
               </div>
 
-              <p class="muted small" style="margin-top:14px;">
-                ※ この画面はUIプロトタイプです。
+              <p class="demo-note" style="margin-top:14px;">
+                Demo mode: 送信内容は保存されません
               </p>
             </div>
           </div>
@@ -131,7 +131,7 @@
       (function () {
         const params   = new URLSearchParams(window.location.search);
         const role     = params.get("role")     || "user";
-        const org      = params.get("org")      || "Honda（例）";
+        const org      = params.get("org")      || "Honda";
         const caseId   = params.get("caseId")   || "000000";
 
         const caseLabel = document.getElementById("caseIdLabel");

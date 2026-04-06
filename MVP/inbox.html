@@ -66,8 +66,8 @@
           <div class="panel">
             <div class="panel-body">
               <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:10px;">
-                <button class="btn btn--full" type="button" onclick="alert('未読フィルタ（プロトタイプ）')">未読のみ</button>
-                <button class="btn btn--full" type="button" onclick="alert('全件（プロトタイプ）')">すべて</button>
+                <button class="btn btn--full" type="button" onclick="window.mvpNotify && window.mvpNotify('未読のみを表示しました', 'info')">未読のみ</button>
+                <button class="btn btn--full" type="button" onclick="window.mvpNotify && window.mvpNotify('すべて表示しました', 'info')">すべて</button>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@
                       <td style="font-weight:600;">見積PDFの差し替えについて</td>
                       <td>000012</td>
                       <td>
-                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda（例）&caseId=000012">開く</a>
+                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t001&org=Honda&caseId=000012">開く</a>
                       </td>
                     </tr>
                     <tr>
@@ -100,7 +100,7 @@
                       <td style="font-weight:600;">途中写真の追加依頼</td>
                       <td>000102</td>
                       <td>
-                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t002&org=Honda（例）&caseId=000102">開く</a>
+                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t002&org=Honda&caseId=000102">開く</a>
                       </td>
                     </tr>
                     <tr>
@@ -108,14 +108,14 @@
                       <td>完了報告の確認</td>
                       <td>000013</td>
                       <td>
-                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t003&org=Honda（例）&caseId=000013">開く</a>
+                        <a class="btn" href="./inbox-thread.html?role=user&threadId=t003&org=Honda&caseId=000013">開く</a>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <p class="muted small" style="padding:12px 16px 14px; margin:0;">
-                ※ この画面はプロトタイプです。実データはありません。
+              <p class="demo-note" style="margin:12px 16px 14px;">
+                Demo mode: メッセージはサンプルです
               </p>
             </div>
           </div>
@@ -151,7 +151,7 @@
       (function () {
         const params = new URLSearchParams(window.location.search);
         const role = params.get("role") || "user";
-        const org  = params.get("org")  || "Honda（例）";
+        const org  = params.get("org")  || "Honda";
 
         document.querySelectorAll("a[href*='inbox-thread.html']").forEach(a => {
           const url = new URL(a.href, window.location.href);

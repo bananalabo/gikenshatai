@@ -1,6 +1,6 @@
 # MVP HTML Prototype
 
-静的HTMLプロトタイプ（バックエンドなし）。ANZ Plus iOS アプリを参考にしたモバイルファーストデザイン。
+静的HTMLプロトタイプ（バックエンドなし）。モバイルファーストで、クライアントデモ時に実運用イメージを伝えやすい導線を重視しています。
 
 ## ディレクトリ構成
 
@@ -48,10 +48,26 @@ MVP/
 | 利用者登録 | `user-signup.html` |
 | 管理者ログイン | `login.html` |
 | 管理者 案件一覧 | `admin/admin-cases.html?role=admin&org=元請け` |
-| 利用者 案件一覧 | `user/user-cases.html?role=user&org=Honda（例）` |
+| 利用者 案件一覧 | `user/user-cases.html?role=user&org=Honda` |
 | 案件詳細（共通） | `case-detail.html?role=admin&caseId=000012` |
-| 受信箱 | `inbox.html?role=user&org=Honda（例）` |
+| 受信箱 | `inbox.html?role=user&org=Honda` |
 | 画面一覧 | `sitemap.html` |
+
+## モーション仕様（アプリらしさ）
+
+- 画面遷移: 200ms 前後の控えめなスライド + フェード
+- 進む操作: 右から左へ入る
+- 戻る操作: 左から右へ入る
+- モーダル/プレビュー: フェード + ごく小さいスケール
+- `prefers-reduced-motion: reduce` の場合はアニメーションを最小化
+
+## デモ実施チェックリスト（3分デモ前）
+
+- 主要動線（User: 新規依頼 -> 案件詳細、Admin: 一覧 -> 案件詳細 -> ステータス更新）が途切れない
+- `org` フィルタで空画面になる場合、空状態メッセージが表示される
+- 主要ボタンで `alert` ではなく統一トースト表示になる
+- 受信箱、案件一覧、案件詳細で主要CTAが1つに絞られている
+- モバイル表示でヘッダー/ボトムナビが重なっていない
 
 ## レスポンシブ対応
 
@@ -62,3 +78,4 @@ MVP/
 
 - バックエンドなし。添付ファイルは保存されません。
 - URL クエリパラメータ `role`・`org`・`caseId` でデータを渡しています。
+- `org` は内部で正規化され、`Honda（例）` などの表記ゆれを吸収します。

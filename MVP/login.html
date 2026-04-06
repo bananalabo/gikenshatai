@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>管理者ログイン — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./mvp.js"></script>
   </head>
   <body class="auth-page">
     <div class="auth-container">
@@ -56,14 +57,15 @@
       <a
         class="btn black btn--full"
         href="./admin/admin-cases.html?role=admin&org=元請け"
+        onclick="if (window.mvpNotify) window.mvpNotify('管理者としてログインしました', 'success')"
         style="font-size:16px; padding:15px 20px; margin-top:8px;"
       >
         管理者としてログイン
       </a>
 
       <!-- Prototype note -->
-      <p class="muted small" style="text-align:center; margin-top:16px;">
-        ※ プロトタイプのため認証は実装されていません。
+      <p class="demo-note" style="justify-content:center; margin-top:16px;">
+        Demo mode: 認証はサンプル動作です
       </p>
 
       <!-- User link -->

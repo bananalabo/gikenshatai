@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ログイン — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./mvp.js"></script>
   </head>
   <body class="auth-page">
     <div class="auth-container">
@@ -53,7 +54,7 @@
 
       <!-- Forgot password -->
       <div style="text-align:right; margin-top:-4px; margin-bottom:20px;">
-        <a href="#" onclick="alert('プロトタイプ：パスワードリセットは未実装です。'); return false;"
+        <a href="#" onclick="if (window.mvpNotify) window.mvpNotify('パスワードリセットは準備中です', 'info'); return false;"
            style="font-size:14px; color:var(--primary); font-weight:500;">
           パスワードをお忘れですか？
         </a>
@@ -62,7 +63,8 @@
       <!-- CTA -->
       <a
         class="btn primary btn--full"
-        href="./user/user-cases.html?role=user&org=Honda（例）"
+        href="./user/user-cases.html?role=user&org=Honda"
+        onclick="if (window.mvpNotify) window.mvpNotify('ログインしました', 'success')"
         style="font-size:16px; padding:15px 20px;"
       >
         ログイン

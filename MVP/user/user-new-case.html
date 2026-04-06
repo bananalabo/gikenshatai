@@ -77,16 +77,17 @@
                 </div>
               </div>
 
-              <div style="margin-top:14px;">
-                <div class="proto-field">
+              <details style="margin-top:14px;">
+                <summary class="muted small" style="cursor:pointer; font-weight:600;">任意項目を追加（備考）</summary>
+                <div class="proto-field" style="margin-top:10px;">
                   <span class="proto-bubble">自由記述（見積条件など）</span>
                   <label>備考（任意）</label>
                   <textarea placeholder="例：見積に必要な情報、特記事項など"></textarea>
                 </div>
-              </div>
+              </details>
 
-              <p class="muted small" style="margin-top:12px;">
-                ※ この画面はUI確認用です。クリックしても実データは保存されません。
+              <p class="demo-note" style="margin-top:12px;">
+                Demo mode: 入力内容は保存されません
               </p>
             </div>
           </div>
@@ -94,8 +95,8 @@
           <!-- Desktop button bar -->
           <div class="btnbar" style="display:none;" id="desktopBtnbar">
             <button class="btn success" type="button" onclick="fakeCreate()">作成する</button>
-            <button class="btn" type="button" onclick="alert('下書き保存：プロトタイプです。')">下書き保存</button>
-            <a class="btn" id="backToCasesBtn" href="./user-cases.html?role=user&org=Honda（例）">戻る</a>
+            <button class="btn" type="button" onclick="window.mvpNotify && window.mvpNotify('下書きを保存しました', 'info')">下書き保存</button>
+            <a class="btn" id="backToCasesBtn" href="./user-cases.html?role=user&org=Honda">戻る</a>
           </div>
 
         </main>
@@ -133,9 +134,12 @@
 
     <script>
       (function () {
-        const org = new URLSearchParams(window.location.search).get("org") || "Honda（例）";
+        const orgRaw = new URLSearchParams(window.location.search).get("org") || "Honda";
+        const org = window.normalizeOrgName ? window.normalizeOrgName(orgRaw) : orgRaw;
         const backBtn = document.getElementById("backToCasesBtn");
-        if (backBtn) backBtn.href = "./user-cases.html?role=user&org=" + encodeURIComponent(org);
+        if (backBtn) backBtn.href = window.buildMvpHref
+          ? window.buildMvpHref("./user-cases.html", { role: "user", org: org })
+          : "./user-cases.html?role=user&org=" + encodeURIComponent(org);
       })();
 
       // Show desktop btn bar on ≥900px
@@ -157,8 +161,14 @@
       })();
 
       function fakeCreate() {
-        const org = new URLSearchParams(window.location.search).get("org") || "Honda（例）";
-        window.location.href = "../case-detail.html?role=user&caseId=000201&org=" + encodeURIComponent(org);
+        const orgRaw = new URLSearchParams(window.location.search).get("org") || "Honda";
+        const org = window.normalizeOrgName ? window.normalizeOrgName(orgRaw) : orgRaw;
+        if (window.mvpNotify) window.mvpNotify("案件を作成しました", "success");
+        window.setTimeout(() => {
+          window.location.href = window.buildMvpHref
+            ? window.buildMvpHref("../case-detail.html", { role: "user", caseId: "000201", org: org })
+            : "../case-detail.html?role=user&caseId=000201&org=" + encodeURIComponent(org);
+        }, 140);
       }
     </script>
   </body>

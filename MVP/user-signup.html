@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>新規登録 — 案件管理プラットフォーム</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./mvp.js"></script>
   </head>
   <body class="auth-page">
     <div class="auth-container" style="max-width:480px; justify-content:flex-start; padding-top:40px;">
@@ -139,9 +140,9 @@
           <label class="check-row" style="border-top:none; padding-top:0;">
             <input type="checkbox" id="agreeTerms" required />
             <span>
-              <a href="#" onclick="alert('プロトタイプ：利用規約ページは未実装です。'); return false;"
+              <a href="#" onclick="if (window.mvpNotify) window.mvpNotify('利用規約ページは準備中です', 'info'); return false;"
                  style="color:var(--primary); font-weight:600;">利用規約</a>および
-              <a href="#" onclick="alert('プロトタイプ：プライバシーポリシーは未実装です。'); return false;"
+              <a href="#" onclick="if (window.mvpNotify) window.mvpNotify('プライバシーポリシーは準備中です', 'info'); return false;"
                  style="color:var(--primary); font-weight:600;">プライバシーポリシー</a>
               に同意します
             </span>
@@ -165,8 +166,8 @@
       </div>
 
       <!-- Prototype note -->
-      <p class="muted small" style="text-align:center; margin-top:20px;">
-        ※ このフォームはUIプロトタイプです。入力内容は保存されません。
+      <p class="demo-note" style="justify-content:center; margin-top:20px;">
+        Demo mode: 入力内容は保存されません
       </p>
 
     </div>
@@ -193,24 +194,29 @@
         const agreed  = document.getElementById("agreeTerms").checked;
 
         if (!company || !name || !email || !pw) {
-          alert("必須項目をすべて入力してください。");
+          if (window.mvpNotify) window.mvpNotify("必須項目を入力してください");
           return;
         }
         if (pw !== pwc) {
-          alert("パスワードが一致しません。");
+          if (window.mvpNotify) window.mvpNotify("パスワードが一致しません");
           return;
         }
         if (pw.length < 8) {
-          alert("パスワードは8文字以上で入力してください。");
+          if (window.mvpNotify) window.mvpNotify("パスワードは8文字以上で入力してください");
           return;
         }
         if (!agreed) {
-          alert("利用規約への同意が必要です。");
+          if (window.mvpNotify) window.mvpNotify("利用規約への同意が必要です");
           return;
         }
         // Prototype: redirect to user cases with the entered company as org
-        const org = company || "Honda（例）";
-        window.location.href = "./user/user-cases.html?role=user&org=" + encodeURIComponent(org);
+        const orgName = window.normalizeOrgName ? window.normalizeOrgName(company || "Honda") : (company || "Honda");
+        if (window.mvpNotify) window.mvpNotify("アカウント登録が完了しました", "success");
+        window.setTimeout(() => {
+          window.location.href = window.buildMvpHref
+            ? window.buildMvpHref("./user/user-cases.html", { role: "user", org: orgName })
+            : "./user/user-cases.html?role=user&org=" + encodeURIComponent(orgName);
+        }, 140);
       }
     </script>
   </body>
