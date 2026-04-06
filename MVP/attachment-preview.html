@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
   </head>
-  <body>
+  <body
+    data-walkthrough-key="attachment-preview"
+    data-walkthrough-target="#previewPdfBtn"
+    data-walkthrough-title="添付を確認する"
+    data-walkthrough-text="光っている「PDFを表示」をタップして添付内容を確認します。"
+  >
 
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
@@ -67,7 +72,7 @@
             実装時はPDFの埋め込みまたは新規タブ表示を想定。
           </p>
           <div class="btnbar">
-            <button class="btn primary" type="button" onclick="window.mvpNotify && window.mvpNotify('PDFプレビューを開きました', 'info')">PDFを表示</button>
+            <button class="btn primary" id="previewPdfBtn" type="button" onclick="window.mvpNotify && window.mvpNotify('PDFプレビューを開きました', 'info')">PDFを表示</button>
             <button class="btn" type="button" onclick="window.mvpNotify && window.mvpNotify('ダウンロードはデモでは省略しています', 'info')">ダウンロード</button>
           </div>
           <p class="demo-note" style="margin-top:12px;">Demo mode: 添付データはサンプルです</p>

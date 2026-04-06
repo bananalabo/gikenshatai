@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
   </head>
-  <body>
+  <body
+    class="page-case-detail"
+    data-walkthrough-key="case-detail"
+    data-walkthrough-target="#caseDetailReflectBtn"
+    data-walkthrough-title="変更を確定する"
+    data-walkthrough-text="この画面での操作を確定するには、右下に固定表示されている「変更を反映」をタップします。"
+  >
 
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
@@ -103,7 +109,6 @@
                   </div>
                   <div class="role-admin-only" style="margin-top:12px;">
                     <div class="proto-field">
-                      <span class="proto-bubble">見積PDFをここに添付（管理者）</span>
                       <div class="field-label">見積PDFをアップロード</div>
                       <label class="file-btn file-btn--primary">
                         <span class="file-btn__text">PDFを選択</span>
@@ -121,7 +126,6 @@
                   </div>
                   <div class="role-admin-only" style="margin-top:12px;">
                     <div class="proto-field">
-                      <span class="proto-bubble">納品書PDFをここに添付（管理者）</span>
                       <div class="field-label">納品書PDFをアップロード</div>
                       <label class="file-btn file-btn--primary">
                         <span class="file-btn__text">PDFを選択</span>
@@ -139,7 +143,6 @@
             <div class="panel-header">ステータス更新（管理者）</div>
             <div class="panel-body">
               <div class="proto-field">
-                <span class="proto-bubble">ドロップダウンでステータスを選択</span>
                 <label>新しいステータス</label>
                 <select>
                   <option>受付</option>
@@ -181,7 +184,6 @@
               <div class="role-user-only">
                 <div class="section-title">写真追加（利用者）</div>
                 <div class="proto-field">
-                  <span class="proto-bubble">途中写真を追加（画像・複数可）</span>
                   <div class="field-label">スマホで撮影 → アップロード</div>
                   <label class="file-btn">
                     <span class="file-btn__text">写真を追加</span>
@@ -194,7 +196,6 @@
               <div class="role-admin-only" style="margin-top:14px;">
                 <div class="section-title">写真追加（管理者）</div>
                 <div class="proto-field">
-                  <span class="proto-bubble">途中写真を追加（複数可）</span>
                   <div class="field-label">追加写真をアップロード</div>
                   <label class="file-btn">
                     <span class="file-btn__text">写真を追加</span>
@@ -221,7 +222,6 @@
                   </div>
                   <div class="role-user-only" style="margin-top:12px;">
                     <div class="proto-field">
-                      <span class="proto-bubble">車検証（PDFまたは画像）</span>
                       <div class="field-label">車検証をアップロード</div>
                       <label class="file-btn">
                         <span class="file-btn__text">PDFまたは画像を選択</span>
@@ -238,7 +238,6 @@
                   <div class="case-photo" id="damagedPartsGallery" style="display:none; margin-top:8px;"></div>
                   <div class="role-user-only" style="margin-top:12px;">
                     <div class="proto-field">
-                      <span class="proto-bubble">損傷部位の写真（複数可）</span>
                       <div class="field-label">損傷部位写真をアップロード</div>
                       <label class="file-btn">
                         <span class="file-btn__text">写真を追加</span>
@@ -258,15 +257,22 @@
               <p class="muted small" style="margin:0;">
                 ファイル選択やプレビューはこの画面内で有効です。デモでは「反映」で確定した扱いにし、参照用のメタデータだけをブラウザに残します（サーバーには送信されません）。
               </p>
-              <div class="page-actions" style="margin-top:14px;">
-                <button type="button" class="btn primary btn--full" id="caseDetailReflectBtn">変更を反映（デモ）</button>
-              </div>
+              <p class="muted small" style="margin-top:12px;">
+                確定は<strong>画面右下の固定ボタン</strong>から行います（スクロールしても同じ位置に表示されます）。
+              </p>
               <p class="demo-note" style="margin-top:12px;">Demo mode: サーバー保存なし・同一ブラウザの参照用のみ</p>
             </div>
           </div>
 
         </main>
       </div>
+    </div>
+
+    <!-- Fixed save CTA (same id for walkthrough + script) -->
+    <div class="mvp-floating-cta" role="region" aria-label="変更の確定">
+      <button type="button" class="btn primary mvp-floating-cta__btn" id="caseDetailReflectBtn">
+        変更を反映（デモ）
+      </button>
     </div>
 
     <!-- BOTTOM NAV -->

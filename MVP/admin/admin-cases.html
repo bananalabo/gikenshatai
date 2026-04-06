@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
   </head>
-  <body>
+  <body
+    data-walkthrough-key="admin-cases"
+    data-walkthrough-target='a[href*="../case-detail.html"]'
+    data-walkthrough-title="案件詳細を開く"
+    data-walkthrough-text="光っている「詳細」をタップすると案件詳細画面に進みます。"
+  >
 
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
@@ -67,19 +72,16 @@
             <div class="panel-body">
               <div class="grid-2">
                 <div class="proto-field">
-                  <span class="proto-bubble">案件IDで検索</span>
                   <label>案件ID</label>
                   <input type="text" placeholder="例：000012" />
                 </div>
                 <div class="proto-field">
-                  <span class="proto-bubble">関連先名で検索</span>
                   <label>関連先名</label>
                   <input type="text" placeholder="例：Honda" />
                 </div>
               </div>
               <div style="margin-top:12px;">
                 <div class="proto-field">
-                  <span class="proto-bubble">ステータスで絞り込み</span>
                   <label>ステータス</label>
                   <select>
                     <option>すべて</option>

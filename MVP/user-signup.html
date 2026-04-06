@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
   </head>
-  <body class="auth-page">
+  <body
+    class="auth-page"
+    data-walkthrough-key="user-signup"
+    data-walkthrough-target="#signupSubmitBtn"
+    data-walkthrough-title="アカウント作成"
+    data-walkthrough-text="入力が完了したら、光っている「アカウント登録」をタップします。"
+  >
     <div class="auth-container" style="max-width:480px; justify-content:flex-start; padding-top:40px;">
 
       <!-- Brand + back -->
@@ -152,6 +158,7 @@
 
       <!-- Submit CTA -->
       <button
+        id="signupSubmitBtn"
         class="btn primary btn--full"
         type="button"
         onclick="handleSignup()"

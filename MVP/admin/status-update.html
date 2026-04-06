@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
   </head>
-  <body>
+  <body
+    data-walkthrough-key="status-update"
+    data-walkthrough-target="#statusUpdateReflectBtn"
+    data-walkthrough-title="ステータスを反映する"
+    data-walkthrough-text="選択後は、光っている「ステータスを反映」をタップします。"
+  >
 
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
@@ -47,12 +52,10 @@
           </p>
           <div class="grid-2">
             <div class="proto-field">
-              <span class="proto-bubble">現在のステータス（参照のみ）</span>
               <label>現在ステータス（サンプル）</label>
               <input type="text" value="確認中" disabled />
             </div>
             <div class="proto-field">
-              <span class="proto-bubble">変更後のステータスを選択</span>
               <label>更新先</label>
               <select>
                 <option>受付</option>

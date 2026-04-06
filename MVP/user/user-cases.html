@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
   </head>
-  <body>
+  <body
+    data-walkthrough-key="user-cases"
+    data-walkthrough-target='[data-walkthrough-target="new-case"]'
+    data-walkthrough-title="新規依頼の始め方"
+    data-walkthrough-text="光っている「+ 新規依頼」をタップすると、案件作成フォームに進みます。"
+    data-walkthrough-trigger="#startNewCaseWalkthroughBtn"
+  >
 
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
@@ -16,7 +22,7 @@
       </button>
       <span class="mobile-header__title">案件一覧</span>
       <div class="mobile-header__action">
-        <a class="btn primary" id="mobileNewCaseBtn" href="./user-new-case.html?role=user&org=Honda"
+        <a class="btn primary" id="mobileNewCaseBtn" data-walkthrough-target="new-case" href="./user-new-case.html?role=user&org=Honda"
            style="font-size:12px; padding:6px 12px;">
           + 新規
         </a>
@@ -62,7 +68,7 @@
             </div>
             <div class="topnav-actions">
               <button class="btn back" type="button" onclick="history.back()">戻る</button>
-              <a class="btn primary" id="navNewCaseLinkTop" href="./user-new-case.html?role=user&org=Honda">
+              <a class="btn primary" id="navNewCaseLinkTop" data-walkthrough-target="new-case" href="./user-new-case.html?role=user&org=Honda">
                 + 新規依頼
               </a>
             </div>
@@ -74,12 +80,10 @@
             <div class="panel-body">
               <div class="grid-2">
                 <div class="proto-field">
-                  <span class="proto-bubble">案件IDで検索</span>
                   <label>案件ID</label>
                   <input type="text" placeholder="例：000101" />
                 </div>
                 <div class="proto-field">
-                  <span class="proto-bubble">ステータスで絞り込み</span>
                   <label>ステータス</label>
                   <select>
                     <option>すべて</option>
@@ -186,6 +190,9 @@
               <p class="demo-note" style="margin:12px 16px 14px;">
                 Demo mode: サンプルデータを表示中
               </p>
+              <div style="padding:0 16px 14px;">
+                <button class="btn" type="button" id="startNewCaseWalkthroughBtn">新規依頼のガイドを見る</button>
+              </div>
             </div>
           </div>
 
@@ -242,6 +249,7 @@
         if (mobileBtn) mobileBtn.href = window.buildMvpHref ? window.buildMvpHref("./user-new-case.html", { role: "user", org: org }) : "./user-new-case.html?role=user&org=" + encodeURIComponent(org);
         if (topBtn)    topBtn.href    = window.buildMvpHref ? window.buildMvpHref("./user-new-case.html", { role: "user", org: org }) : "./user-new-case.html?role=user&org=" + encodeURIComponent(org);
       })();
+
     </script>
   </body>
 </html>

@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="./styles.css" />
     <script src="./mvp.js"></script>
   </head>
-  <body>
+  <body
+    class="page-inbox-thread"
+    data-walkthrough-key="inbox-thread"
+    data-walkthrough-target="#threadSendBtn"
+    data-walkthrough-title="返信を送信する"
+    data-walkthrough-text="メッセージを入力し、画面下部に固定の入力エリアから「送信」をタップして返信します（PCでは右側のパネルに表示されます）。"
+  >
 
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
@@ -60,44 +66,60 @@
           </div>
 
           <!-- Thread info -->
-          <div class="panel">
+          <div class="panel thread-panel">
             <div class="panel-header">スレッド（サンプル）</div>
-            <div class="panel-body">
-              <p class="muted small" style="margin:0 0 14px;">
-                案件ID：<strong id="caseIdLabel">000000</strong>
-              </p>
+            <div class="panel-body thread-panel__body">
+              <div class="thread-layout">
+                <div class="thread-layout__messages">
+                  <p class="muted small thread-layout__case-id">
+                    案件ID：<strong id="caseIdLabel">000000</strong>
+                  </p>
+                  <div class="msg-list">
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-06T09:15">4/6 9:15</time>
+                      </div>
+                      <div class="msg-text">見積PDFを差し替えました。ご確認お願いします。</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--out">
+                      <div class="msg-meta">
+                        <span class="msg-sender">あなた</span>
+                        <time class="msg-time" datetime="2026-04-06T09:42">4/6 9:42</time>
+                      </div>
+                      <div class="msg-text">確認します。反映までの予定も共有いただけますか？</div>
+                    </div>
+                    <div class="msg-bubble msg-bubble--in">
+                      <div class="msg-meta">
+                        <span class="msg-sender">相手</span>
+                        <time class="msg-time" datetime="2026-04-06T14:05">4/6 14:05</time>
+                      </div>
+                      <div class="msg-text">次のステータスは作業中に更新予定です（明日AM）。</div>
+                    </div>
+                  </div>
+                </div>
 
-              <!-- Messages -->
-              <div class="msg-list">
-                <div class="msg-bubble msg-bubble--in">
-                  <div class="msg-sender">相手</div>
-                  見積PDFを差し替えました。ご確認お願いします。
-                </div>
-                <div class="msg-bubble msg-bubble--out">
-                  <div class="msg-sender">あなた</div>
-                  確認します。反映までの予定も共有いただけますか？
-                </div>
-                <div class="msg-bubble msg-bubble--in">
-                  <div class="msg-sender">相手</div>
-                  次のステータスは作業中に更新予定です（明日AM）。
+                <div class="thread-layout__composer" id="threadComposer">
+                  <div class="proto-field thread-composer__field">
+                    <label for="threadReplyInput">返信</label>
+                    <textarea id="threadReplyInput" placeholder="メッセージを入力" rows="3"></textarea>
+                  </div>
+                  <div class="thread-composer__actions">
+                    <button
+                      class="btn primary thread-composer__send"
+                      id="threadSendBtn"
+                      type="button"
+                      onclick="window.mvpNotify && window.mvpNotify('返信を送信しました', 'success')"
+                    >
+                      送信
+                    </button>
+                  </div>
+                  <p class="muted small thread-composer__hint">
+                    スマホではこの入力エリアが画面下に固定されます。PCでは右カラムに表示されます。
+                  </p>
+                  <p class="demo-note thread-composer__demo">Demo mode: 送信内容は保存されません</p>
                 </div>
               </div>
-
-              <div class="divider"></div>
-
-              <!-- Reply -->
-              <div class="proto-field">
-                <span class="proto-bubble">返信文を入力（デモ・送信内容は保存されません）</span>
-                <label>返信</label>
-                <textarea placeholder="メッセージを入力"></textarea>
-              </div>
-              <div class="btnbar" style="margin-top:10px;">
-                <button class="btn primary" type="button" onclick="window.mvpNotify && window.mvpNotify('返信を送信しました', 'success')">送信</button>
-              </div>
-
-              <p class="demo-note" style="margin-top:14px;">
-                Demo mode: 送信内容は保存されません
-              </p>
             </div>
           </div>
 

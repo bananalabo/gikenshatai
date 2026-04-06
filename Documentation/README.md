@@ -12,6 +12,7 @@ This folder contains the initial documentation set derived from `Meetings/2026/0
 7. `07_DX_Subsidy_Checklist.md` (DX補助金の要件確認メモ)
 8. `08_Sales_FC_Outline.md` (他社展開/FCの販売計画アウトライン)
 9. `09_Action_Plan.md`（今すぐやること：意思決定〜見積まで）
+10. `10_Price_Estimate_Dev_and_Run.md`（機能別・月額の単価表：行削除で再計算可能／Xano・ストレージメモ）
 
 ## Wireframes
 - `Wireframes/` にMVP想定の画面ワイヤーフレームを格納（開発会社向け見積の添付用）

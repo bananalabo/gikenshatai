@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="../styles.css" />
     <script src="../mvp.js"></script>
   </head>
-  <body>
+  <body
+    data-walkthrough-key="user-new-case"
+    data-walkthrough-target='[data-walkthrough-target="create-case"]'
+    data-walkthrough-title="案件を作成する"
+    data-walkthrough-text="入力後は、光っている「作成する」をタップして案件を登録します。"
+  >
 
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
@@ -66,12 +71,10 @@
             <div class="panel-body">
               <div class="grid-2">
                 <div class="proto-field">
-                  <span class="proto-bubble">顧客・依頼元の名称</span>
                   <label>関連先名（顧客/依頼元）</label>
                   <input id="newCaseCustomer" type="text" placeholder="例：Honda" />
                 </div>
                 <div class="proto-field">
-                  <span class="proto-bubble">依頼日を選択</span>
                   <label>依頼日</label>
                   <input id="newCaseDate" type="date" />
                 </div>
@@ -80,7 +83,6 @@
               <details style="margin-top:14px;">
                 <summary class="muted small" style="cursor:pointer; font-weight:600;">任意項目を追加（備考）</summary>
                 <div class="proto-field" style="margin-top:10px;">
-                  <span class="proto-bubble">自由記述（見積条件など）</span>
                   <label>備考（任意）</label>
                   <textarea id="newCaseNote" placeholder="例：見積に必要な情報、特記事項など"></textarea>
                 </div>
@@ -94,7 +96,7 @@
 
           <!-- Desktop button bar -->
           <div class="btnbar" style="display:none;" id="desktopBtnbar">
-            <button class="btn success" type="button" onclick="fakeCreate()">作成する</button>
+            <button class="btn success" data-walkthrough-target="create-case" type="button" onclick="fakeCreate()">作成する</button>
             <button class="btn" type="button" id="newCaseDraftBtn">下書き保存</button>
             <a class="btn" id="backToCasesBtn" href="./user-cases.html?role=user&org=Honda">戻る</a>
           </div>
@@ -106,7 +108,7 @@
     <!-- Sticky bottom CTA (mobile) -->
     <div class="page-actions" id="mobileBtnArea"
          style="position:fixed; bottom:calc(var(--bottom-nav-h) + 8px); left:16px; right:16px; z-index:150;">
-      <button class="btn success btn--full" type="button" onclick="fakeCreate()">作成する</button>
+      <button class="btn success btn--full" data-walkthrough-target="create-case" type="button" onclick="fakeCreate()">作成する</button>
     </div>
 
     <!-- BOTTOM NAV -->
