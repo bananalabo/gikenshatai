@@ -84,8 +84,9 @@
               <div class="divider"></div>
               <div class="d-flex align-center justify-between flex-wrap gap-sm">
                 <span class="section-title" style="margin:0;">必須項目の進捗</span>
-                <span class="status-badge status-checking">2 / 4 完了</span>
+                <span class="status-badge status-checking" title="デモ用の見せ方です。実データの進捗とは連動しません。">例示（デモ）2 / 4</span>
               </div>
+              <p class="muted small" style="margin-top:8px;">実装時はアップロード状況に応じて自動計算します。</p>
             </div>
           </div>
 
@@ -150,9 +151,9 @@
                 </select>
               </div>
               <div class="btnbar">
-                <button class="btn success" type="button" onclick="window.mvpNotify && window.mvpNotify('ステータスを更新しました', 'success')">更新する</button>
+                <button class="btn success" type="button" id="caseDetailStatusReflectBtn">ステータスを反映（デモ）</button>
               </div>
-              <p class="demo-note" style="margin-top:12px;">Demo mode: 変更は保存されません</p>
+              <p class="demo-note" style="margin-top:12px;">Demo mode: サーバーには保存されません</p>
             </div>
           </div>
 
@@ -187,7 +188,7 @@
                     <input id="progressPhotosInputUser" type="file" multiple accept="image/*" />
                   </label>
                 </div>
-                <p class="muted small" style="margin-top:8px;">選択した画像を一覧に追加（プロトタイプ）</p>
+                <p class="muted small" style="margin-top:8px;">選択した画像は一覧に追加されます（ページを離れると消えます・デモ）</p>
               </div>
 
               <div class="role-admin-only" style="margin-top:14px;">
@@ -213,7 +214,7 @@
                   <div class="section-title">車検証</div>
                   <div class="muted small">PDFまたは画像（利用者アップロード）</div>
                   <div id="vehicleDocPreviewArea" style="margin-top:8px;">
-                    <div class="muted small">未登録（プロトタイプ）</div>
+                    <div class="muted small">未登録（デモ）</div>
                   </div>
                   <div class="btnbar" style="margin-top:8px;">
                     <button class="btn" type="button" id="vehicleDocViewBtn" style="display:none;">プレビュー</button>
@@ -233,7 +234,7 @@
                 <div>
                   <div class="section-title">損傷部位写真</div>
                   <div class="muted small">必要に応じて利用者がアップロード</div>
-                  <div id="damagedPartsEmptyState" class="muted small" style="margin-top:8px;">未登録（プロトタイプ）</div>
+                  <div id="damagedPartsEmptyState" class="muted small" style="margin-top:8px;">未登録（デモ）</div>
                   <div class="case-photo" id="damagedPartsGallery" style="display:none; margin-top:8px;"></div>
                   <div class="role-user-only" style="margin-top:12px;">
                     <div class="proto-field">
@@ -247,6 +248,20 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Demo: explicit "save" for whole-page edits (metadata only; no server) -->
+          <div class="panel" id="caseDetailReflectPanel">
+            <div class="panel-header">変更の確定（デモ）</div>
+            <div class="panel-body">
+              <p class="muted small" style="margin:0;">
+                ファイル選択やプレビューはこの画面内で有効です。デモでは「反映」で確定した扱いにし、参照用のメタデータだけをブラウザに残します（サーバーには送信されません）。
+              </p>
+              <div class="page-actions" style="margin-top:14px;">
+                <button type="button" class="btn primary btn--full" id="caseDetailReflectBtn">変更を反映（デモ）</button>
+              </div>
+              <p class="demo-note" style="margin-top:12px;">Demo mode: サーバー保存なし・同一ブラウザの参照用のみ</p>
             </div>
           </div>
 
@@ -292,6 +307,28 @@
         const caseId = params.get("caseId") || "000000";
         const role   = params.get("role")   || "user";
         const org    = params.get("org")    || "Honda";
+
+        // #region agent log
+        fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
+          body: JSON.stringify({
+            sessionId: "595356",
+            location: "case-detail.html:DOMContentLoaded",
+            message: "case_detail_loaded",
+            data: {
+              caseId: caseId,
+              role: role,
+              org: org,
+              fileInputCount: document.querySelectorAll("input[type=file]").length,
+              hasReflectBtn: !!document.getElementById("caseDetailReflectBtn"),
+            },
+            timestamp: Date.now(),
+            hypothesisId: "H1",
+            runId: "post-fix",
+          }),
+        }).catch(function () {});
+        // #endregion
 
         // Update mobile header title
         const mobileTitle = document.getElementById("mobileDetailTitle");
@@ -491,6 +528,56 @@
               bindThumb(thumb);
             });
             damagedInput.value = "";
+          });
+        }
+
+        const statusReflectBtn = document.getElementById("caseDetailStatusReflectBtn");
+        if (statusReflectBtn) {
+          statusReflectBtn.addEventListener("click", function () {
+            // #region agent log
+            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
+              body: JSON.stringify({
+                sessionId: "595356",
+                location: "case-detail.html:status_reflect",
+                message: "status_reflect_demo",
+                data: { caseId: caseId },
+                timestamp: Date.now(),
+                hypothesisId: "H2",
+                runId: "post-fix",
+              }),
+            }).catch(function () {});
+            // #endregion
+            if (window.mvpNotify) window.mvpNotify("ステータスを反映しました（デモ）", "success");
+          });
+        }
+
+        const reflectBtn = document.getElementById("caseDetailReflectBtn");
+        if (reflectBtn) {
+          reflectBtn.addEventListener("click", function () {
+            try {
+              sessionStorage.setItem(
+                "mvp_case_detail_reflection_v1",
+                JSON.stringify({ caseId: caseId, org: org, role: role, reflectedAt: Date.now() })
+              );
+            } catch (e) {}
+            // #region agent log
+            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
+              body: JSON.stringify({
+                sessionId: "595356",
+                location: "case-detail.html:reflect_demo",
+                message: "case_detail_reflect_demo",
+                data: { caseId: caseId, role: role, org: org },
+                timestamp: Date.now(),
+                hypothesisId: "H1",
+                runId: "post-fix",
+              }),
+            }).catch(function () {});
+            // #endregion
+            if (window.mvpNotify) window.mvpNotify("変更を反映しました（デモ）", "success");
           });
         }
       });

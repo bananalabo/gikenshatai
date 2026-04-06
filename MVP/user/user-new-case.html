@@ -68,12 +68,12 @@
                 <div class="proto-field">
                   <span class="proto-bubble">顧客・依頼元の名称</span>
                   <label>関連先名（顧客/依頼元）</label>
-                  <input type="text" placeholder="例：Honda" />
+                  <input id="newCaseCustomer" type="text" placeholder="例：Honda" />
                 </div>
                 <div class="proto-field">
                   <span class="proto-bubble">依頼日を選択</span>
                   <label>依頼日</label>
-                  <input type="date" />
+                  <input id="newCaseDate" type="date" />
                 </div>
               </div>
 
@@ -82,12 +82,12 @@
                 <div class="proto-field" style="margin-top:10px;">
                   <span class="proto-bubble">自由記述（見積条件など）</span>
                   <label>備考（任意）</label>
-                  <textarea placeholder="例：見積に必要な情報、特記事項など"></textarea>
+                  <textarea id="newCaseNote" placeholder="例：見積に必要な情報、特記事項など"></textarea>
                 </div>
               </details>
 
               <p class="demo-note" style="margin-top:12px;">
-                Demo mode: 入力内容は保存されません
+                Demo mode: 「下書き保存」でこのブラウザにのみ保存（作成するまでサーバーには送りません）
               </p>
             </div>
           </div>
@@ -95,7 +95,7 @@
           <!-- Desktop button bar -->
           <div class="btnbar" style="display:none;" id="desktopBtnbar">
             <button class="btn success" type="button" onclick="fakeCreate()">作成する</button>
-            <button class="btn" type="button" onclick="window.mvpNotify && window.mvpNotify('下書きを保存しました', 'info')">下書き保存</button>
+            <button class="btn" type="button" id="newCaseDraftBtn">下書き保存</button>
             <a class="btn" id="backToCasesBtn" href="./user-cases.html?role=user&org=Honda">戻る</a>
           </div>
 
@@ -140,6 +140,52 @@
         if (backBtn) backBtn.href = window.buildMvpHref
           ? window.buildMvpHref("./user-cases.html", { role: "user", org: org })
           : "./user-cases.html?role=user&org=" + encodeURIComponent(org);
+      })();
+
+      (function draftLocal() {
+        var KEY = "mvp_new_case_draft_v1";
+        var customer = document.getElementById("newCaseCustomer");
+        var dateEl = document.getElementById("newCaseDate");
+        var note = document.getElementById("newCaseNote");
+        var draftBtn = document.getElementById("newCaseDraftBtn");
+        try {
+          var raw = localStorage.getItem(KEY);
+          if (raw) {
+            var d = JSON.parse(raw);
+            if (customer && d.customer) customer.value = d.customer;
+            if (dateEl && d.date) dateEl.value = d.date;
+            if (note && d.note) note.value = d.note;
+          }
+        } catch (e) {}
+        if (draftBtn) {
+          draftBtn.addEventListener("click", function () {
+            var payload = {
+              customer: customer ? customer.value : "",
+              date: dateEl ? dateEl.value : "",
+              note: note ? note.value : "",
+              savedAt: Date.now(),
+            };
+            try {
+              localStorage.setItem(KEY, JSON.stringify(payload));
+            } catch (e) {}
+            // #region agent log
+            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
+              body: JSON.stringify({
+                sessionId: "595356",
+                location: "user-new-case.html:draft_save",
+                message: "new_case_draft_saved",
+                data: { hasCustomer: !!(customer && customer.value), hasDate: !!(dateEl && dateEl.value) },
+                timestamp: Date.now(),
+                hypothesisId: "H3",
+                runId: "post-fix",
+              }),
+            }).catch(function () {});
+            // #endregion
+            if (window.mvpNotify) window.mvpNotify("下書きを保存しました（このブラウザのみ）", "info");
+          });
+        }
       })();
 
       // Show desktop btn bar on ≥900px

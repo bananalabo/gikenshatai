@@ -42,6 +42,9 @@
       <div class="panel">
         <div class="panel-header">新しいステータスを選択</div>
         <div class="panel-body">
+          <p class="muted small" style="margin:0 0 14px;">
+            案件詳細画面の「ステータス更新」と同じ操作の独立ページです（デモ用）。本番ではどちらか一方に寄せます。
+          </p>
           <div class="grid-2">
             <div class="proto-field">
               <span class="proto-bubble">現在のステータス（参照のみ）</span>
@@ -63,8 +66,8 @@
           </div>
 
           <div class="page-actions">
-            <button class="btn success btn--full" type="button" onclick="window.mvpNotify && window.mvpNotify('ステータスを更新しました', 'success')">
-              更新する
+            <button class="btn success btn--full" type="button" id="statusUpdateReflectBtn">
+              ステータスを反映（デモ）
             </button>
             <a class="btn btn--full" id="backToCasesBtn" href="./admin-cases.html?role=admin&org=元請け">
               案件一覧へ戻る
@@ -94,6 +97,44 @@
           backBtn.href = window.buildMvpHref
             ? window.buildMvpHref("./admin-cases.html", { role: "admin", org: org })
             : "./admin-cases.html?role=admin&org=" + encodeURIComponent(org);
+        }
+
+        // #region agent log
+        fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
+          body: JSON.stringify({
+            sessionId: "595356",
+            location: "status-update.html:init",
+            message: "status_update_screen_loaded",
+            data: { caseId: caseId, org: org },
+            timestamp: Date.now(),
+            hypothesisId: "H4",
+            runId: "post-fix",
+          }),
+        }).catch(function () {});
+        // #endregion
+
+        var sur = document.getElementById("statusUpdateReflectBtn");
+        if (sur) {
+          sur.addEventListener("click", function () {
+            // #region agent log
+            fetch("http://127.0.0.1:7720/ingest/a04a7499-5b58-4ea0-a09d-ae9eb900614e", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "595356" },
+              body: JSON.stringify({
+                sessionId: "595356",
+                location: "status-update.html:reflect_click",
+                message: "status_update_reflect_demo",
+                data: { caseId: caseId },
+                timestamp: Date.now(),
+                hypothesisId: "H4",
+                runId: "post-fix",
+              }),
+            }).catch(function () {});
+            // #endregion
+            if (window.mvpNotify) window.mvpNotify("ステータスを反映しました（デモ）", "success");
+          });
         }
       })();
     </script>
