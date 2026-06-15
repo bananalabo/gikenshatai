@@ -82,15 +82,74 @@
   .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
   main { max-width: 1100px; margin: 0 auto; padding: 24px; }
-  .intro { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  .intro-row {
+    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px;
+  }
+  .intro { color: var(--muted); font-size: 14px; margin: 0; flex: 1; }
   section.card {
     background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
     padding: 20px 22px; margin: 18px 0; box-shadow: 0 1px 2px rgba(15,23,42,.04);
   }
-  section.card h2 { font-size: 16px; margin: 0 0 14px; color: var(--ink); }
+  .card-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    margin-bottom: 14px;
+  }
+  .card-head h2 { font-size: 16px; margin: 0; color: var(--ink); line-height: 1.35; flex: 1; }
+  .info-btn {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line);
+    background: #fff; color: var(--brand); font-size: 15px; font-weight: 800; font-style: italic;
+    font-family: Georgia, "Times New Roman", serif; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 2px rgba(15,23,42,.06);
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .info-btn:hover, .info-btn:focus-visible {
+    background: var(--brand-soft); border-color: var(--brand); outline: none;
+  }
   .diagram { overflow-x: auto; }
   .diagram svg { max-width: 100%; height: auto; }
   footer { max-width: 1100px; margin: 0 auto; padding: 8px 24px 48px; color: var(--muted); font-size: 12px; }
+
+  /* Info modal (diagram explanations) */
+  #info-modal {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(15,23,42,.5); display: flex; align-items: flex-end; justify-content: center;
+    padding: 0; overflow-y: auto;
+  }
+  @media (min-width: 640px) {
+    #info-modal { align-items: center; padding: 24px 16px; }
+  }
+  #info-modal.hidden { display: none; }
+  .info-panel {
+    width: 100%; max-width: 520px; background: var(--panel); border-radius: 16px 16px 0 0;
+    border: 1px solid var(--line); box-shadow: 0 -8px 32px rgba(0,0,0,.12);
+    max-height: min(85vh, 640px); display: flex; flex-direction: column;
+  }
+  @media (min-width: 640px) {
+    .info-panel { border-radius: 16px; max-height: min(80vh, 620px); }
+  }
+  .info-panel-head {
+    padding: 16px 18px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-shrink: 0;
+  }
+  .info-panel-head h3 { margin: 0; font-size: 17px; line-height: 1.3; }
+  .info-panel-close {
+    border: none; background: #f1f5f9; color: var(--ink); width: 36px; height: 36px;
+    border-radius: 10px; font-size: 22px; line-height: 1; cursor: pointer; flex-shrink: 0;
+  }
+  .info-panel-close:hover { background: #e2e8f0; }
+  .info-panel-body {
+    padding: 14px 18px 22px; overflow-y: auto; font-size: 14px; line-height: 1.65; color: var(--ink);
+  }
+  .info-panel-body p { margin: 0 0 12px; }
+  .info-panel-body p:last-child { margin-bottom: 0; }
+  .info-panel-body ul { margin: 0 0 12px; padding-left: 1.15rem; }
+  .info-panel-body li { margin-bottom: 8px; }
+  .info-panel-body li:last-child { margin-bottom: 0; }
+  .info-panel-body .info-note {
+    font-size: 12px; color: var(--muted); margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line);
+  }
+
   @media (max-width: 640px) {
     .header-inner { flex-direction: column; align-items: flex-start; }
   }
@@ -128,30 +187,59 @@
   </header>
 
   <main>
-    <p class="intro intro-text"></p>
+    <div class="intro-row">
+      <p class="intro intro-text"></p>
+      <button type="button" class="info-btn" id="introInfoBtn" data-info-key="intro" aria-expanded="false" title="">i</button>
+    </div>
 
     <section class="card">
-      <h2 id="title-d1"></h2>
+      <div class="card-head">
+        <h2 id="title-d1"></h2>
+        <button type="button" class="info-btn info-diagram" data-info-key="d1" aria-expanded="false" title="">i</button>
+      </div>
       <div class="diagram" id="diagram-d1"></div>
     </section>
     <section class="card">
-      <h2 id="title-d2"></h2>
+      <div class="card-head">
+        <h2 id="title-d2"></h2>
+        <button type="button" class="info-btn info-diagram" data-info-key="d2" aria-expanded="false" title="">i</button>
+      </div>
       <div class="diagram" id="diagram-d2"></div>
     </section>
     <section class="card">
-      <h2 id="title-d3"></h2>
+      <div class="card-head">
+        <h2 id="title-d3"></h2>
+        <button type="button" class="info-btn info-diagram" data-info-key="d3" aria-expanded="false" title="">i</button>
+      </div>
       <div class="diagram" id="diagram-d3"></div>
     </section>
     <section class="card">
-      <h2 id="title-d4"></h2>
+      <div class="card-head">
+        <h2 id="title-d4"></h2>
+        <button type="button" class="info-btn info-diagram" data-info-key="d4" aria-expanded="false" title="">i</button>
+      </div>
       <div class="diagram" id="diagram-d4"></div>
     </section>
     <section class="card">
-      <h2 id="title-d5"></h2>
+      <div class="card-head">
+        <h2 id="title-d5"></h2>
+        <button type="button" class="info-btn info-diagram" data-info-key="d5" aria-expanded="false" title="">i</button>
+      </div>
       <div class="diagram" id="diagram-d5"></div>
     </section>
   </main>
   <footer class="foot-text"></footer>
+</div>
+
+<!-- Explanation modal -->
+<div id="info-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
+  <div class="info-panel">
+    <div class="info-panel-head">
+      <h3 id="info-modal-title"></h3>
+      <button type="button" class="info-panel-close" id="infoModalClose" aria-label="">×</button>
+    </div>
+    <div class="info-panel-body" id="info-modal-body"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -165,12 +253,100 @@
       linkPages: "ページ一覧 (仕様) / Page list",
       intro: "BP Connect（ビーコネ）の主要画面とその遷移を、ロール別にまとめた図です。各図はログイン後の動きを示します。",
       footer: "BP Connect — 社内・取引先共有用の画面遷移図。仕様の詳細は build-spec ドキュメントを参照。",
+      infoBtnTitle: "この図の説明を開く（クリック）",
+      ariaCloseInfo: "閉じる",
+      modalHint: "背景をタップ、または Esc キーでも閉じられます。",
       titles: {
         d1: "1. ログインと権限ルーティング",
         d2: "2. 管理者フロー（運営 / 現場責任者）",
         d3: "3. 取引先フロー（ディーラー / 部品商）",
         d4: "4. 現場担当者フロー（モバイル）",
         d5: "5. 案件ライフサイクル（全ロール横断）"
+      },
+      explain: {
+        intro: {
+          title: "このページの読み方",
+          paragraphs: [
+            "このページは、BP Connect（ビーコネ）で「誰が、どの画面から、どこへ進むか」を図で示したものです。ディーラー・整備工場と鈑金塗装工場の間で、案件と写真・書類・メッセージを一元管理する想定です。",
+            "上から順に ①ログインと権限 ②管理者 ③取引先 ④現場担当者 ⑤案件の流れ（全体） と読むと全体像がつかみやすくなります。"
+          ],
+          bullets: [
+            "角丸の箱：画面（URL のイメージ）",
+            "ひし形：条件分岐（はい / いいえ など）",
+            "矢印：よく使う遷移の例（実際の画面はもっと多くの導線があります）",
+            "各図の右上の「i」：その図だけの補足説明を開きます（図を隠さずに確認できます）"
+          ],
+          note: "詳しい画面ごとの入力項目は「ページ一覧」資料を参照してください。"
+        },
+        d1: {
+          title: "1. ログインと権限ルーティング — 説明",
+          paragraphs: [
+            "最初にアプリを開いたとき、すでにログイン情報（トークン）がブラウザに残っていれば、そのまま権限に応じたトップ画面へ進みます。無ければログイン画面へ案内されます。"
+          ],
+          bullets: [
+            "「有効なトークンあり?」：前回ログインから一定時間内か、セッションが切れていないかのイメージです。",
+            "「総合管理者 / 現場責任者」：工場側の管理者。ダッシュボードから全案件・取引先・集計などに進みます。",
+            "「取引先 (client)」：ディーラー等のパートナー企業。自社に関係する案件一覧がトップです。",
+            "「現場担当者」：担当に割られた案件だけを見る画面（今日のタスク）から始まります。",
+            "「401 / トークン無効」：セッション切れや未ログインのとき、再度ログインが必要になる状態です。"
+          ],
+          note: "実際のログインは ID（メール等）とパスワードで行い、サーバ側で権限が判定されます。"
+        },
+        d2: {
+          title: "2. 管理者フロー — 説明",
+          paragraphs: [
+            "管理者のホームは「ダッシュボード」です。ここから案件一覧・取引先・売上集計・目標実績・受信箱など、業務の中心機能へまとめてアクセスできます。"
+          ],
+          bullets: [
+            "「案件一覧」→「案件詳細」：1台ごとのステータス変更、見積・写真の添付、担当者の割当、メッセージのやり取りなど、案件単位の作業の主戦場です。",
+            "「取引先一覧」→「取引先詳細」：会社名・締め日などのマスタと、その取引先に紐づく案件を確認します。",
+            "「添付プレビュー」：写真や PDF を拡大表示するモーダルです（一覧のサムネイルから開きます）。",
+            "「受信箱」「スレッド」：案件に紐づくメッセージを、一覧で把握してから会話画面へ進む流れです。",
+            "「アカウント管理」：総合管理者のみが利用する想定で、取引先・現場向けのログイン発行を行います。"
+          ],
+          note: "現場責任者も多くの画面にアクセスできますが、アカウント発行など一部は総合管理者のみ、という整理です。"
+        },
+        d3: {
+          title: "3. 取引先フロー — 説明",
+          paragraphs: [
+            "取引先（ディーラー・部品商など）は、自社が関わる案件だけが表示されます。他社の案件は見えません。"
+          ],
+          bullets: [
+            "「自社案件一覧」：進捗状況がステータスで分かり、未提出の写真がある場合は警告が出る想定です。",
+            "「新規案件作成」：車両情報・修理区分・必須写真などを入力し、依頼を登録します。送信後は案件詳細へ移ります。",
+            "「案件詳細」：追加の写真アップロードや、工場とのメッセージのやり取りができます（ステータス変更は管理者側が行う想定）。",
+            "「受信箱」：複数案件のメッセージを横断的に確認できます。"
+          ],
+          note: "スマホからカメラで撮影してそのままアップロードできるよう、画面はモバイル前提で設計します。"
+        },
+        d4: {
+          title: "4. 現場担当者フロー — 説明",
+          paragraphs: [
+            "現場担当者は「自分に割り当てられた案件」だけが対象です。毎日の作業で迷わないよう、「今日のタスク」から始まるレイアウトを想定しています。"
+          ],
+          bullets: [
+            "「今日のタスク」：担当案件の件数や、納車予定が今日の案件を上に出すなど、優先度が分かりやすい一覧です。",
+            "「案件詳細（現場）」：管理者向け画面より機能を絞り、ステータス更新・途中写真・メッセージに集中します。請求や案件削除などは表示しません。",
+            "「添付プレビュー」：撮影した写真の確認に使います。",
+            "管理者（現場責任者）も同様の「今日のタスク」から入れるようにし、現場の状況を共有しやすくします。"
+          ],
+          note: "納車予定日は電話等で変わることがあるため、都度更新できるフィールドとして扱います。"
+        },
+        d5: {
+          title: "5. 案件ライフサイクル — 説明",
+          paragraphs: [
+            "1台の案件が「依頼 → 承認・見積 → 作業 → 納品・請求 → 集計・目標」まで進む流れの一例です。実際の業務に合わせてステータス名や順序は調整可能です。"
+          ],
+          bullets: [
+            "左から右へ：時間の流れ（前の工程が終わると次へ進むイメージ）です。",
+            "取引先：依頼と写真の提出から入ります。",
+            "管理者：受付承認、見積 PDF、担当割当、納品・協定・請求書など、工場側のハブとなります。",
+            "現場：作業中の写真や仕上げチェック、完成写真などを登録します。",
+            "「メッセージは全案件ページで利用可」：点線は、工程と同時並行でメッセージやり取りができることを示しています。",
+            "集計・目標：請求月（締め）を確定したうえで、月次売上や目標実績ボードに反映されます。"
+          ],
+          note: "「受付」「見積済」「作業中」などの語は、システム上のステータスとして管理されます。"
+        }
       }
     },
     en: {
@@ -179,12 +355,100 @@
       linkPages: "Page list (spec) / ページ一覧",
       intro: "Key screens of BP Connect and how they connect, organized by role. Each diagram shows behavior after login.",
       footer: "BP Connect — screen flow for internal and client sharing. See the build-spec docs for full specifications.",
+      infoBtnTitle: "Open explanation for this diagram (click)",
+      ariaCloseInfo: "Close",
+      modalHint: "Click the dimmed area outside the panel, or press Esc, to close.",
       titles: {
         d1: "1. Login & Role Routing",
         d2: "2. Admin Flow (Operations / Site Manager)",
         d3: "3. Client Flow (Dealer / Partner)",
         d4: "4. Field Staff Flow (Mobile)",
         d5: "5. Case Lifecycle Across Roles"
+      },
+      explain: {
+        intro: {
+          title: "How to read this page",
+          paragraphs: [
+            "These diagrams show who goes to which screen and typical next steps in BP Connect (Bee Cone): a B2B workspace for dealers/shops and the body & paint shop to share each vehicle case, photos, documents, and messages in one place.",
+            "Read top to bottom: (1) login & roles, (2) admin, (3) client partner, (4) field staff, (5) one case end-to-end — that order builds a full picture."
+          ],
+          bullets: [
+            "Rounded boxes: a screen (URL path).",
+            "Diamonds: a decision (yes/no, which role, etc.).",
+            "Arrows: common paths (the real app may have more shortcuts).",
+            "The “i” button on each card: opens notes for that diagram only, without hiding the chart."
+          ],
+          note: "For field-by-field form content, use the “Page list” companion page."
+        },
+        d1: {
+          title: "1. Login & role routing — notes",
+          paragraphs: [
+            "When the app opens, if a valid session token is still stored in the browser, the user skips login and lands on the home screen for their role. Otherwise they see the login page."
+          ],
+          bullets: [
+            "“Has valid token?”: shorthand for “still signed in, not expired.”",
+            "“super_admin / field_admin”: shop-side managers — start at the dashboard with access to all cases, vendors, reports, etc.",
+            "“client”: partner companies — only their own cases.",
+            "“field_staff”: starts from “today’s tasks” for assigned work only.",
+            "“401 / no token”: session ended or not logged in — must sign in again."
+          ],
+          note: "The server always checks permissions; the diagram is the user journey only."
+        },
+        d2: {
+          title: "2. Admin flow — notes",
+          paragraphs: [
+            "The admin home is the dashboard — the hub to case lists, vendors, sales totals, targets, inbox, and more."
+          ],
+          bullets: [
+            "Case list → case detail: where status changes, PDFs (estimates, delivery notes, invoices), assignments, and messaging happen per vehicle.",
+            "Vendors → vendor detail: master data (company, closing day) plus that partner’s cases.",
+            "Attachment preview (modal): tap a thumbnail to zoom images/PDFs.",
+            "Inbox → thread: scan messages across cases, then open the conversation for one case.",
+            "Accounts: intended for super_admin only — issuing logins for clients and staff."
+          ],
+          note: "field_admin sees most admin screens; a few sensitive actions stay super_admin-only."
+        },
+        d3: {
+          title: "3. Client flow — notes",
+          paragraphs: [
+            "Partner users only ever see their own organization’s cases; other dealers’ data is invisible even if someone guesses a URL."
+          ],
+          bullets: [
+            "My cases: status chips and warnings if required photos are still missing.",
+            "New case: enter vehicle info, repair type, required photos, then submit — lands on case detail.",
+            "Case detail: more uploads and chat with the shop; status changes are done by admins in v1.",
+            "Inbox: read messages across their cases in one place."
+          ],
+          note: "Mobile-first: shoot with the phone camera and upload in the browser."
+        },
+        d4: {
+          title: "4. Field staff flow — notes",
+          paragraphs: [
+            "Field staff work only on cases assigned to them. The “today’s tasks” screen is optimized for daily phone use."
+          ],
+          bullets: [
+            "Today’s tasks: counts by status and highlights vehicles scheduled for delivery today.",
+            "Case detail (staff): trimmed vs admin — status updates, progress/completion photos, messaging; no billing or case delete.",
+            "Attachment preview: quick check of photos taken on site.",
+            "field_admin can use the same queue to supervise the floor."
+          ],
+          note: "Delivery date can change after a phone call — it stays editable in the case record."
+        },
+        d5: {
+          title: "5. Case lifecycle — notes",
+          paragraphs: [
+            "One example path for a single vehicle from request through billing and performance reporting. Status names and order can be tuned to your real shop workflow."
+          ],
+          bullets: [
+            "Left to right: time/progress (simplified).",
+            "Client: opens the case with request + photos.",
+            "Admin: reception/approval, estimate PDF, staff assignment, then delivery/agreement/invoice documents.",
+            "Field: in-progress and completion photos, finishing check.",
+            "Dotted “messaging” line: chat can run in parallel at any stage.",
+            "Sales & targets: after billing month is set, totals feed monthly sales and the target/actual board."
+          ],
+          note: "Statuses like “received” or “estimated” are stored as structured values in the system."
+        }
       }
     }
   };
@@ -306,9 +570,67 @@
 
   let currentLang = "ja";
 
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function buildExplainHtml(entry, hint) {
+    var html = "";
+    (entry.paragraphs || []).forEach(function (p) {
+      html += "<p>" + escapeHtml(p) + "</p>";
+    });
+    if (entry.bullets && entry.bullets.length) {
+      html += "<ul>";
+      entry.bullets.forEach(function (b) {
+        html += "<li>" + escapeHtml(b) + "</li>";
+      });
+      html += "</ul>";
+    }
+    if (entry.note) {
+      html += "<p class=\"info-note\">" + escapeHtml(entry.note) + "</p>";
+    }
+    if (hint) {
+      html += "<p class=\"info-note\">" + escapeHtml(hint) + "</p>";
+    }
+    return html;
+  }
+
+  function updateInfoChrome(t) {
+    document.querySelectorAll(".info-btn").forEach(function (btn) {
+      btn.setAttribute("title", t.infoBtnTitle);
+      btn.setAttribute("aria-label", t.infoBtnTitle);
+    });
+    document.getElementById("infoModalClose").setAttribute("aria-label", t.ariaCloseInfo);
+  }
+
+  function closeInfoModal() {
+    document.getElementById("info-modal").classList.add("hidden");
+    document.querySelectorAll(".info-btn").forEach(function (btn) {
+      btn.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function openInfoModal(key) {
+    var t = ui[currentLang];
+    var entry = t.explain[key];
+    if (!entry) return;
+    document.getElementById("info-modal-title").textContent = entry.title;
+    document.getElementById("info-modal-body").innerHTML = buildExplainHtml(entry, t.modalHint);
+    document.getElementById("info-modal").classList.remove("hidden");
+    document.querySelectorAll(".info-btn").forEach(function (b) {
+      b.setAttribute("aria-expanded", b.getAttribute("data-info-key") === key ? "true" : "false");
+    });
+    document.getElementById("infoModalClose").focus();
+  }
+
   mermaid.initialize({ startOnLoad: false, theme: "default", securityLevel: "loose", flowchart: { htmlLabels: true, curve: "basis" } });
 
   async function renderAll(lang) {
+    closeInfoModal();
     currentLang = lang;
     document.documentElement.lang = lang;
     const t = ui[lang];
@@ -332,6 +654,7 @@
     document.querySelectorAll(".lang-toggle button").forEach(function (b) {
       b.classList.toggle("active", b.dataset.lang === lang);
     });
+    updateInfoChrome(t);
   }
 
   function unlock() {
@@ -358,6 +681,21 @@
   });
   document.querySelectorAll(".lang-toggle button").forEach(function (b) {
     b.addEventListener("click", function () { renderAll(b.dataset.lang); });
+  });
+
+  document.getElementById("infoModalClose").addEventListener("click", closeInfoModal);
+  document.getElementById("info-modal").addEventListener("click", function (e) {
+    if (e.target.id === "info-modal") closeInfoModal();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !document.getElementById("info-modal").classList.contains("hidden")) {
+      closeInfoModal();
+    }
+  });
+  document.querySelectorAll(".info-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      openInfoModal(btn.getAttribute("data-info-key"));
+    });
   });
 
   if (sessionStorage.getItem("bpc_ok") === "1") {
