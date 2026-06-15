@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>BP Connect — Page List / ページ一覧</title>
+<style>
+  :root {
+    --bg: #f1f5f9;
+    --panel: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --brand: #1d4ed8;
+    --brand-soft: #eff6ff;
+    --accent: #f59e0b;
+    --cat-auth: #6366f1;
+    --cat-admin: #1d4ed8;
+    --cat-client: #059669;
+    --cat-staff: #d97706;
+    --cat-shared: #7c3aed;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+      "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    font-size: 15px;
+  }
+
+  #gate {
+    position: fixed; inset: 0; z-index: 2000;
+    background: radial-gradient(1200px 600px at 50% -10%, #1e3a8a, #0f172a);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  #gate .card {
+    width: 100%; max-width: 380px; background: var(--panel);
+    border-radius: 16px; padding: 32px 28px; box-shadow: 0 24px 60px rgba(0,0,0,.35);
+    text-align: center;
+  }
+  #gate .logo { font-weight: 800; font-size: 22px; letter-spacing: .2px; color: var(--brand); }
+  #gate .logo span { color: var(--accent); }
+  #gate p { color: var(--muted); font-size: 14px; margin: 6px 0 20px; }
+  #gate input {
+    width: 100%; padding: 12px 14px; font-size: 16px; border: 1px solid var(--line);
+    border-radius: 10px; outline: none; margin-bottom: 12px;
+  }
+  #gate input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+  #gate button {
+    width: 100%; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #fff;
+    background: var(--brand); border: none; border-radius: 10px; cursor: pointer;
+  }
+  #gate button:hover { background: #1742c0; }
+  #gateError { color: #dc2626; font-size: 13px; min-height: 18px; margin-top: 10px; }
+  .hidden { display: none !important; }
+
+  header {
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    max-width: 960px; margin: 0 auto; padding: 14px 20px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .title { font-weight: 800; font-size: 17px; color: var(--brand); }
+  .title span { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 13px; font-weight: 400; display: block; margin-top: 2px; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .lang-toggle button {
+    border: none; background: #fff; color: var(--muted); padding: 8px 14px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .lang-toggle button.active { background: var(--brand); color: #fff; }
+  .link-flow {
+    font-size: 13px; font-weight: 600; color: var(--brand); text-decoration: none;
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+  }
+  .link-flow:hover { background: var(--brand-soft); }
+
+  main { max-width: 960px; margin: 0 auto; padding: 20px; }
+  .intro { color: var(--muted); font-size: 14px; margin: 0 0 20px; }
+
+  .cat-section { margin-bottom: 28px; }
+  .cat-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--line);
+  }
+  .cat-badge {
+    font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em;
+    padding: 4px 10px; border-radius: 6px; color: #fff; flex-shrink: 0;
+  }
+  .cat-badge.auth { background: var(--cat-auth); }
+  .cat-badge.admin { background: var(--cat-admin); }
+  .cat-badge.client { background: var(--cat-client); }
+  .cat-badge.staff { background: var(--cat-staff); }
+  .cat-badge.shared { background: var(--cat-shared); }
+  .cat-title { font-size: 17px; font-weight: 800; margin: 0; }
+  .cat-desc { font-size: 13px; color: var(--muted); margin: 2px 0 0; }
+
+  .page-list { display: flex; flex-direction: column; gap: 8px; }
+  .page-row {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; cursor: pointer; text-align: left; width: 100%;
+    transition: box-shadow .15s, border-color .15s;
+  }
+  .page-row:hover { border-color: var(--brand); box-shadow: 0 4px 14px rgba(29,78,216,.12); }
+  .page-row:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .page-path { font-family: ui-monospace, monospace; font-size: 13px; color: var(--brand); font-weight: 700; }
+  .page-name { font-size: 15px; font-weight: 700; margin: 4px 0 0; }
+  .page-id { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .page-chev { color: var(--muted); font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+
+  /* Modal */
+  #modal-overlay {
+    position: fixed; inset: 0; z-index: 1500;
+    background: rgba(15,23,42,.55); display: flex; align-items: flex-start; justify-content: center;
+    padding: 24px 16px; overflow-y: auto;
+  }
+  #modal-overlay.hidden { display: none; }
+  .modal {
+    width: 100%; max-width: 640px; background: var(--panel); border-radius: 16px;
+    border: 1px solid var(--line); box-shadow: 0 24px 48px rgba(0,0,0,.2);
+    margin: auto 0;
+  }
+  .modal-head {
+    padding: 18px 20px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  }
+  .modal-head h2 { margin: 0; font-size: 18px; line-height: 1.3; }
+  .modal-head .sub { font-size: 12px; color: var(--muted); font-family: ui-monospace, monospace; margin-top: 6px; }
+  .modal-close {
+    border: none; background: #f1f5f9; color: var(--ink); width: 36px; height: 36px;
+    border-radius: 10px; font-size: 20px; line-height: 1; cursor: pointer; flex-shrink: 0;
+  }
+  .modal-close:hover { background: #e2e8f0; }
+  .modal-body { padding: 16px 20px 22px; max-height: min(70vh, 560px); overflow-y: auto; }
+  .modal-body p.purpose { margin: 0 0 16px; font-size: 14px; color: var(--ink); }
+  .modal-section { margin-bottom: 18px; }
+  .modal-section:last-child { margin-bottom: 0; }
+  .modal-section h3 {
+    font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin: 0 0 8px; border-left: 3px solid var(--brand); padding-left: 8px;
+  }
+  .modal-section ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .modal-section li { margin-bottom: 6px; }
+  .modal-section code { font-size: 12px; background: #f1f5f9; padding: 1px 5px; border-radius: 4px; }
+
+  footer { max-width: 960px; margin: 0 auto; padding: 8px 20px 40px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="card">
+    <div class="logo">BP <span>Connect</span></div>
+    <p>Enter password to view<br />閲覧パスワードを入力してください</p>
+    <input id="gateInput" type="password" autocomplete="off" placeholder="Password / パスワード" />
+    <button id="gateBtn">View / 表示</button>
+    <div id="gateError"></div>
+  </div>
+</div>
+
+<div id="content" class="hidden">
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="title">BP <span>Connect</span> — <span id="hdr-title"></span></div>
+        <span class="subtitle" id="hdr-sub"></span>
+      </div>
+      <div class="header-actions">
+        <a class="link-flow" id="link-flow" href="./bpconnect-flow.html">Page flow / 画面フロー</a>
+        <div class="lang-toggle">
+          <button type="button" data-lang="ja" class="active">日本語</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <p class="intro" id="intro"></p>
+    <div id="categories"></div>
+  </main>
+  <footer id="foot"></footer>
+</div>
+
+<div id="modal-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="modal-title"></h2>
+        <div class="sub" id="modal-path"></div>
+      </div>
+      <button type="button" class="modal-close" id="modalClose" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = "bpconnect";
+
+  const UI = {
+    ja: {
+      hdrTitle: "ページ一覧（仕様）",
+      hdrSub: "ロール別に整理。行をクリックするとこのページに載せる内容が表示されます。",
+      intro: "Webflow で作成する各画面の目的・フォーム・ブロック・データ取得元の一覧です。クライアント共有用。",
+      foot: "BP Connect — build-spec/04_Webflow_Pages.md に準拠。パスワードはプレビュー用（クライアントサイド）です。",
+      categories: {
+        auth: { badge: "Auth", title: "認証（全ユーザー）", desc: "ログイン後、権限に応じてトップ画面へ遷移します。" },
+        admin: { badge: "Admin", title: "管理者（総合管理者・現場責任者）", desc: "全案件・取引先・集計・目標・アカウント（総合管理者のみ）を扱います。" },
+        client: { badge: "Client", title: "取引先（ディーラー・部品商など）", desc: "自社案件のみ。新規依頼の作成と写真・メッセージのやり取りが中心です。" },
+        staff: { badge: "Field", title: "現場担当者", desc: "割り当てられた案件のみ。モバイルで「今日やること」を優先表示します。" },
+        shared: { badge: "Shared", title: "共有（全ロール）", desc: "受信箱・スレッド・添付プレビュー。案件へのアクセスは権限で絞られます。" }
+      },
+      modalPurpose: "目的",
+      modalBlocks: "画面ブロック・要素（Wized）",
+      modalForms: "フォーム・入力項目",
+      modalApi: "主な API / データ取得",
+      modalRoles: "アクセス可能なロール",
+      clickHint: "クリックで詳細"
+    },
+    en: {
+      hdrTitle: "Page inventory (spec)",
+      hdrSub: "Grouped by role. Click a row to see what goes on that page.",
+      intro: "Purpose, forms, blocks, and data sources for each Webflow screen. For client sharing.",
+      foot: "BP Connect — aligned with build-spec/04_Webflow_Pages.md. Password is preview-only (client-side).",
+      categories: {
+        auth: { badge: "Auth", title: "Authentication (all users)", desc: "After login, users are routed to the correct home by role." },
+        admin: { badge: "Admin", title: "Administrators (Ops + site manager)", desc: "All cases, vendors, reports, targets, and accounts (super admin only)." },
+        client: { badge: "Client", title: "Trading partners (dealers, parts, etc.)", desc: "Own-company cases only. New requests, uploads, and messaging." },
+        staff: { badge: "Field", title: "Field staff", desc: "Assigned cases only. Mobile-first “what to do today.”" },
+        shared: { badge: "Shared", title: "Shared (all roles)", desc: "Inbox, threads, attachment preview. Case access is still permission-scoped." }
+      },
+      modalPurpose: "Purpose",
+      modalBlocks: "Screen blocks & elements (Wized)",
+      modalForms: "Forms & inputs",
+      modalApi: "Primary APIs / data",
+      modalRoles: "Roles with access",
+      clickHint: "Click for details"
+    }
+  };
+
+  const PAGES = [
+    {
+      category: "auth",
+      path: "/login",
+      wireframe: "00_Login",
+      ja: {
+        title: "ログイン",
+        purpose: "認証し、ロールに応じてトップへ遷移する。",
+        blocks: [
+          "フォーム `wized-form=\"loginForm\"`",
+          "送信 `wized=\"loginSubmit\"`、エラー `wized=\"loginError\"`、読込 `wized=\"loginLoading\"`"
+        ],
+        forms: ["`email` — ID またはメール", "`password` — パスワード"],
+        api: "`POST /auth/login` → 成功後 `POST /auth/me`",
+        roles: "全員（未ログイン）"
+      },
+      en: {
+        title: "Login",
+        purpose: "Authenticate and route to the correct home by role.",
+        blocks: [
+          "Form `wized-form=\"loginForm\"`",
+          "Submit `wized=\"loginSubmit\"`, error `wized=\"loginError\"`, loading `wized=\"loginLoading\"`"
+        ],
+        forms: ["`email` — ID or email", "`password`"],
+        api: "`POST /auth/login` then `POST /auth/me` on success",
+        roles: "Everyone (unauthenticated)"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin",
+      wireframe: "Admin Dashboard",
+      ja: {
+        title: "管理者ダッシュボード",
+        purpose: "運用の俯瞰（目標実績・進捗カテゴリ・新着メッセージ・進行中案件）。",
+        blocks: [
+          "進捗カード `wized=\"progressCards\"`（連絡票待ち / 写真見積送付済 / 作業中 / 納品予定 / 今月完了）",
+          "目標実績 `wized=\"targetsSummary\"`",
+          "進行中案件 `wized-list=\"inProgressCases\"` → 行クリックで `/admin/case`",
+          "新着メッセージ `wized-list=\"recentMessages\"` → `/inbox-thread`",
+          "取引先・集計・アカウントへのクイックリンク"
+        ],
+        forms: [],
+        api: "`GET /dashboard/admin`",
+        roles: "総合管理者、現場責任者"
+      },
+      en: {
+        title: "Admin dashboard",
+        purpose: "Operations overview: targets, progress buckets, recent messages, in-progress cases.",
+        blocks: [
+          "Progress cards `wized=\"progressCards\"`",
+          "Targets summary `wized=\"targetsSummary\"`",
+          "In-progress list `wized-list=\"inProgressCases\"` → row opens `/admin/case`",
+          "Recent messages `wized-list=\"recentMessages\"` → `/inbox-thread`",
+          "Quick links to vendors, sales report, accounts"
+        ],
+        forms: [],
+        api: "`GET /dashboard/admin`",
+        roles: "super_admin, field_admin"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin/cases",
+      wireframe: "01_Admin_CaseList",
+      ja: {
+        title: "案件一覧（管理者）",
+        purpose: "全案件をフィルタ・並び替えで管理する。",
+        blocks: [
+          "フィルタ `wized-form=\"caseFilters\"`、適用 `wized=\"filterApply\"`、リセット `wized=\"filterReset\"`",
+          "一覧 `wized-list=\"caseList\"`、空 `wized=\"caseListEmpty\"`、読込 `wized=\"caseListLoading\"`、エラー `wized=\"caseListError\"`、ページャ `wized=\"casePager\"`"
+        ],
+        forms: ["`status`", "`organization_id`", "`month`", "`search`", "`only_active`"],
+        api: "`GET /cases`（クエリで絞り込み）",
+        roles: "総合管理者、現場責任者"
+      },
+      en: {
+        title: "Case list (admin)",
+        purpose: "Browse and filter all cases.",
+        blocks: [
+          "Filters `wized-form=\"caseFilters\"`, apply `wized=\"filterApply\"`, reset `wized=\"filterReset\"`",
+          "List `wized-list=\"caseList\"`, empty/loading/error states, pager `wized=\"casePager\"`"
+        ],
+        forms: ["`status`", "`organization_id`", "`month`", "`search`", "`only_active`"],
+        api: "`GET /cases` with query params",
+        roles: "super_admin, field_admin"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin/case?id=",
+      wireframe: "04_Admin_CaseDetail",
+      ja: {
+        title: "案件詳細（管理者）",
+        purpose: "1案件の全操作（編集・ステータス・担当・添付・履歴・メッセージ）。",
+        blocks: [
+          "ヘッダ `wized=\"caseHeader\"`",
+          "編集 `wized-form=\"caseEditForm\"`、保存 `wized=\"caseSave\"`",
+          "ステータス `wized-form=\"statusForm\"`、`wized=\"statusApply\"`",
+          "担当 `wized-form=\"assignForm\"`",
+          "添付ゾーン `wized=\"attachmentZones\"`（種別ごと `wized-list=\"att-*\"`、アップロード `wized-upload`、削除 `wized=\"attDelete\"`）",
+          "履歴 `wized-list=\"statusHistory\"`",
+          "メッセージ `wized-list=\"caseMessages\"`、送信 `wized=\"messageSend\"`、削除 `wized=\"messageDelete\"`"
+        ],
+        forms: ["caseEdit: `amount`, `delivery_scheduled_date`, `billing_month`, `repair_location`, `repair_details`, `insurance_company`, `classification`", "status: `status`, `memo`", "assign: `assigned_staff_id`", "message: `body`, 添付"],
+        api: "`GET/PATCH /cases/{id}`、添付・メッセージ・ステータス・担当の各 API",
+        roles: "総合管理者、現場責任者"
+      },
+      en: {
+        title: "Case detail (admin)",
+        purpose: "All admin actions for one case.",
+        blocks: [
+          "Header `wized=\"caseHeader\"`",
+          "Edit `wized-form=\"caseEditForm\"`, save `wized=\"caseSave\"`",
+          "Status `wized-form=\"statusForm\"`, apply `wized=\"statusApply\"`",
+          "Assignment `wized-form=\"assignForm\"`",
+          "Attachments `wized=\"attachmentZones\"` with typed lists/uploads/deletes",
+          "History `wized-list=\"statusHistory\"`",
+          "Messages `wized-list=\"caseMessages\"`, send `wized=\"messageSend\"`, delete `wized=\"messageDelete\"`"
+        ],
+        forms: ["caseEdit fields", "status + memo", "assigned_staff_id", "message body + optional file"],
+        api: "`GET/PATCH /cases/{id}` plus attachments, messages, status, assign endpoints",
+        roles: "super_admin, field_admin"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin/vendors",
+      wireframe: "10_Vendors",
+      ja: {
+        title: "取引先一覧",
+        purpose: "取引先の一覧・期間フィルタ・KPI。新規取引先の登録。",
+        blocks: [
+          "一覧 `wized-list=\"vendorList\"`",
+          "期間 `wized-form=\"vendorFilters\"`（`month`）",
+          "新規モーダル `wized-form=\"vendorCreateForm\"`"
+        ],
+        forms: ["新規: `company_name`（必須）, `contact_name`, `address`, `phone`, `closing_day`, `closing_day_custom`, `org_type`"],
+        api: "`GET /organizations`、`POST /organizations`",
+        roles: "総合管理者、現場責任者"
+      },
+      en: {
+        title: "Vendors list",
+        purpose: "List partners, period filter, KPIs, add new vendor.",
+        blocks: ["List `wized-list=\"vendorList\"`", "Filters `wized-form=\"vendorFilters\"`", "Create modal `wized-form=\"vendorCreateForm\"`"],
+        forms: ["Create: `company_name` (required), contact, address, phone, closing_day, custom day, org_type"],
+        api: "`GET /organizations`, `POST /organizations`",
+        roles: "super_admin, field_admin"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin/vendor?id=",
+      wireframe: "Vendor Detail",
+      ja: {
+        title: "取引先詳細",
+        purpose: "1社の情報編集と、その取引先の案件一覧。",
+        blocks: ["情報 `wized=\"vendorInfo\"`、編集 `wized-form=\"vendorEditForm\"`", "案件 `wized-list=\"vendorCases\"`"],
+        forms: ["会社名・担当者・住所・電話・締め日など（編集フォームに準拠）"],
+        api: "`GET/PATCH /organizations/{id}`、`GET /organizations/{id}/cases`",
+        roles: "総合管理者、現場責任者"
+      },
+      en: {
+        title: "Vendor detail",
+        purpose: "Edit one organization and list its cases.",
+        blocks: ["Info `wized=\"vendorInfo\"`, edit `wized-form=\"vendorEditForm\"`", "Cases `wized-list=\"vendorCases\"`"],
+        forms: ["Org fields per edit form"],
+        api: "`GET/PATCH /organizations/{id}`, `GET /organizations/{id}/cases`",
+        roles: "super_admin, field_admin"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin/sales",
+      wireframe: "Sales Report",
+      ja: {
+        title: "集計レポート（売上・請求）",
+        purpose: "取引先×月の売上合計と、請求内訳・合計請求の基礎表示。",
+        blocks: [
+          "コントロール `wized-form=\"salesFilters\"`",
+          "売上表 `wized-list=\"salesRows\"`、合計 `wized=\"salesGrandTotal\"`",
+          "請求明細 `wized-list=\"invoiceLines\"`、合計 `wized=\"invoiceTotal\"`",
+          "将来: `wized=\"invoiceExport\"`"
+        ],
+        forms: ["`month`（必須）", "`organization_id`（任意、明細表示用）"],
+        api: "`GET /reports/sales`、`GET /reports/invoice`",
+        roles: "総合管理者、現場責任者"
+      },
+      en: {
+        title: "Sales & billing report",
+        purpose: "Per-client monthly totals and invoice line breakdown.",
+        blocks: ["`wized-form=\"salesFilters\"`", "`wized-list=\"salesRows\"` + grand total", "`wized-list=\"invoiceLines\"` + total", "Future export `wized=\"invoiceExport\"`"],
+        forms: ["`month` (required)", "`organization_id` (optional, for lines)"],
+        api: "`GET /reports/sales`, `GET /reports/invoice`",
+        roles: "super_admin, field_admin"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin/targets",
+      wireframe: "Targets",
+      ja: {
+        title: "目標実績ボード（編集）",
+        purpose: "月次の目標台数・金額と実績（計算値）の表示・登録。",
+        blocks: ["月 `wized-form=\"targetFilters\"`", "行 `wized-list=\"targetRows\"`", "フォーム `wized-form=\"targetForm\"`"],
+        forms: ["`organization_id`（任意）", "`period_month`", "`target_count`", "`target_amount`"],
+        api: "`GET /targets`、`POST` / `PATCH /targets`",
+        roles: "閲覧: 管理者。編集: 総合管理者を推奨"
+      },
+      en: {
+        title: "Targets & performance",
+        purpose: "Monthly targets vs computed actuals; create/edit targets.",
+        blocks: ["Month `wized-form=\"targetFilters\"`", "Rows `wized-list=\"targetRows\"`", "Form `wized-form=\"targetForm\"`"],
+        forms: ["`organization_id` (optional)", "`period_month`", "`target_count`", "`target_amount`"],
+        api: "`GET /targets`, `POST` / `PATCH /targets`",
+        roles: "View: admins. Edit: recommend super_admin"
+      }
+    },
+    {
+      category: "admin",
+      path: "/admin/accounts",
+      wireframe: "Admin_Accounts",
+      ja: {
+        title: "アカウント管理",
+        purpose: "取引先・現場向けアカウントの発行・無効化。",
+        blocks: ["一覧 `wized-list=\"userList\"`", "作成 `wized-form=\"userCreateForm\"`", "有効切替 `wized=\"userToggleActive\"`"],
+        forms: ["`display_name`", "`email`", "`login_id`", "`password`", "`role`", "`organization_id`（client 時必須）"],
+        api: "`GET/POST/PATCH /admin/users`",
+        roles: "総合管理者のみ"
+      },
+      en: {
+        title: "Account management",
+        purpose: "Issue and deactivate client/staff accounts.",
+        blocks: ["List `wized-list=\"userList\"`", "Create `wized-form=\"userCreateForm\"`", "Toggle `wized=\"userToggleActive\"`"],
+        forms: ["display_name, email, login_id, password, role, organization_id (required for client)"],
+        api: "`GET/POST/PATCH /admin/users`",
+        roles: "super_admin only"
+      }
+    },
+    {
+      category: "client",
+      path: "/cases",
+      wireframe: "02_User_CaseList",
+      ja: {
+        title: "自社案件一覧",
+        purpose: "自社案件の一覧と新規依頼への導線。",
+        blocks: ["CTA `wized=\"newCaseCta\"` → `/new-case`", "一覧 `wized-list=\"userCaseList\"`", "未アップロード警告 `wized=\"uploadPending\"`", "空 `wized=\"userCaseEmpty\"`"],
+        forms: [],
+        api: "`GET /cases`（サーバ側で自社のみ）",
+        roles: "取引先（client）"
+      },
+      en: {
+        title: "My cases (client)",
+        purpose: "List own-company cases; CTA to new request.",
+        blocks: ["CTA `wized=\"newCaseCta\"`", "List `wized-list=\"userCaseList\"`", "Upload warning `wized=\"uploadPending\"`", "Empty `wized=\"userCaseEmpty\"`"],
+        forms: [],
+        api: "`GET /cases` (server-scoped to org)",
+        roles: "client"
+      }
+    },
+    {
+      category: "client",
+      path: "/new-case",
+      wireframe: "03_User_NewCase",
+      ja: {
+        title: "新規依頼",
+        purpose: "新規案件の登録と必須写真のアップロード。",
+        blocks: [
+          "フォーム `wized-form=\"newCaseForm\"`",
+          "保険会社は条件表示 `wized=\"insuranceField\"`",
+          "アップロード `wized-upload=\"newcase-*\"`",
+          "下書き `wized=\"caseSaveDraft\"`、送信 `wized=\"caseSubmit\"`",
+          "エラー `wized=\"newCaseErrors\"`"
+        ],
+        forms: ["`vehicle_number`（必須）", "`vehicle_model`", "`repair_category`", "`insurance_company`（保険時必須）", "`repair_location`", "`repair_details`", "`delivery_scheduled_date`", "必須写真4種"],
+        api: "`POST /cases` → `POST /cases/{id}/attachments`",
+        roles: "取引先（client）。管理者も利用可の想定"
+      },
+      en: {
+        title: "New request",
+        purpose: "Create a case and upload required photos.",
+        blocks: ["Form `wized-form=\"newCaseForm\"`", "Conditional insurance `wized=\"insuranceField\"`", "Upload slots", "Draft/submit buttons", "Errors `wized=\"newCaseErrors\"`"],
+        forms: ["vehicle_number (req), model, repair_category, insurance (when insurance), location, details, delivery date, 4 required photo types"],
+        api: "`POST /cases` then attachment uploads",
+        roles: "client (admins may also use)"
+      }
+    },
+    {
+      category: "client",
+      path: "/case?id=",
+      wireframe: "05_User_CaseDetail_Upload",
+      ja: {
+        title: "案件詳細（取引先）",
+        purpose: "写真アップロード、ステータス閲覧、メッセージ。削除は不可。",
+        blocks: [
+          "ヘッダ `wized=\"userCaseHeader\"`（読取専用）",
+          "アップロード `wized=\"userUploadZones\"`",
+          "進捗 `wized=\"uploadProgress\"`、再試行 `wized=\"uploadRetry\"`",
+          "メッセージ `wized-form=\"messageForm\"`（削除ボタンなし）"
+        ],
+        forms: ["メッセージ `body`、任意添付"],
+        api: "`GET /cases/{id}`、添付・メッセージ",
+        roles: "取引先（client）"
+      },
+      en: {
+        title: "Case detail (client)",
+        purpose: "Uploads, read-only status, messaging. No delete for client.",
+        blocks: ["Header `wized=\"userCaseHeader\"`", "Upload zones", "Progress/retry", "Message composer (no delete)"],
+        forms: ["message body + optional attachment"],
+        api: "`GET /cases/{id}`, attachments, messages",
+        roles: "client"
+      }
+    },
+    {
+      category: "staff",
+      path: "/my-tasks",
+      wireframe: "11_MyTasks",
+      ja: {
+        title: "今日のタスク（現場）",
+        purpose: "担当案件の件数・本日納車・一覧。モバイル最優先。",
+        blocks: ["件数 `wized=\"staffCounts\"`", "本日納車 `wized-list=\"deliveringToday\"`", "一覧 `wized-list=\"myCases\"` → `/case-staff`"],
+        forms: [],
+        api: "`GET /dashboard/staff`",
+        roles: "現場担当者、現場責任者"
+      },
+      en: {
+        title: "My tasks (field)",
+        purpose: "Counts, delivering today, assigned case list. Mobile-first.",
+        blocks: ["Counts `wized=\"staffCounts\"`", "Delivering today `wized-list=\"deliveringToday\"`", "List `wized-list=\"myCases\"`"],
+        forms: [],
+        api: "`GET /dashboard/staff`",
+        roles: "field_staff, field_admin"
+      }
+    },
+    {
+      category: "staff",
+      path: "/case-staff?id=",
+      wireframe: "Staff Case Detail",
+      ja: {
+        title: "案件詳細（現場）",
+        purpose: "管理者案件詳細の縮小版。ステータス・写真・メッセージ。請求・担当・案件削除は非表示。",
+        blocks: ["`wized-form=\"statusForm\"`", "写真のアップロード・削除（権限内）", "`wized=\"adminOnly\"` は非表示"],
+        forms: ["ステータス・メモ", "メッセージ"],
+        api: "`GET/PATCH /cases/{id}`、添付・メッセージ・ステータス",
+        roles: "現場担当者、現場責任者（割当案件）"
+      },
+      en: {
+        title: "Case detail (field staff)",
+        purpose: "Subset of admin detail: status, photos, messages. Hide billing/assign/delete-case.",
+        blocks: ["Status form", "Photo upload/delete where allowed", "Hide `wized=\"adminOnly\"` blocks"],
+        forms: ["status + memo", "messages"],
+        api: "`GET/PATCH /cases/{id}`, attachments, messages, status",
+        roles: "field_staff, field_admin (assigned)"
+      }
+    },
+    {
+      category: "shared",
+      path: "(modal)",
+      wireframe: "06_Attachment_Preview",
+      ja: {
+        title: "添付プレビュー（モーダル）",
+        purpose: "サムネイルから画像/PDFを拡大表示・ダウンロード。",
+        blocks: ["`wized=\"previewPane\"`", "`wized=\"previewMeta\"`", "`wized=\"previewDownload\"`", "`wized=\"previewClose\"`", "`wized=\"previewFallback\"`"],
+        forms: [],
+        api: "ファイル URL（既に取得済みの添付）",
+        roles: "権限のある案件を閲覧できる全ロール"
+      },
+      en: {
+        title: "Attachment preview (modal)",
+        purpose: "Lightbox for image/PDF from thumbnails.",
+        blocks: ["Pane, metadata, download, close, unsupported fallback"],
+        forms: [],
+        api: "File URLs from loaded attachments",
+        roles: "All roles that can view the case"
+      }
+    },
+    {
+      category: "shared",
+      path: "/inbox",
+      wireframe: "08_Inbox_List",
+      ja: {
+        title: "受信箱",
+        purpose: "未読/全件タブ、案件に紐づくスレッド一覧、検索。",
+        blocks: ["タブ `wized=\"inboxTabs\"`", "一覧 `wized-list=\"inboxThreads\"`", "検索 `name=\"search\"`"],
+        forms: ["`search`"],
+        api: "`GET /inbox?filter=`",
+        roles: "全ロール（アクセス範囲はサーバで絞り込み）"
+      },
+      en: {
+        title: "Inbox",
+        purpose: "Unread/all tabs, case-linked threads, search.",
+        blocks: ["Tabs `wized=\"inboxTabs\"`", "List `wized-list=\"inboxThreads\"`"],
+        forms: ["`search`"],
+        api: "`GET /inbox?filter=`",
+        roles: "All (scoped server-side)"
+      }
+    },
+    {
+      category: "shared",
+      path: "/inbox-thread?case_id=",
+      wireframe: "09_Inbox_Thread",
+      ja: {
+        title: "メッセージスレッド",
+        purpose: "案件単位の履歴と送信。案件詳細へジャンプ。",
+        blocks: ["履歴 `wized-list=\"threadMessages\"`", "送信 `wized-form=\"messageForm\"`", "`wized=\"jumpToCase\"`", "管理者のみ削除"],
+        forms: ["`body`、任意添付"],
+        api: "`GET/POST /cases/{id}/messages`、削除は管理者のみ",
+        roles: "全ロール（案件アクセス可能な範囲）"
+      },
+      en: {
+        title: "Message thread",
+        purpose: "Per-case history, composer, jump to case. Admin-only delete.",
+        blocks: ["`wized-list=\"threadMessages\"`", "composer", "`wized=\"jumpToCase\"`"],
+        forms: ["body + optional attachment"],
+        api: "`GET/POST /cases/{id}/messages`, delete admin-only",
+        roles: "All (scoped)"
+      }
+    }
+  ];
+
+  let lang = "ja";
+
+  function t(key) {
+    return UI[lang][key];
+  }
+
+  function catClass(cat) {
+    return { auth: "auth", admin: "admin", client: "client", staff: "staff", shared: "shared" }[cat] || "shared";
+  }
+
+  function renderCategories() {
+    const order = ["auth", "admin", "client", "staff", "shared"];
+    const u = UI[lang];
+    const root = document.getElementById("categories");
+    root.innerHTML = "";
+    order.forEach(function (catKey) {
+      const cat = u.categories[catKey];
+      const section = document.createElement("section");
+      section.className = "cat-section";
+      const pagesInCat = PAGES.filter(function (p) { return p.category === catKey; });
+      section.innerHTML =
+        '<div class="cat-head">' +
+          '<span class="cat-badge ' + catClass(catKey) + '">' + cat.badge + "</span>" +
+          "<div><h2 class=\"cat-title\">" + cat.title + "</h2><p class=\"cat-desc\">" + cat.desc + "</p></div>" +
+        "</div>" +
+        '<div class="page-list" data-cat="' + catKey + '"></div>';
+      const listEl = section.querySelector(".page-list");
+      pagesInCat.forEach(function (page, idx) {
+        const L = page[lang];
+        const row = document.createElement("button");
+        row.type = "button";
+        row.className = "page-row";
+        row.setAttribute("aria-expanded", "false");
+        row.innerHTML =
+          '<div><div class="page-path">' + page.path + "</div>" +
+          '<div class="page-name">' + L.title + "</div>" +
+          '<div class="page-id">' + page.wireframe + " · " + u.clickHint + "</div></div>" +
+          '<span class="page-chev">›</span>';
+        row.addEventListener("click", function () { openModal(page); });
+        listEl.appendChild(row);
+      });
+      root.appendChild(section);
+    });
+  }
+
+  function openModal(page) {
+    const L = page[lang];
+    const u = UI[lang];
+    document.getElementById("modal-title").textContent = L.title;
+    document.getElementById("modal-path").textContent = page.path + " · " + page.wireframe;
+    let html = "<p class=\"purpose\"><strong>" + u.modalPurpose + ":</strong> " + L.purpose + "</p>";
+    html += sectionHtml(u.modalBlocks, L.blocks);
+    if (L.forms && L.forms.length) {
+      html += sectionHtml(u.modalForms, L.forms);
+    }
+    html += "<div class=\"modal-section\"><h3>" + u.modalApi + "</h3><p style=\"margin:0;font-size:14px;\"><code>" + L.api + "</code></p></div>";
+    html += "<div class=\"modal-section\"><h3>" + u.modalRoles + "</h3><p style=\"margin:0;font-size:14px;\">" + L.roles + "</p></div>";
+    document.getElementById("modalBody").innerHTML = html;
+    document.getElementById("modal-overlay").classList.remove("hidden");
+    document.getElementById("modalClose").focus();
+  }
+
+  function sectionHtml(heading, items) {
+    if (!items || !items.length) return "";
+    let h = "<div class=\"modal-section\"><h3>" + heading + "</h3><ul>";
+    items.forEach(function (item) {
+      h += "<li>" + escapeHtml(item) + "</li>";
+    });
+    h += "</ul></div>";
+    return h;
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function closeModal() {
+    document.getElementById("modal-overlay").classList.add("hidden");
+  }
+
+  function setLang(newLang) {
+    lang = newLang;
+    document.documentElement.lang = lang;
+    document.getElementById("hdr-title").textContent = UI[lang].hdrTitle;
+    document.getElementById("hdr-sub").textContent = UI[lang].hdrSub;
+    document.getElementById("intro").textContent = UI[lang].intro;
+    document.getElementById("foot").textContent = UI[lang].foot;
+    document.getElementById("link-flow").textContent = lang === "ja" ? "画面フロー / Page flow" : "Page flow / 画面フロー";
+    document.querySelectorAll(".lang-toggle button").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.lang === lang);
+    });
+    renderCategories();
+  }
+
+  function unlock() {
+    document.getElementById("gate").classList.add("hidden");
+    document.getElementById("content").classList.remove("hidden");
+    sessionStorage.setItem("bpc_ok", "1");
+    setLang("ja");
+  }
+
+  function tryUnlock() {
+    const val = document.getElementById("gateInput").value.trim();
+    if (val === PASSWORD) {
+      unlock();
+    } else {
+      document.getElementById("gateError").textContent = "Incorrect password / パスワードが違います";
+      document.getElementById("gateInput").select();
+    }
+  }
+
+  document.getElementById("gateBtn").addEventListener("click", tryUnlock);
+  document.getElementById("gateInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") tryUnlock();
+  });
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  document.getElementById("modal-overlay").addEventListener("click", function (e) {
+    if (e.target.id === "modal-overlay") closeModal();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !document.getElementById("modal-overlay").classList.contains("hidden")) {
+      closeModal();
+    }
+  });
+  document.querySelectorAll(".lang-toggle button").forEach(function (b) {
+    b.addEventListener("click", function () { setLang(b.dataset.lang); });
+  });
+
+  if (sessionStorage.getItem("bpc_ok") === "1") {
+    unlock();
+  } else {
+    document.getElementById("gateInput").focus();
+  }
+</script>
+</body>
+</html>
