@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>BP Connect — Page Flow / ページフロー</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --brand: #1d4ed8;
+    --brand-soft: #eff6ff;
+    --accent: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+      "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    color: var(--ink);
+    background: #f1f5f9;
+    line-height: 1.6;
+  }
+
+  /* ---------- Password gate ---------- */
+  #gate {
+    position: fixed; inset: 0; z-index: 1000;
+    background: radial-gradient(1200px 600px at 50% -10%, #1e3a8a, var(--bg));
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  #gate .card {
+    width: 100%; max-width: 380px; background: var(--panel);
+    border-radius: 16px; padding: 32px 28px; box-shadow: 0 24px 60px rgba(0,0,0,.35);
+    text-align: center;
+  }
+  #gate .logo {
+    font-weight: 800; font-size: 22px; letter-spacing: .2px; color: var(--brand);
+  }
+  #gate .logo span { color: var(--accent); }
+  #gate p { color: var(--muted); font-size: 14px; margin: 6px 0 20px; }
+  #gate input {
+    width: 100%; padding: 12px 14px; font-size: 16px; border: 1px solid var(--line);
+    border-radius: 10px; outline: none; margin-bottom: 12px;
+  }
+  #gate input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+  #gate button {
+    width: 100%; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #fff;
+    background: var(--brand); border: none; border-radius: 10px; cursor: pointer;
+  }
+  #gate button:hover { background: #1742c0; }
+  #gateError { color: #dc2626; font-size: 13px; min-height: 18px; margin-top: 10px; }
+  .hidden { display: none !important; }
+
+  /* ---------- Page ---------- */
+  header {
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .header-inner {
+    max-width: 1100px; margin: 0 auto; padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .title { font-weight: 800; font-size: 18px; color: var(--brand); }
+  .title span { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 13px; font-weight: 400; }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .lang-toggle button {
+    border: none; background: #fff; color: var(--muted); padding: 8px 16px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .lang-toggle button.active { background: var(--brand); color: #fff; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  .intro { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  section.card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px 22px; margin: 18px 0; box-shadow: 0 1px 2px rgba(15,23,42,.04);
+  }
+  section.card h2 { font-size: 16px; margin: 0 0 14px; color: var(--ink); }
+  .diagram { overflow-x: auto; }
+  .diagram svg { max-width: 100%; height: auto; }
+  footer { max-width: 1100px; margin: 0 auto; padding: 8px 24px 48px; color: var(--muted); font-size: 12px; }
+  @media (max-width: 640px) {
+    .header-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Password gate -->
+<div id="gate">
+  <div class="card">
+    <div class="logo">BP <span>Connect</span></div>
+    <p>Enter password to view<br />閲覧パスワードを入力してください</p>
+    <input id="gateInput" type="password" autocomplete="off" placeholder="Password / パスワード" />
+    <button id="gateBtn">View / 表示</button>
+    <div id="gateError"></div>
+  </div>
+</div>
+
+<!-- Content -->
+<div id="content" class="hidden">
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="title">BP <span>Connect</span> — <span class="ttl-text"></span></div>
+        <div class="subtitle sub-text"></div>
+      </div>
+      <div class="lang-toggle">
+        <button data-lang="ja" class="active">日本語</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <p class="intro intro-text"></p>
+
+    <section class="card">
+      <h2 id="title-d1"></h2>
+      <div class="diagram" id="diagram-d1"></div>
+    </section>
+    <section class="card">
+      <h2 id="title-d2"></h2>
+      <div class="diagram" id="diagram-d2"></div>
+    </section>
+    <section class="card">
+      <h2 id="title-d3"></h2>
+      <div class="diagram" id="diagram-d3"></div>
+    </section>
+    <section class="card">
+      <h2 id="title-d4"></h2>
+      <div class="diagram" id="diagram-d4"></div>
+    </section>
+    <section class="card">
+      <h2 id="title-d5"></h2>
+      <div class="diagram" id="diagram-d5"></div>
+    </section>
+  </main>
+  <footer class="foot-text"></footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  const PASSWORD = "bpconnect";
+
+  const ui = {
+    ja: {
+      title: "ページフロー",
+      subtitle: "画面遷移の概要",
+      intro: "BP Connect（ビーコネ）の主要画面とその遷移を、ロール別にまとめた図です。各図はログイン後の動きを示します。",
+      footer: "BP Connect — 社内・取引先共有用の画面遷移図。仕様の詳細は build-spec ドキュメントを参照。",
+      titles: {
+        d1: "1. ログインと権限ルーティング",
+        d2: "2. 管理者フロー（運営 / 現場責任者）",
+        d3: "3. 取引先フロー（ディーラー / 部品商）",
+        d4: "4. 現場担当者フロー（モバイル）",
+        d5: "5. 案件ライフサイクル（全ロール横断）"
+      }
+    },
+    en: {
+      title: "Page Flow",
+      subtitle: "Screen navigation overview",
+      intro: "Key screens of BP Connect and how they connect, organized by role. Each diagram shows behavior after login.",
+      footer: "BP Connect — screen flow for internal and client sharing. See the build-spec docs for full specifications.",
+      titles: {
+        d1: "1. Login & Role Routing",
+        d2: "2. Admin Flow (Operations / Site Manager)",
+        d3: "3. Client Flow (Dealer / Partner)",
+        d4: "4. Field Staff Flow (Mobile)",
+        d5: "5. Case Lifecycle Across Roles"
+      }
+    }
+  };
+
+  const diagrams = {
+    ja: {
+      d1: `flowchart TD
+  Start(["アプリを開く"]) --> AuthCheck{"有効なトークンあり?"}
+  AuthCheck -->|なし| Login["/login ログイン"]
+  AuthCheck -->|あり| RoleRoute{"権限は?"}
+  Login -->|"ログイン成功"| RoleRoute
+  Login -->|"ログイン失敗"| Login
+  RoleRoute -->|"総合管理者 / 現場責任者"| AdminDash["/admin ダッシュボード"]
+  RoleRoute -->|"取引先 (client)"| UserCases["/cases 自社案件一覧"]
+  RoleRoute -->|"現場担当者"| MyTasks["/my-tasks 今日のタスク"]
+  AnyPage["保護ページ全般"] -->|"401 / トークン無効"| Login`,
+      d2: `flowchart TD
+  AdminDash["/admin ダッシュボード"] --> AdminCases["/admin/cases 案件一覧"]
+  AdminDash --> Vendors["/admin/vendors 取引先一覧"]
+  AdminDash --> Sales["/admin/sales 集計レポート"]
+  AdminDash --> Targets["/admin/targets 目標実績"]
+  AdminDash --> Accounts["/admin/accounts アカウント管理(総合管理者)"]
+  AdminDash -->|"新着メッセージ"| InboxThread["/inbox-thread スレッド"]
+  AdminDash --> Inbox["/inbox 受信箱"]
+  AdminCases -->|"案件を選択"| AdminCase["/admin/case 案件詳細"]
+  AdminCase -->|"サムネイル"| Preview["添付プレビュー (モーダル)"]
+  AdminCase -->|"ステータス / 担当 / 添付 / メッセージ"| AdminCase
+  Vendors -->|"取引先を選択"| VendorDetail["/admin/vendor 取引先詳細"]
+  VendorDetail -->|"案件を選択"| AdminCase
+  Inbox -->|"スレッドを開く"| InboxThread
+  InboxThread -->|"案件へ移動"| AdminCase`,
+      d3: `flowchart TD
+  UserCases["/cases 自社案件一覧"] -->|"新規依頼"| NewCase["/new-case 新規案件作成"]
+  NewCase -->|"送信 (作成 + アップロード)"| UserCase["/case 案件詳細 / アップロード"]
+  UserCases -->|"案件を選択"| UserCase
+  UserCase -->|"写真アップロード / メッセージ送信"| UserCase
+  UserCase -->|"サムネイル"| Preview["添付プレビュー (モーダル)"]
+  UserCases --> Inbox["/inbox 受信箱"]
+  Inbox -->|"スレッドを開く"| InboxThread["/inbox-thread スレッド"]
+  InboxThread -->|"案件へ移動"| UserCase`,
+      d4: `flowchart TD
+  MyTasks["/my-tasks 今日のタスク"] -->|"担当案件を選択"| StaffCase["/case-staff 案件詳細"]
+  StaffCase -->|"ステータス更新 / 途中写真追加"| StaffCase
+  StaffCase -->|"サムネイル"| Preview["添付プレビュー (モーダル)"]
+  StaffCase -->|"メッセージ"| StaffCase
+  MyTasks --> Inbox["/inbox 受信箱"]
+  Inbox -->|"スレッドを開く"| InboxThread["/inbox-thread スレッド"]
+  InboxThread -->|"案件へ移動"| StaffCase`,
+      d5: `flowchart TD
+  C1["取引先: /new-case<br/>依頼作成 + 写真アップロード"] -->|"状態: 受付"| A1["管理者: /admin/case<br/>確認・承認"]
+  A1 -->|"状態: 確認中"| A2["管理者: /admin/case<br/>見積書PDF添付"]
+  A2 -->|"状態: 見積済"| A3["管理者: /admin/case<br/>担当者を割当"]
+  A3 --> S1["現場: /case-staff<br/>作業 + 途中写真"]
+  S1 -->|"部品待ち / 作業中"| S2["現場: /case-staff<br/>仕上げチェック + 完成写真"]
+  S2 -->|"仕上げチェック / 納品予定"| A4["管理者: /admin/case<br/>納品書 + 協定書 + 請求書"]
+  A4 -->|"納品済 / 完了"| R1["管理者: /admin/sales<br/>請求月の確定 + 集計"]
+  R1 --> T1["管理者: /admin/targets<br/>実績が目標実績ボードに反映"]
+  M1["メッセージは全案件ページで利用可 (全ロール)"] -.-> A1
+  M1 -.-> S1
+  M1 -.-> A4`
+    },
+    en: {
+      d1: `flowchart TD
+  Start(["User opens app"]) --> AuthCheck{"Has valid token?"}
+  AuthCheck -->|No| Login["/login"]
+  AuthCheck -->|Yes| RoleRoute{"role?"}
+  Login -->|"login success"| RoleRoute
+  Login -->|"login fail"| Login
+  RoleRoute -->|"super_admin / field_admin"| AdminDash["/admin Dashboard"]
+  RoleRoute -->|"client"| UserCases["/cases"]
+  RoleRoute -->|"field_staff"| MyTasks["/my-tasks"]
+  AnyPage["Any protected page"] -->|"401 / no token"| Login`,
+      d2: `flowchart TD
+  AdminDash["/admin Dashboard"] --> AdminCases["/admin/cases Case List"]
+  AdminDash --> Vendors["/admin/vendors Vendors"]
+  AdminDash --> Sales["/admin/sales Report"]
+  AdminDash --> Targets["/admin/targets Targets"]
+  AdminDash --> Accounts["/admin/accounts (super_admin)"]
+  AdminDash -->|"recent message"| InboxThread["/inbox-thread"]
+  AdminDash --> Inbox["/inbox"]
+  AdminCases -->|"select case"| AdminCase["/admin/case Detail"]
+  AdminCase -->|"thumbnail"| Preview["Attachment Preview (modal)"]
+  AdminCase -->|"status / assign / attach / message"| AdminCase
+  Vendors -->|"select vendor"| VendorDetail["/admin/vendor Detail"]
+  VendorDetail -->|"select case"| AdminCase
+  Inbox -->|"open thread"| InboxThread
+  InboxThread -->|"jump to case"| AdminCase`,
+      d3: `flowchart TD
+  UserCases["/cases My Cases"] -->|"New request"| NewCase["/new-case"]
+  NewCase -->|"submit (create + upload)"| UserCase["/case Detail / Upload"]
+  UserCases -->|"select case"| UserCase
+  UserCase -->|"upload photo / send message"| UserCase
+  UserCase -->|"thumbnail"| Preview["Attachment Preview (modal)"]
+  UserCases --> Inbox["/inbox"]
+  Inbox -->|"open thread"| InboxThread["/inbox-thread"]
+  InboxThread -->|"jump to case"| UserCase`,
+      d4: `flowchart TD
+  MyTasks["/my-tasks Today's Tasks"] -->|"select assigned case"| StaffCase["/case-staff Detail"]
+  StaffCase -->|"update status / add progress photo"| StaffCase
+  StaffCase -->|"thumbnail"| Preview["Attachment Preview (modal)"]
+  StaffCase -->|"message"| StaffCase
+  MyTasks --> Inbox["/inbox"]
+  Inbox -->|"open thread"| InboxThread["/inbox-thread"]
+  InboxThread -->|"jump to case"| StaffCase`,
+      d5: `flowchart TD
+  C1["Client: /new-case<br/>create request + upload photos"] -->|"status: received"| A1["Admin: /admin/case<br/>review & approve"]
+  A1 -->|"status: confirming"| A2["Admin: /admin/case<br/>attach estimate PDF"]
+  A2 -->|"status: estimated"| A3["Admin: /admin/case<br/>assign staff"]
+  A3 --> S1["Staff: /case-staff<br/>work + progress photos"]
+  S1 -->|"awaiting_parts / in_progress"| S2["Staff: /case-staff<br/>finishing check + completion photos"]
+  S2 -->|"finishing_check / delivery_scheduled"| A4["Admin: /admin/case<br/>delivery note + agreement + invoice"]
+  A4 -->|"delivered / completed"| R1["Admin: /admin/sales<br/>set billing month + totals"]
+  R1 --> T1["Admin: /admin/targets<br/>actuals roll up to performance board"]
+  M1["Messaging on every case page (all roles)"] -.-> A1
+  M1 -.-> S1
+  M1 -.-> A4`
+    }
+  };
+
+  let currentLang = "ja";
+
+  mermaid.initialize({ startOnLoad: false, theme: "default", securityLevel: "loose", flowchart: { htmlLabels: true, curve: "basis" } });
+
+  async function renderAll(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    const t = ui[lang];
+    document.querySelector(".ttl-text").textContent = t.title;
+    document.querySelector(".sub-text").textContent = t.subtitle;
+    document.querySelector(".intro-text").textContent = t.intro;
+    document.querySelector(".foot-text").textContent = t.footer;
+    for (const key of ["d1", "d2", "d3", "d4", "d5"]) {
+      document.getElementById("title-" + key).textContent = t.titles[key];
+      const container = document.getElementById("diagram-" + key);
+      const id = "m-" + lang + "-" + key + "-" + Date.now();
+      try {
+        const { svg } = await mermaid.render(id, diagrams[lang][key]);
+        container.innerHTML = svg;
+      } catch (e) {
+        container.textContent = "diagram error";
+      }
+    }
+    document.querySelectorAll(".lang-toggle button").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.lang === lang);
+    });
+  }
+
+  function unlock() {
+    document.getElementById("gate").classList.add("hidden");
+    document.getElementById("content").classList.remove("hidden");
+    sessionStorage.setItem("bpc_ok", "1");
+    renderAll("ja");
+  }
+
+  function tryUnlock() {
+    const val = document.getElementById("gateInput").value.trim();
+    if (val === PASSWORD) {
+      unlock();
+    } else {
+      const err = document.getElementById("gateError");
+      err.textContent = "Incorrect password / パスワードが違います";
+      document.getElementById("gateInput").select();
+    }
+  }
+
+  document.getElementById("gateBtn").addEventListener("click", tryUnlock);
+  document.getElementById("gateInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") tryUnlock();
+  });
+  document.querySelectorAll(".lang-toggle button").forEach(function (b) {
+    b.addEventListener("click", function () { renderAll(b.dataset.lang); });
+  });
+
+  if (sessionStorage.getItem("bpc_ok") === "1") {
+    unlock();
+  } else {
+    document.getElementById("gateInput").focus();
+  }
+</script>
+</body>
+</html>
