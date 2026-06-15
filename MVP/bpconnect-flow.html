@@ -73,6 +73,13 @@
     font-size: 14px; font-weight: 600; cursor: pointer;
   }
   .lang-toggle button.active { background: var(--brand); color: #fff; }
+  .link-pages {
+    font-size: 13px; font-weight: 600; color: var(--brand); text-decoration: none;
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+    white-space: nowrap;
+  }
+  .link-pages:hover { background: var(--brand-soft); }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
   main { max-width: 1100px; margin: 0 auto; padding: 24px; }
   .intro { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
@@ -110,9 +117,12 @@
         <div class="title">BP <span>Connect</span> — <span class="ttl-text"></span></div>
         <div class="subtitle sub-text"></div>
       </div>
-      <div class="lang-toggle">
-        <button data-lang="ja" class="active">日本語</button>
-        <button data-lang="en">EN</button>
+      <div class="header-actions">
+        <a class="link-pages" id="linkPages" href="./bpconnect-pages.html">Page list / ページ一覧</a>
+        <div class="lang-toggle">
+          <button data-lang="ja" class="active">日本語</button>
+          <button data-lang="en">EN</button>
+        </div>
       </div>
     </div>
   </header>
@@ -152,6 +162,7 @@
     ja: {
       title: "ページフロー",
       subtitle: "画面遷移の概要",
+      linkPages: "ページ一覧 (仕様) / Page list",
       intro: "BP Connect（ビーコネ）の主要画面とその遷移を、ロール別にまとめた図です。各図はログイン後の動きを示します。",
       footer: "BP Connect — 社内・取引先共有用の画面遷移図。仕様の詳細は build-spec ドキュメントを参照。",
       titles: {
@@ -165,6 +176,7 @@
     en: {
       title: "Page Flow",
       subtitle: "Screen navigation overview",
+      linkPages: "Page list (spec) / ページ一覧",
       intro: "Key screens of BP Connect and how they connect, organized by role. Each diagram shows behavior after login.",
       footer: "BP Connect — screen flow for internal and client sharing. See the build-spec docs for full specifications.",
       titles: {
@@ -304,6 +316,8 @@
     document.querySelector(".sub-text").textContent = t.subtitle;
     document.querySelector(".intro-text").textContent = t.intro;
     document.querySelector(".foot-text").textContent = t.footer;
+    var lp = document.getElementById("linkPages");
+    if (lp && t.linkPages) lp.textContent = t.linkPages;
     for (const key of ["d1", "d2", "d3", "d4", "d5"]) {
       document.getElementById("title-" + key).textContent = t.titles[key];
       const container = document.getElementById("diagram-" + key);
